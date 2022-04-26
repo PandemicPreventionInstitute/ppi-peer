@@ -1,6 +1,6 @@
 # PEER 
 <img src="https://user-images.githubusercontent.com/201428/165138572-711bb040-f827-473d-898b-1a325f00bbe1.png" align="right" width=240 />
-The Covid Probability Estimator for Exposure Risk (PEER) provides everyday decision-makers with easy-to-understand, actionable data on Covid risks. This app is built using (React.js)[https://reactjs.org/docs/getting-started.html] and [Material UI](https://mui.com/) components. The 
+The Covid Probability Estimator for Exposure Risk (PEER) provides everyday decision-makers with easy-to-understand, actionable data on Covid risks. This app is built using [React](https://reactjs.org/docs/getting-started.html) and [Material UI](https://mui.com/) components. The 
 
 ## Local Environment Setup: Prerequisites
 The PEER React App uses Node.js (v17.x.x) and Yarn package manager. Before installing and using the Yarn package manager, you will need to have Node.js installed. To see if you already have Node.js installed, type the following command into your local command line terminal:
