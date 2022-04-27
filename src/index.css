@@ -61,7 +61,7 @@ ul a.active {
 }
 
 .map-container {
-  height: 100vh;
+  height: 80vh;
   width: 100%;
   position: relative;
 }
@@ -89,7 +89,7 @@ ul a.active {
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   padding: 16px 32px 32px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 @media (max-width: 600px) {

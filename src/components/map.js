@@ -1,8 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import Filters from './filters.js';
+// import WorldData from 'https://ppi-estimator.s3.amazonaws.com/data.fc.fgb';
+import geobuf from 'geobuf';
+import { PublicOff } from '@mui/icons-material';
   
 mapboxgl.accessToken = 'pk.eyJ1IjoidG9vdGhwaWNrIiwiYSI6ImNpczVlajdoODBhcXkyc28wdWJvOWhpcTUifQ.AU8-RSZrTkWidj7yDLPtMg';
+// var geojson = geobuf.decode(new PublicOff(WorldData));
  
 export default function Map() {
     const mapContainer = useRef(null);
@@ -10,7 +14,8 @@ export default function Map() {
     const [lng, setLng] = useState(12);
     const [lat, setLat] = useState(30);
     const [zoom, setZoom] = useState(1.5);
-    let hoveredStateId = null;
+    // let hoveredStateId = null;
+    // console.log("Hello big guy: ", geojson);
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -27,7 +32,7 @@ export default function Map() {
         map.current.on('load', () => {
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': './constants/world.geojson'
+                'data': './constants/data.fc.geojson'
             });
 
             map.current.addLayer({
@@ -35,7 +40,10 @@ export default function Map() {
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
-                    'fill-color': '#44AABB',
+                    'fill-color': {
+                        'property': 'risk',
+                        'stops': [[0, 'YELLOW'], [1, 'pink'], [5, 'red']]
+                      },
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'hover'], false],
@@ -46,33 +54,26 @@ export default function Map() {
                     'fill-outline-color': '#000000',
                 },
                 'filter': ['==', '$type', 'Polygon']
-            }, 'road-simple');
-
-            // map.current.on('mousemove', 'world', (e) => {
-            //     if (e.features.length > 0) {
-            //         if (hoveredStateId !== null) {
-            //             map.current.setFeatureState(
-            //                 { source: 'world', id: hoveredStateId },
-            //                 { hover: false }
-            //             );
-            //         }
-            //         hoveredStateId = e.features[0].properties.GEOID;
-            //         map.current.setFeatureState(
-            //             { source: 'world', id: hoveredStateId },
-            //             { hover: true }
-            //         );
-            //     }
-            // });
-
-            // map.current.on('mouseleave', 'world', () => {
-            //     if (hoveredStateId !== null) {
-            //         map.current.setFeatureState(
-            //             { source: 'world', id: hoveredStateId },
-            //             { hover: false }
-            //         );
-            //     }
-            //     hoveredStateId = null;
-            // });                
+            }, 'road-simple');  
+            
+            map.current.on("mousemove", function (e) {
+                var features = map.current.queryRenderedFeatures(e.point, {
+                    layers: ["world"]
+                });
+    
+                if (features.length) {
+                    //show name and value in sidebar
+                    document.getElementById('tooltip-name').innerHTML = features[0].properties.RegionName;
+                    document.getElementById('tooltip').innerHTML = features[0].properties.DateReport;
+                    //for troubleshooting - show complete features info
+                    //document.getElementById('tooltip').innerHTML = JSON.stringify(features, null, 2);
+                } else {
+                    //if not hovering over a feature set tooltip to empty
+                    document.getElementById('tooltip-name').innerHTML = "";
+                    document.getElementById('tooltip').innerHTML = "";
+                }
+            });
+    
 
         });
             
@@ -96,6 +97,8 @@ export default function Map() {
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
             <div ref={mapContainer} className="map-container" />
+            <div id="tooltip-name"></div>
+            <div id='tooltip'></div>
         </div>
     );
 }
