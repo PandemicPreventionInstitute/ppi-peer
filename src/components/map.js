@@ -10,7 +10,8 @@ export default function Map() {
     const [lng, setLng] = useState(12);
     const [lat, setLat] = useState(30);
     const [zoom, setZoom] = useState(1.5);
-    
+    let hoveredStateId = null;
+
     useEffect(() => {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
@@ -20,48 +21,14 @@ export default function Map() {
             zoom: zoom,
             renderWorldCopies: false
         });
+
         map.current.addControl(new mapboxgl.NavigationControl());
+        
         map.current.on('load', () => {
-            // map.current.addSource('eu', {
-            //     'type': 'geojson',
-            //     'data': './constants/eu.geojson'
-            // });
-
-            // map.current.addSource('usa', {
-            //     'type': 'geojson',
-            //     'data': './constants/usa.geojson'
-            // });
-
             map.current.addSource('world', {
                 'type': 'geojson',
                 'data': './constants/world.geojson'
             });
-
-            // map.current.addLayer({
-            //     'id': 'eu',
-            //     'type': 'fill',
-            //     'source': 'eu',
-            //     'paint': {
-            //         'fill-color': '#44AABB',
-            //         'fill-opacity': 0.25,
-            //         'fill-antialias': true,
-            //         'fill-outline-color': '#000000',
-            //     },
-            //     'filter': ['==', '$type', 'Polygon']
-            // }, 'road-simple');
-
-            // map.current.addLayer({
-            //     'id': 'usa',
-            //     'type': 'fill',
-            //     'source': 'usa',
-            //     'paint': {
-            //         'fill-color': '#44AABB',
-            //         'fill-opacity': 0.45,
-            //         'fill-antialias': true,
-            //         'fill-outline-color': '#000000',
-            //     },
-            //     'filter': ['==', '$type', 'Polygon']
-            // }, 'road-simple');
 
             map.current.addLayer({
                 'id': 'world',
@@ -69,12 +36,43 @@ export default function Map() {
                 'source': 'world',
                 'paint': {
                     'fill-color': '#44AABB',
-                    'fill-opacity': 0.45,
+                    'fill-opacity': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        1,
+                        0.5
+                    ],
                     'fill-antialias': true,
                     'fill-outline-color': '#000000',
                 },
                 'filter': ['==', '$type', 'Polygon']
             }, 'road-simple');
+
+            // map.current.on('mousemove', 'world', (e) => {
+            //     if (e.features.length > 0) {
+            //         if (hoveredStateId !== null) {
+            //             map.current.setFeatureState(
+            //                 { source: 'world', id: hoveredStateId },
+            //                 { hover: false }
+            //             );
+            //         }
+            //         hoveredStateId = e.features[0].properties.GEOID;
+            //         map.current.setFeatureState(
+            //             { source: 'world', id: hoveredStateId },
+            //             { hover: true }
+            //         );
+            //     }
+            // });
+
+            // map.current.on('mouseleave', 'world', () => {
+            //     if (hoveredStateId !== null) {
+            //         map.current.setFeatureState(
+            //             { source: 'world', id: hoveredStateId },
+            //             { hover: false }
+            //         );
+            //     }
+            //     hoveredStateId = null;
+            // });                
 
         });
             
