@@ -1,20 +1,19 @@
-import React, { useState } from 'react';  
+import React from 'react';  
 import { Box } from '@mui/system';
 import { 
-    MenuList,
-    MenuItem,
     ListItemText,
     ListItemIcon,
-    Collapse,
-    IconButton,
-    Theme
+    IconButton
 } from '@mui/material';
 
-import {ExpandMore} from '@mui/icons-material';
-import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import {NavLink} from 'react-router-dom';
 
-import {NavLink} from 'react-router-dom'
+import { styled } from '@mui/material/styles';
+import MuiDrawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItemButton from '@mui/material/ListItemButton';
 
 import {
     MapOutlined,
@@ -23,106 +22,111 @@ import {
     ContentCopy
 } from '@mui/icons-material';
 
-import clsx from "clsx";
-
 import styles from '../css/sidebar.module.css';
+
+const drawerWidth = 300;
+
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    display: 'block',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    }),
+  }),
+);
  
 export default function Sidebar() {
-    //const classes = useStyles();
 
-    const [expanded, setExpanded] = useState(true);
+    const [open, setOpen] = React.useState(true);
 
-    const handleToggle = () => {
-        setExpanded(!expanded);
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
     };
     
     return (
-        
-        <><Collapse in={expanded} timeout="auto" unmountOnExit>
-            <Box>
-                <h1 className={styles.title}>COVID-19 Presence Estimator</h1>
-                <h2 className={styles.subtitle}>for event planning</h2>
+        <Drawer variant="permanent" open={open} className={styles.sidebar}>
+            <DrawerHeader>
+                <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
+                    {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                </IconButton>
+            </DrawerHeader>
+            <Box sx={{ display: open ? 'block' : 'none' }}>
+                <div>                   
+                    <h1 className={styles.title}>COVID-19 Presence Estimator</h1>
+                    <h2 className={styles.subtitle}>for event planning</h2>                                                    
+                </div>               
                 <div className={styles.blurb}>
                     <p className={styles.serif}>Are you planning to host or attend a special event? Are you worried about someone bringing the virus to the occassion? We can help you estimate the probability.</p>
                     <p>Estimate the probability that one person could be infected with COVID-19 in the event, so you can take precautions and make safer decisions</p>
                 </div>
-
-                <MenuList className={styles.leftNav}>
-                    <MenuItem
-                        component={NavLink}
-                        className={styles.leftNavItem}
-                        activeclassname="active"
-                        to="/"
-                    >
-                        <ListItemIcon>
-                            <MapOutlined fontSize="small" style={{ color: 'white' }} />
-                        </ListItemIcon>
-                        <ListItemText>MAP</ListItemText>
-                    </MenuItem>
-
-                    <MenuItem
-                        component={NavLink}
-                        className={styles.leftNavItem}
-                        activeclassname="active"
-                        to="/advanced"
-                    >
-                        <ListItemIcon>
-                            <BarChartOutlined fontSize="small" style={{ color: 'white' }} />
-                        </ListItemIcon>
-                        <ListItemText>ADVANCED DATA TOOL</ListItemText>
-                    </MenuItem>
-
-                    <MenuItem
-                        component={NavLink}
-                        className={styles.leftNavItem}
-                        activeclassname="active"
-                        to="/data"
-                    >
-                        <ListItemIcon>
-                            <ContentCopy fontSize="small" style={{ color: 'white' }} />
-                        </ListItemIcon>
-                        <ListItemText>DATA SOURCES</ListItemText>
-                    </MenuItem>
-
-                    <MenuItem
-                        component={NavLink}
-                        className={styles.leftNavItem}
-                        activeclassname="active"
-                        to="/about"
-                    >
-                        <ListItemIcon>
-                            <InfoOutlined fontSize="small" style={{ color: 'white' }}/>
-                        </ListItemIcon>
-                        <ListItemText>ABOUT THE TOOL</ListItemText>
-                    </MenuItem>
-                </MenuList>
-            </Box>
-        </Collapse>
-        <Box
-            // className={clsx(classes.root, {
-            //     [classes.pointer]: !expanded
-            // })}
-            onClick={handleToggle}
-        >
-            <Box display="flex" alignItems="center">
-                <Box
-                display="flex"
-                alignItems="center"
-                className={styles.expandIconBox}
+            </Box>  
+            <List>
+            {['MAP', 'ADVANCED DATA TOOL', 'DATA SOURCES', 'ABOUT THE TOOL'].map((text, index) => (
+                <ListItemButton
+                activeclassname="active"
+                component={NavLink}
+                className={styles.leftNavItem}
+                to={index === 0 ? "/" : index === 1 ? "/advanced" : index === 2 ? "/data" : "/about"}                
+                key={text}
+                sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                }}
                 >
-                <IconButton
-                    size="small"
-                    aria-expanded={expanded}
-                    onClick={() => setExpanded(!expanded)}
-                >
-                    <ArrowBackIosNewOutlinedIcon
-                    className={clsx(styles.expand, {
-                        [styles.expandOpen]: expanded
-                    })}
-                    />
-                </IconButton>
-            </Box>
-            </Box>
-        </Box></>
+                    <ListItemIcon
+                        sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                        }}
+                    >
+                        {index === 0 ? <MapOutlined /> : index === 1 ? <BarChartOutlined /> : index === 2 ? <ContentCopy /> : <InfoOutlined />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+            ))}
+            </List>
+        </Drawer>       
     );
 }

@@ -6,7 +6,7 @@
 }
 
 .title {
-    padding: 60px 60px 0;
+    padding: 0 60px 0;
 }
 
 .subtitle {
@@ -36,26 +36,11 @@
 }
 .serif {
     font-family: 'Noto Serif', serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
 }
 
-.expandIconBox {
-    margin-right: 20px;
-    /* transform: rotate(90deg); */
-}
-.expand {
-    transform: rotate(0deg);
-    margin-left: auto;
-}
-.expandOpen {
-    /*transform: rotate(180deg);*/
-}
-.expanded {
-    margin-left: 20px;
-    transform: rotate(180deg);
-}
-
+/* These styles may be extraneous */
 @media (max-width: 600px) {
     .sidebar {
         height: auto;

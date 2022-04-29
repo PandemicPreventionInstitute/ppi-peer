@@ -18,10 +18,10 @@ function App() {
   return (
     <div className="App">
       <Grid container spacing={0}>
-        <Grid item xs={12} sm={4} md={3} className={styles.sidebar}>
+        <Grid /* item xs={12} sm={4} md={3}  */className={styles.sidebar}>
           <Sidebar />
         </Grid>
-        <Grid item xs={12} sm={8} md={9} className={styles.mapbox}>
+        <Grid item xs={12} sm={8} md={9} className={styles.mapbox} component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Routes>
             <Route path="/" element={<Map />} />
             <Route path="about" element={<About />} />
