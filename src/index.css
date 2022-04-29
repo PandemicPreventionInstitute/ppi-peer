@@ -120,7 +120,7 @@ div#mapLegend span {
 }
 
 div#mapLegend span.nodata {
-  border-top-color: #efefef;
+  border-top-color: #eff5d9;
 }
 
 div#mapLegend span.range1 {

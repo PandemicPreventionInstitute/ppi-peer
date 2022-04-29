@@ -22,6 +22,7 @@ export default function Map() {
         });
 
         map.current.addControl(new mapboxgl.NavigationControl());
+        var clickedStateId = null
         
         map.current.on('load', () => {
             map.current.addSource('world', {
@@ -36,19 +37,43 @@ export default function Map() {
                 'paint': {
                     'fill-color': {
                         'property': 'risk',
-                        'stops': [[0, '#efefef'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091']]
+                        'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091']]
                       },
                     'fill-opacity': [
                         'case',
-                        ['boolean', ['feature-state', 'hover'], false],
+                        ['boolean', ['feature-state', 'click'], false],
                         1,
-                        1
+                        0.9,
                     ],
                     'fill-antialias': true,
-                    'fill-outline-color': {
-                        'property': 'risk',
-                        'stops':  [[0, '#cccccc'], [1, '#b5e48c'], [25, '#76c893'], [50, '#34a0a4'], [75, '#1a759f'], [99, '#1e6091']]
-                      },
+                },
+                'filter': ['==', '$type', 'Polygon']
+            }, 'road-simple');  
+
+            map.current.addLayer({
+                'id': 'world-outline',
+                'type': 'line',
+                'source': 'world',
+                'paint': {
+                    'line-color': '#000000',
+                    'line-width': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // zoom is 5 (or less) -> circle radius will be 1px
+                        3, 0,
+                        5, 0.5,
+                        8, 0.75,
+                        // zoom is 10 (or greater) -> circle radius will be 5px
+                        10, 1
+                    ],
+                    'line-opacity': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // zoom is 5 (or less) -> circle radius will be 1px
+                        3, 0,
+                        5, 0.25,
+                        8, 0.5,
+                        // zoom is 10 (or greater) -> circle radius will be 5px
+                        10, 0.75
+                    ],
                 },
                 'filter': ['==', '$type', 'Polygon']
             }, 'road-simple');  
@@ -64,13 +89,28 @@ export default function Map() {
         
                 if (!features.length) {
                     return;
+                } else {
+                    console.log("Oh hello, ", features[0].properties.RegionName)
+                    console.log("Oh hello ID: ", clickedStateId)
+                    if (clickedStateId) {
+                        map.current.setFeatureState(
+                            { source: 'world', id: clickedStateId },
+                            { click: false }
+                        );
+                    }
+                    clickedStateId = e.features[0].properties.geoid;
+                    map.current.setFeatureState(
+                        { source: 'world', id: clickedStateId },
+                        { click: true }
+                    );
                 }
+        
         
                 var feature = features[0];
 
                 popup
                 .setLngLat(e.lngLat)
-                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p>' + feature.properties.risk + '</p>' + '<h3>' + feature.properties.DateReport + '</h3><p>' + feature.properties.country + '</p>' )
+                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p>Risk: ' + feature.properties.risk + '% <br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
             });
     
@@ -98,13 +138,13 @@ export default function Map() {
             <div ref={mapContainer} className="map-container" />
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
+                <span class="nodata">No Data</span>
                 <span class="range1">Less than 1% </span>
                 <span class="range2">1 - 25 </span>
                 <span class="range3">25 - 50 </span>
                 <span class="range4">50 - 75 </span>
                 <span class="range5">75 - 99 </span>
                 <span class="range6">More than 99% </span>
-                <span class="nodata">No Data</span>
             </div>
         </div>
     );
