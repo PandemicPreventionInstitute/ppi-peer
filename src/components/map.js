@@ -22,6 +22,10 @@ export default function Map() {
         });
         map.current.addControl(new mapboxgl.NavigationControl());
         map.current.on('load', () => {
+
+            var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+            mapCanvas.style.width = '100%'; // set mapboxgl-canvas width to 100% so map width adjusts when sidebar is collapsed
+
             // map.current.addSource('eu', {
             //     'type': 'geojson',
             //     'data': './constants/eu.geojson'
@@ -98,6 +102,6 @@ export default function Map() {
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
             <div ref={mapContainer} className="map-container" />
-        </div>
+        </div>            
     );
 }

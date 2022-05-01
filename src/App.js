@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Routes, Route } from "react-router-dom";
 
-import { 
-  Grid
- } from '@mui/material';
+import { Box } from '@mui/material';
 
 import Map from './components/map.js';
 import About from './components/about.js';
@@ -16,21 +14,17 @@ import styles from './css/sidebar.module.css';
 
 function App() {
   return (
-    <div className="App">
-      <Grid container spacing={0}>
-        <Grid /* item xs={12} sm={4} md={3}  */className={styles.sidebar}>
-          <Sidebar />
-        </Grid>
-        <Grid item xs={12} sm={8} md={9} className={styles.mapbox} component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Routes>
+    <Box sx={{ display: 'flex' }} className="App">     
+      <Sidebar className={styles.sidebar}/>
+      <Box component="main" className={styles.mapbox} sx={{ flexGrow: 1, p: 0 }}>
+        <Routes>
             <Route path="/" element={<Map />} />
             <Route path="about" element={<About />} />
             <Route path="advanced" element={<Advanced />} />
             <Route path="data" element={<Data />} />
-          </Routes>
-        </Grid>
-      </Grid>
-    </div>
+        </Routes>
+      </Box>
+    </Box>
   );
 }
 

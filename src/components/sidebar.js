@@ -24,7 +24,7 @@ import {
 
 import styles from '../css/sidebar.module.css';
 
-const drawerWidth = 300;
+const drawerWidth = '20%';
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -59,14 +59,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     width: drawerWidth,
     flexShrink: 0,
     display: 'block',
-    boxSizing: 'border-box',
+    boxSizing: 'border-box',   
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
+      '& .MuiPaper-root': {
+        background: '#318AD0',
+        color: '#ffffff'
+      }
     }),
     ...(!open && {
-      ...closedMixin(theme),
+      ...closedMixin(theme),   
       '& .MuiDrawer-paper': closedMixin(theme),
+      '& .MuiPaper-root': {
+        background: '#318AD0',
+        color: '#ffffff'
+      }
     }),
   }),
 );
@@ -84,10 +92,10 @@ export default function Sidebar() {
     };
     
     return (
-        <Drawer variant="permanent" open={open} className={styles.sidebar}>
+        <Drawer variant="permanent" open={open}>
             <DrawerHeader>
                 <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-                    {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    {open ? <ChevronLeftIcon fontSize="large"/> : <ChevronRightIcon fontSize="large"/>}
                 </IconButton>
             </DrawerHeader>
             <Box sx={{ display: open ? 'block' : 'none' }}>
@@ -101,31 +109,31 @@ export default function Sidebar() {
                 </div>
             </Box>  
             <List>
-            {['MAP', 'ADVANCED DATA TOOL', 'DATA SOURCES', 'ABOUT THE TOOL'].map((text, index) => (
-                <ListItemButton
-                activeclassname="active"
-                component={NavLink}
-                className={styles.leftNavItem}
-                to={index === 0 ? "/" : index === 1 ? "/advanced" : index === 2 ? "/data" : "/about"}                
-                key={text}
-                sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                }}
-                >
-                    <ListItemIcon
-                        sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                        }}
+                {['MAP', 'ADVANCED DATA TOOL', 'DATA SOURCES', 'ABOUT THE TOOL'].map((text, index) => (
+                    <ListItemButton
+                    activeclassname="active"
+                    component={NavLink}
+                    className={styles.leftNavItem}
+                    to={index === 0 ? "/" : index === 1 ? "/advanced" : index === 2 ? "/data" : "/about"}                
+                    key={text}
+                    sx={{
+                        minHeight: 48,
+                        justifyContent: open ? 'initial' : 'center',
+                        px: 2.5,
+                    }}
                     >
-                        {index === 0 ? <MapOutlined /> : index === 1 ? <BarChartOutlined /> : index === 2 ? <ContentCopy /> : <InfoOutlined />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-            ))}
+                        <ListItemIcon
+                            sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                            }}
+                        >
+                            {index === 0 ? <MapOutlined /> : index === 1 ? <BarChartOutlined /> : index === 2 ? <ContentCopy /> : <InfoOutlined />}
+                        </ListItemIcon>
+                        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                    </ListItemButton>
+                ))}
             </List>
         </Drawer>       
     );
