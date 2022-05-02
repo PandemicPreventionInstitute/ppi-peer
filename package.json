@@ -12,6 +12,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
+    "env-cmd": "^10.1.0",
     "geobuf": "^3.0.2",
     "leaflet": "^1.8.0",
     "mapbox-gl": "^2.8.2",
@@ -23,8 +24,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env.local react-scripts start",
+    "build:local": "env-cmd -f .env.local react-scripts build",
+    "build:prod": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
