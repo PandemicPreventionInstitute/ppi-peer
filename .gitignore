@@ -26,5 +26,5 @@ yarn-error.log*
 *.geojson
 *.fgb
 
-# local env file
-.env.local
+# lock files
+yarn.lock
