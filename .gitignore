@@ -24,3 +24,7 @@ yarn-error.log*
 
 # data files
 *.geojson
+*.fgb
+
+# lock files
+yarn.lock
