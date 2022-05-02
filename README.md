@@ -13,8 +13,14 @@ Once you have Node.js installed, proceed to install the Yarn package manager glo
 
 After the package install successfully, you can check it's version by running `yarn --version`. This should return the current version of Yarn installed.
 
+### Environment Variables and Mapbox Token
+- Make a duplicate of the `.env` file that contains environment variables. Name this duplicate `.env.local`. This will use environment variables for your local. 
+- Create an account on [Mapbox](https://www.mapbox.com)
+- Once logged in, go to [Access Tokens](https://account.mapbox.com/access-tokens/) to get your default token or generate a new.
+- Set the `REACT_APP_MAPBOX_TOKEN` variable to use your token in `.env.local` for local development.
+
 ## Local Environment Setup: Running locally
-From your terminal window, run `yarn run`. This will install all the dependency packages in `package.json` and will spin up the application in your browser, at http://localhost:3000
+From your terminal window, run `yarn start`. This will install all the dependency packages in `package.json` and will spin up the application in your browser, at http://localhost:3000
 
 ## Build and Deploy
 In order to build a deployable bundle of html, css, and the compiled javascript, run `yarn build`. This will generate a `/build` folder in your project that has the compiled project ready to be deployed to cloud environment.
