@@ -24,3 +24,6 @@ yarn-error.log*
 
 # data files
 *.geojson
+
+# local env file
+.env.local
