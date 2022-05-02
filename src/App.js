@@ -14,7 +14,7 @@ import styles from './css/sidebar.module.css';
 
 function App() {
   return (
-    <Box sx={{ display: 'flex' }} className="App">     
+    <Box sx={{ display: 'flex' }} className="App">  
       <Sidebar className={styles.sidebar}/>
       <Box component="main" className={styles.mapbox} sx={{ flexGrow: 1, p: 0 }}>
         <Routes>

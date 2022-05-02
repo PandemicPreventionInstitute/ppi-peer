@@ -1,22 +1,23 @@
 .title {
-    padding: 0 60px 0;
+    padding: 0 40px 0;
 }
 
 .subtitle {
-    padding: 0 30px 0 60px;
+    padding: 0 10px 0 40px;
 }
 
 .leftNav {
-    padding-left: 60px !important;
+    padding-left: 45px !important;
 }
 
 .leftNavItem {
-    padding: 24px 12px !important;
+    padding: 24px 12px;
     border-radius: 12px 0 0 12px !important;
+    color: #ffffff;
 }
 
 .blurb {
-    padding: 0 60px;
+    padding: 0 40px;
 }
 
 .subtitle::after {
@@ -42,28 +43,36 @@
     justify-content: flex-end;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
     .sidebar {
         height: auto;
     }
 
     .leftNavItem {
-        padding: 24px 12px 24px 24px !important;
         border-radius: 12px 12px 0 0 !important;
+        font-size: 12px;
     }
     .title {
-        padding: 60px 40px 0;
+        padding: 0 10px;
+        font-size: 20px;
     }
     
     .subtitle {
-        padding: 0 40px;
+        padding: 0 10px;
+        font-size: 14px;
     }
     
     .leftNav {
         padding-left: 40px !important;
     }
+    
     .blurb {
-        padding: 0 40px;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .serif {
+        font-size: 14px;
     }
     
 }

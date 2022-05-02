@@ -1,31 +1,35 @@
-import React from 'react';  
+import React, { useState, useEffect } from 'react'; 
 import { Box } from '@mui/system';
 import { 
     ListItemText,
     ListItemIcon,
     IconButton
 } from '@mui/material';
-
 import {NavLink} from 'react-router-dom';
-
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemButton from '@mui/material/ListItemButton';
-
 import {
     MapOutlined,
     BarChartOutlined,
     InfoOutlined,
     ContentCopy
 } from '@mui/icons-material';
-
 import styles from '../css/sidebar.module.css';
 
+/**
+ * Sidebar width
+ */
 const drawerWidth = '20%';
 
+/**
+ * 
+ * @param {*} theme 
+ * Sidebar opened styling
+ */
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -35,6 +39,11 @@ const openedMixin = (theme) => ({
   overflowX: 'hidden',
 });
 
+/**
+ * 
+ * @param {*} theme 
+ * Sidebar closed styling
+ */
 const closedMixin = (theme) => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -47,18 +56,24 @@ const closedMixin = (theme) => ({
   },
 });
 
+/**
+ * Sidebar button and icon styling
+ */
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
+  padding: theme.spacing(1, 1),
 }));
 
+/**
+ * Sidebar styling
+ */
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     width: drawerWidth,
     flexShrink: 0,
-    display: 'block',
+    display: 'flex',
     boxSizing: 'border-box',   
     ...(open && {
       ...openedMixin(theme),
@@ -83,22 +98,60 @@ export default function Sidebar() {
 
     const [open, setOpen] = React.useState(true);
 
+    /**
+     * Open sidebar
+     */
     const handleDrawerOpen = () => {
         setOpen(true);
     };
 
+    /**
+     * Collapse sidebar
+     */
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const [windowDimension, detectHW] = useState({
+        winWidth: window.innerWidth,
+        winHeight: window.innerHeight,
+    });
+    
+    /**
+     * Get the current window's screen size
+     */
+    const detectSize = () => {
+        detectHW({
+            winWidth: window.innerWidth,
+            winHeight: window.innerHeight,
+        });        
+    };
+    
+    /**
+     * Used to adjust sidebar state depending on window screen width size
+     */
+    useEffect(() => {
+        window.addEventListener('resize', detectSize);
+
+        if (windowDimension.winWidth < 1000) {
+            handleDrawerClose();
+        } else {
+            handleDrawerOpen();
+        }
+
+        return () => {
+            window.removeEventListener('resize', detectSize);
+        }
+    }, [windowDimension]);
     
     return (
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant='permanent' open={open}>
             <DrawerHeader>
                 <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-                    {open ? <ChevronLeftIcon fontSize="large"/> : <ChevronRightIcon fontSize="large"/>}
+                    {open ? <ChevronLeftIcon sx={{ fontSize: 40, color: '#ffffff' }}/> : <ChevronRightIcon sx={{ fontSize: 40, color: '#ffffff' }}/>}
                 </IconButton>
             </DrawerHeader>
-            <Box sx={{ display: open ? 'block' : 'none' }}>
+            <Box sx={{ display: open ? 'block' : 'none', alignItems: 'center' }}>
                 <div>                   
                     <h1 className={styles.title}>COVID-19 Presence Estimator</h1>
                     <h2 className={styles.subtitle}>for event planning</h2>                                                    
@@ -111,10 +164,10 @@ export default function Sidebar() {
             <List>
                 {['MAP', 'ADVANCED DATA TOOL', 'DATA SOURCES', 'ABOUT THE TOOL'].map((text, index) => (
                     <ListItemButton
-                    activeclassname="active"
+                    activeclassname='active'
                     component={NavLink}
                     className={styles.leftNavItem}
-                    to={index === 0 ? "/" : index === 1 ? "/advanced" : index === 2 ? "/data" : "/about"}                
+                    to={index === 0 ? '/' : index === 1 ? '/advanced' : index === 2 ? '/data' : '/about'}                
                     key={text}
                     sx={{
                         minHeight: 48,
@@ -127,6 +180,7 @@ export default function Sidebar() {
                             minWidth: 0,
                             mr: open ? 3 : 'auto',
                             justifyContent: 'center',
+                            color: '#ffffff'
                             }}
                         >
                             {index === 0 ? <MapOutlined /> : index === 1 ? <BarChartOutlined /> : index === 2 ? <ContentCopy /> : <InfoOutlined />}
