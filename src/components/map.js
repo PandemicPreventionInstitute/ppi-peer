@@ -52,33 +52,33 @@ export default function Map() {
                 'filter': ['==', '$type', 'Polygon']
             }, 'road-simple');  
 
-            map.current.addLayer({
-                'id': 'world-outline',
-                'type': 'line',
-                'source': 'world',
-                'paint': {
-                    'line-color': '#000000',
-                    'line-width': [
-                        "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
-                        3, 0,
-                        5, 0.5,
-                        8, 0.75,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
-                        10, 1
-                    ],
-                    'line-opacity': [
-                        "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
-                        3, 0,
-                        5, 0.25,
-                        8, 0.5,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
-                        10, 0.75
-                    ],
-                },
-                'filter': ['==', '$type', 'Polygon']
-            }, 'road-simple');  
+            // map.current.addLayer({
+            //     'id': 'world-outline',
+            //     'type': 'line',
+            //     'source': 'world',
+            //     'paint': {
+            //         'line-color': '#000000',
+            //         'line-width': [
+            //             "interpolate", ["linear"], ["zoom"],
+            //             // zoom is 5 (or less) -> circle radius will be 1px
+            //             3, 0,
+            //             5, 0.5,
+            //             8, 0.75,
+            //             // zoom is 10 (or greater) -> circle radius will be 5px
+            //             10, 1
+            //         ],
+            //         'line-opacity': [
+            //             "interpolate", ["linear"], ["zoom"],
+            //             // zoom is 5 (or less) -> circle radius will be 1px
+            //             3, 0,
+            //             5, 0.25,
+            //             8, 0.5,
+            //             // zoom is 10 (or greater) -> circle radius will be 5px
+            //             10, 0.75
+            //         ],
+            //     },
+            //     'filter': ['==', '$type', 'Polygon']
+            // }, 'road-simple');  
 
             var popup = new mapboxgl.Popup({ offset: [0, -7] });
                     
