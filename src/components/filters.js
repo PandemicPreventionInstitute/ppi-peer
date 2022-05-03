@@ -3,13 +3,19 @@ import {
     Slider,
     TextField
 } from '@mui/material';
-
+import styles from '../css/filters.module.css';
 import {
     PeopleAltOutlined,
     RoomOutlined,
     ShieldOutlined,
     ExpandMoreOutlined
 } from '@mui/icons-material';
+import mask from '../icons/icon_mask.png';
+import socialDistance from '../icons/icon_distancing.png';
+import handwashing from '../icons/icon_handwashing.png';
+import outdoors from '../icons/icon_outdoors.png';
+import sanitizer from '../icons/icon_sanitizer.png';
+import vaccines from '../icons/icon_vaccines.png';
 
 const marks = [
     {
@@ -74,7 +80,7 @@ export default function Filters() {
     
     return (
       <>
-        <div className="filters">
+        <div /* className="filters" */>
             <h3 className="serif">Select your event location and size</h3>
             <p>Where will the event or activity take place and how many people will be attending?</p>
 
@@ -99,11 +105,49 @@ export default function Filters() {
             />
         </div>
         {/* Mina shenanigans starting here */}
-        <div className="filters">
+        <div /* className="filters" */>
           <h4 style={{marginBottom: 40}}>
             <ShieldOutlined fontSize="small" style={{ color: '#318AD0', marginBottom: -3, marginRight: 5 }} /> TAKE THE RIGHT PRECAUTIONS 
-            <ExpandMoreOutlined style={{ color: '#318AD0', marginBottom: -5, marginLeft: 20 }} />
+            <ExpandMoreOutlined style={{ color: '#6C787F', marginBottom: -5 }} />
           </h4>
+          <div className={styles.iconGrid}>
+            <div style={{display: 'block'}}>
+              <div className={styles.circle}>
+                <img src={mask} alt="Use a mask" />
+              </div>
+              <div className={styles.precautionText}>Use a mask</div>
+            </div>  
+            <div style={{display: 'block'}}>
+              <div className={styles.circle}>
+                <img src={socialDistance} alt="Social distance" />
+              </div>
+              <div className={styles.precautionText}>Social distance</div>
+            </div> 
+            <div style={{display: 'block'}}>
+              <div className={styles.circle}>
+                <img src={handwashing} alt="Wash your hands" />
+              </div>
+              <div className={styles.precautionText}>Wash your hands</div>
+            </div>  
+            <div style={{display: 'block'}}>
+              <div className={styles.circle}>
+                <img src={outdoors} alt="Choose the outdoors" />
+              </div>
+              <div className={styles.precautionText}>Choose the outdoors</div>
+            </div> 
+            <div style={{display: 'block'}}>
+              <div className={styles.circle}>
+                <img src={sanitizer} alt="Use hand sanitizer" />
+              </div>
+              <div className={styles.precautionText}>Use hand sanitizer</div>
+            </div>  
+            <div style={{display: 'block'}}>
+              <div className={styles.circle}>
+                <img src={vaccines} alt="Get vaccinated" />
+              </div>
+              <div className={styles.precautionText}>Get vaccinated</div>
+            </div>          
+          </div>
         </div>
         </>
     );
