@@ -1,15 +1,30 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import Filters from './filters.js';
+import styles from '../css/sidebar.module.css';
+import Drawer from './sidebar';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+//mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wycDRkcDc0MDN6MTNrcXZ3dnVrdnRmYyJ9.BlWon0Tsj-UygLC4IOQeVA';
+
+export function useResizeMapClose() {
+    const map = useRef(null);
+    if (!map.current) return;
+    map.panBy([100*-1, 0], { 
+        duration: 500,
+        easing: (t) => t<.5 ? 2*t*t : -1+(4-2*t)*t 
+      });
+}
  
 export default function Map() {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(12);
     const [lat, setLat] = useState(30);
-    const [zoom, setZoom] = useState(1.5);
+    const [zoom, setZoom] = useState(2);
+
+    /* MINA TO FIX */
+    const sidebar = document.querySelector('.infowindow');
     
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -18,7 +33,7 @@ export default function Map() {
             style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky',
             center: [lng, lat],
             zoom: zoom,
-            renderWorldCopies: false
+            renderWorldCopies: true
         });
         map.current.addControl(new mapboxgl.NavigationControl());
         map.current.on('load', () => {
@@ -92,6 +107,28 @@ export default function Map() {
             setZoom(map.current.getZoom().toFixed(2));
         });
     });
+
+    /* MINA SHENANIGANS BELOW */
+
+    /* useEffect(() => {
+        if (!map.current) return; // wait for map to initialize
+        const sidebar = document.querySelector('.sidebar');
+        const directionMultiplier = sidebar.classList.contains('open') ? 1 : -1;
+        map.current.panBy([100*directionMultiplier, 0], { 
+            duration: 500,
+            easing: (t) => t<.5 ? 2*t*t : -1+(4-2*t)*t 
+          });
+    }); */
+
+    /* useEffect(() => {
+        if (!map.current) return; // wait for map to initialize
+        console.log(Drawer.open);
+        const directionMultiplier = Drawer.open ? 1 : -1;
+        map.current.panBy([100*directionMultiplier, 0], { 
+            duration: 500,
+            easing: (t) => t<.5 ? 2*t*t : -1+(4-2*t)*t 
+        });
+    }) */
     
     return (
         <div className="map">

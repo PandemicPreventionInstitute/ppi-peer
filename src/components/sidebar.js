@@ -19,6 +19,8 @@ import {
     ContentCopy
 } from '@mui/icons-material';
 import styles from '../css/sidebar.module.css';
+import Map from './map';
+import { resizeMapClose } from './map';
 
 /**
  * Sidebar width
@@ -37,6 +39,8 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
+  overflowy: 'auto',
+  
 });
 
 /**
@@ -53,7 +57,7 @@ const closedMixin = (theme) => ({
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+  }
 });
 
 /**
@@ -63,7 +67,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  padding: theme.spacing(1, 1),
+  padding: theme.spacing(1, 1)
 }));
 
 /**
@@ -110,6 +114,12 @@ export default function Sidebar() {
      */
     const handleDrawerClose = () => {
         setOpen(false);
+        /* MINA TO FIX */
+        //useResizeMapClose();
+        Map.map.current.panBy([100 * -1, 0], {
+            duration: 500,
+            easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t)
+          });
     };
 
     const [windowDimension, detectHW] = useState({

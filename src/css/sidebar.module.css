@@ -41,6 +41,8 @@
     position: relative;
     outline: none;
     justify-content: flex-end;
+    overflow: auto;
+    display: box;
 }
 
 @media (max-width: 1000px) {
