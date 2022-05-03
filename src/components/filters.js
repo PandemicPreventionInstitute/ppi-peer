@@ -6,7 +6,9 @@ import {
 
 import {
     PeopleAltOutlined,
-    RoomOutlined
+    RoomOutlined,
+    ShieldOutlined,
+    ExpandMoreOutlined
 } from '@mui/icons-material';
 
 const marks = [
@@ -71,6 +73,7 @@ const marks = [
 export default function Filters() {
     
     return (
+      <>
         <div className="filters">
             <h3 className="serif">Select your event location and size</h3>
             <p>Where will the event or activity take place and how many people will be attending?</p>
@@ -95,5 +98,13 @@ export default function Filters() {
                 markLabel={false}
             />
         </div>
+        {/* Mina shenanigans starting here */}
+        <div className="filters">
+          <h4 style={{marginBottom: 40}}>
+            <ShieldOutlined fontSize="small" style={{ color: '#318AD0', marginBottom: -3, marginRight: 5 }} /> TAKE THE RIGHT PRECAUTIONS 
+            <ExpandMoreOutlined style={{ color: '#318AD0', marginBottom: -5, marginLeft: 20 }} />
+          </h4>
+        </div>
+        </>
     );
 }
