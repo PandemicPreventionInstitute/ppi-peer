@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import turf from 'turf';
 import Filters from './filters.js';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -27,11 +28,12 @@ export default function Map() {
         map.current.on('load', () => {
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': './constants/data.fc.geojson'
+                'data': './constants/data.fc.geojson',
+                'generateId': true
             });
 
             map.current.addLayer({
-                'id': 'world',
+                'id': 'world-fill',
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
@@ -43,7 +45,7 @@ export default function Map() {
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
                         1,
-                        0.9,
+                        0.8,
                     ],
                     'fill-antialias': true,
                 },
@@ -80,37 +82,41 @@ export default function Map() {
 
             var popup = new mapboxgl.Popup({ offset: [0, -7] });
                     
-            
-            map.current.on('click', 'world', function(e) {
+            map.current.on('click', 'world-fill', function(e) {
                 map.current.getCanvas().style.cursor = 'pointer';
                 var features = map.current.queryRenderedFeatures(e.point, {
-                    layers: ['world'] 
+                    layers: ['world-fill'] 
                 });
+                var bbox = turf.bbox({
+                    type: 'FeatureCollection',
+                    features: features
+                  });
+
+                map.current.fitBounds(bbox, {padding: 20});    
+            
         
                 if (!features.length) {
                     return;
                 } else {
-                    console.log("Oh hello, ", features[0].properties.RegionName)
-                    console.log("Oh hello ID: ", clickedStateId)
                     if (clickedStateId) {
                         map.current.setFeatureState(
                             { source: 'world', id: clickedStateId },
                             { click: false }
                         );
                     }
-                    clickedStateId = e.features[0].properties.geoid;
+                    clickedStateId = e.features[0].id;
                     map.current.setFeatureState(
                         { source: 'world', id: clickedStateId },
                         { click: true }
                     );
                 }
-        
-        
+
                 var feature = features[0];
+                var coordinates = feature.geometry.coordinates;
 
                 popup
                 .setLngLat(e.lngLat)
-                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p>Risk: ' + feature.properties.risk + '% <br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
+                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + feature.properties.risk + '% </strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
             });
     
