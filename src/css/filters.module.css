@@ -9,7 +9,6 @@
 .circle {
     width: 54px;
     height: 54px;
-    /* background: #eaf2f8; */
     -moz-border-radius: 70px;
     -webkit-border-radius: 70px;
     border-radius: 24px;
@@ -24,4 +23,10 @@
     align-content: center;
     height: 45px;
     font-size: 14px;
+}
+
+.expandButton {
+    display: inline;
+    line-height: 30px;
+    padding: 0 8px 8px 8px !important;
 }

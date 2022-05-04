@@ -1,14 +1,17 @@
 import React from 'react';
 import { 
     Slider,
-    TextField
+    TextField,
+    IconButton,
+    Box
 } from '@mui/material';
 import styles from '../css/filters.module.css';
 import {
     PeopleAltOutlined,
     RoomOutlined,
     ShieldOutlined,
-    ExpandMoreOutlined
+    ExpandMoreOutlined,
+    ExpandLessOutlined
 } from '@mui/icons-material';
 import mask from '../icons/icon_mask.png';
 import socialDistance from '../icons/icon_distancing.png';
@@ -77,10 +80,20 @@ const marks = [
   
    
 export default function Filters() {
+
+    const [open, setOpen] = React.useState(false);
+
+    const handlePrecautionsOpen = () => {
+      setOpen(true);
+    };
+
+    const handlePrecautionsClose = () => {
+      setOpen(false);
+    };
     
     return (
-      <>
-        <div /* className="filters" */>
+      <Box>
+        <div>
             <h3 className="serif">Select your event location and size</h3>
             <p>Where will the event or activity take place and how many people will be attending?</p>
 
@@ -104,13 +117,16 @@ export default function Filters() {
                 markLabel={false}
             />
         </div>
-        {/* Mina shenanigans starting here */}
-        <div /* className="filters" */>
-          <h4 style={{marginBottom: 40}}>
-            <ShieldOutlined fontSize="small" style={{ color: '#318AD0', marginBottom: -3, marginRight: 5 }} /> TAKE THE RIGHT PRECAUTIONS 
-            <ExpandMoreOutlined style={{ color: '#6C787F', marginBottom: -5 }} />
+        
+        <div id='Precautions'>
+          <h4 style={{marginBottom: 20}}>
+            <ShieldOutlined fontSize="small" style={{ color: '#318AD0', marginBottom: -3, marginRight: 5 }} /> TAKE THE RIGHT PRECAUTIONS
+            <IconButton aria-label="open precautions" className={styles.expandButton} onClick={open ? handlePrecautionsClose : handlePrecautionsOpen}>
+              <ExpandMoreOutlined style={{ color: '#6C787F', marginBottom: -5, display: !open ? 'block' : 'none' }} />
+              <ExpandLessOutlined style={{ color: '#6C787F', marginBottom: -5, display: open ? 'block' : 'none' }} />
+            </IconButton>
           </h4>
-          <div className={styles.iconGrid}>
+          <div className={styles.iconGrid} style={{display: open ? 'grid' : 'none'}}>
             <div style={{display: 'block'}}>
               <div className={styles.circle}>
                 <img src={mask} alt="Use a mask" />
@@ -149,6 +165,6 @@ export default function Filters() {
             </div>          
           </div>
         </div>
-        </>
+      </Box>
     );
 }
