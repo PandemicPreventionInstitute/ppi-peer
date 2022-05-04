@@ -3,7 +3,7 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import turf from 'turf';
 import Filters from './filters.js';
   
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
  
 export default function Map() {
     const mapContainer = useRef(null);
@@ -16,7 +16,7 @@ export default function Map() {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky',
+            style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create custom PPI account and map style
             center: [lng, lat],
             zoom: zoom,
             renderWorldCopies: false
@@ -28,10 +28,11 @@ export default function Map() {
         map.current.on('load', () => {
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': './constants/data.fc.geojson',
+                'data': './constants/data_25.fc.geojson', // load geojson file here; @todo: swap this out for S3 bucket source
                 'generateId': true
             });
 
+            // add map layer for filled choropleth polygon regions
             map.current.addLayer({
                 'id': 'world-fill',
                 'type': 'fill',
@@ -52,37 +53,38 @@ export default function Map() {
                 'filter': ['==', '$type', 'Polygon']
             }, 'road-simple');  
 
-            // map.current.addLayer({
-            //     'id': 'world-outline',
-            //     'type': 'line',
-            //     'source': 'world',
-            //     'paint': {
-            //         'line-color': '#000000',
-            //         'line-width': [
-            //             "interpolate", ["linear"], ["zoom"],
-            //             // zoom is 5 (or less) -> circle radius will be 1px
-            //             3, 0,
-            //             5, 0.5,
-            //             8, 0.75,
-            //             // zoom is 10 (or greater) -> circle radius will be 5px
-            //             10, 1
-            //         ],
-            //         'line-opacity': [
-            //             "interpolate", ["linear"], ["zoom"],
-            //             // zoom is 5 (or less) -> circle radius will be 1px
-            //             3, 0,
-            //             5, 0.25,
-            //             8, 0.5,
-            //             // zoom is 10 (or greater) -> circle radius will be 5px
-            //             10, 0.75
-            //         ],
-            //     },
-            //     'filter': ['==', '$type', 'Polygon']
-            // }, 'road-simple');  
-
-            var popup = new mapboxgl.Popup({ offset: [0, -7] });
-                    
+            // add map layer for region outlines
+            map.current.addLayer({
+                'id': 'world-outline',
+                'type': 'line',
+                'source': 'world',
+                'paint': {
+                    'line-color': '#000000',
+                    'line-width': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // zoom is 5 (or less) -> circle radius will be 1px
+                        3, 0,
+                        5, 0.5,
+                        8, 0.75,
+                        // zoom is 10 (or greater) -> circle radius will be 5px
+                        10, 1
+                    ],
+                    'line-opacity': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // zoom is 5 (or less) -> circle radius will be 1px
+                        3, 0,
+                        5, 0.25,
+                        8, 0.5,
+                        // zoom is 10 (or greater) -> circle radius will be 5px
+                        10, 0.75
+                    ],
+                },
+                'filter': ['==', '$type', 'Polygon']
+            }, 'road-simple');  
+            
+            // onClick behavior for a region: zoom and popup
             map.current.on('click', 'world-fill', function(e) {
+                var popup = new mapboxgl.Popup({ offset: [0, -7] });
                 map.current.getCanvas().style.cursor = 'pointer';
                 var features = map.current.queryRenderedFeatures(e.point, {
                     layers: ['world-fill'] 
@@ -93,8 +95,7 @@ export default function Map() {
                   });
 
                 map.current.fitBounds(bbox, {padding: 20});    
-            
-        
+    
                 if (!features.length) {
                     return;
                 } else {
