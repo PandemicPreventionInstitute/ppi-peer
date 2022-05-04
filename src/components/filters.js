@@ -13,12 +13,12 @@ import {
     ExpandMoreOutlined,
     ExpandLessOutlined
 } from '@mui/icons-material';
-import mask from '../icons/icon_mask.png';
-import socialDistance from '../icons/icon_distancing.png';
-import handwashing from '../icons/icon_handwashing.png';
-import outdoors from '../icons/icon_outdoors.png';
-import sanitizer from '../icons/icon_sanitizer.png';
-import vaccines from '../icons/icon_vaccines.png';
+import mask from '../assets/icon_mask.png';
+import socialDistance from '../assets/icon_distancing.png';
+import handwashing from '../assets/icon_handwashing.png';
+import outdoors from '../assets/icon_outdoors.png';
+import sanitizer from '../assets/icon_sanitizer.png';
+import vaccines from '../assets/icon_vaccines.png';
 
 const marks = [
     {
