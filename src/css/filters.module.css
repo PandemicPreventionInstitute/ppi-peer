@@ -1,0 +1,69 @@
+.iconGrid {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(2, 50%);
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.circle {
+    width: 54px;
+    height: 54px;
+    -moz-border-radius: 70px;
+    -webkit-border-radius: 70px;
+    border-radius: 24px;
+    margin-right: 10px;
+    float: left;
+    display: flex;
+    justify-content: center;
+}
+.precautionText {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    height: 45px;
+    font-size: 14px;
+}
+
+.precautionBlock {
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.expandButton {
+    display: inline;
+    line-height: 30px;
+    margin-top: -6px !important;
+}
+
+.crowdSize {
+    margin-bottom: 40px !important;
+}
+
+.roomOutlined {
+    color: #318AD0;
+    margin-bottom: -3px;
+    font-size: larger;
+}
+
+.peopleAltOutlined {
+    color: #318AD0 !important;
+    margin-bottom: -3px !important;
+    font-size: larger;
+}
+
+.shieldOutlined {
+    color: #318AD0;
+    margin-bottom: -4px;
+    margin-right: 3px;
+    font-size: larger;
+}
+
+.expandOutlined {
+    color: #6C787F;
+    margin-bottom: -5px;
+}
+
+.iconBlocks {
+    display: block;
+}
