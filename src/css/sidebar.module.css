@@ -45,6 +45,11 @@
     display: box;
 }
 
+.chevronIcon {
+    font-size: 40px !important;
+    color: #ffffff;
+}
+
 @media (max-width: 1000px) {
     .sidebar {
         height: auto;

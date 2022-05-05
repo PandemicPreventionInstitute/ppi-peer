@@ -84,7 +84,7 @@ ul a.active {
 }
 
 .mapfilters {
-  width: min(280px, 25vw);
+  width: min(312px, 25vw);
   position: absolute;
   left: 32px;
   top: 32px;
@@ -93,7 +93,7 @@ ul a.active {
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   padding: 16px 32px 32px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 @media (max-width: 600px) {

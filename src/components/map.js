@@ -4,8 +4,8 @@ import Filters from './filters.js';
 import styles from '../css/sidebar.module.css';
 import Drawer from './sidebar';
   
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
-//mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wycDRkcDc0MDN6MTNrcXZ3dnVrdnRmYyJ9.BlWon0Tsj-UygLC4IOQeVA';
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wycDRkcDc0MDN6MTNrcXZ3dnVrdnRmYyJ9.BlWon0Tsj-UygLC4IOQeVA';
 
 export function useResizeMapClose() {
     const map = useRef(null);
@@ -23,23 +23,28 @@ export default function Map() {
     const [lat, setLat] = useState(30);
     const [zoom, setZoom] = useState(2);
 
-    /* MINA TO FIX */
-    const sidebar = document.querySelector('.infowindow');
-    
     useEffect(() => {
         if (map.current) return; // initialize map only once
+
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky',
             center: [lng, lat],
             zoom: zoom,
-            renderWorldCopies: true
+            renderWorldCopies: false
         });
+
         map.current.addControl(new mapboxgl.NavigationControl());
         map.current.on('load', () => {
 
             var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
             mapCanvas.style.width = '100%'; // set mapboxgl-canvas width to 100% so map width adjusts when sidebar is collapsed
+
+            /* MINA SHENANIGANS */
+            var sidebarToggle = document.getElementById('sidebarToggle');
+            sidebarToggle.onClick = () => {
+                map.current.resize();
+            };
 
             // map.current.addSource('eu', {
             //     'type': 'geojson',
@@ -108,7 +113,7 @@ export default function Map() {
         });
     });
 
-    /* MINA SHENANIGANS BELOW */
+    /* MINA SHENANIGANS ALL BELOW HERE */
 
     /* useEffect(() => {
         if (!map.current) return; // wait for map to initialize
@@ -129,6 +134,19 @@ export default function Map() {
             easing: (t) => t<.5 ? 2*t*t : -1+(4-2*t)*t 
         });
     }) */
+
+    useEffect(() => {
+        if (!map.current) return; // wait for map to initialize
+        var sidebar = document.getElementById('sidebar');
+        if (sidebar.offsetWidth < 300) {
+            map.current.resize();
+        }
+
+        /* var sidebarToggle = document.getElementById('sidebarToggle');
+        sidebarToggle.onClick = () => {
+            map.current.resize();
+        }; */
+    }); 
     
     return (
         <div className="map">

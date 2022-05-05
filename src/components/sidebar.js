@@ -116,10 +116,10 @@ export default function Sidebar() {
         setOpen(false);
         /* MINA TO FIX */
         //useResizeMapClose();
-        Map.map.current.panBy([100 * -1, 0], {
+        /* Map.map.current.panBy([100 * -1, 0], {
             duration: 500,
             easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t)
-          });
+          }); */
     };
 
     const [windowDimension, detectHW] = useState({
@@ -155,10 +155,10 @@ export default function Sidebar() {
     }, [windowDimension]);
     
     return (
-        <Drawer variant='permanent' open={open}>
+        <Drawer variant='permanent' open={open} id='sidebar'>
             <DrawerHeader>
-                <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-                    {open ? <ChevronLeftIcon sx={{ fontSize: 40, color: '#ffffff' }}/> : <ChevronRightIcon sx={{ fontSize: 40, color: '#ffffff' }}/>}
+                <IconButton id='sidebarToggle' onClick={open ? handleDrawerClose : handleDrawerOpen}>
+                    {open ? <ChevronLeftIcon className={styles.chevronIcon}/> : <ChevronRightIcon className={styles.chevronIcon}/>}
                 </IconButton>
             </DrawerHeader>
             <Box sx={{ display: open ? 'block' : 'none', alignItems: 'center' }}>
@@ -176,13 +176,12 @@ export default function Sidebar() {
                     <ListItemButton
                     activeclassname='active'
                     component={NavLink}
-                    className={styles.leftNavItem}
                     to={index === 0 ? '/' : index === 1 ? '/advanced' : index === 2 ? '/data' : '/about'}                
                     key={text}
                     sx={{
                         minHeight: 48,
                         justifyContent: open ? 'initial' : 'center',
-                        px: 2.5,
+                        px: 2.5
                     }}
                     >
                         <ListItemIcon
