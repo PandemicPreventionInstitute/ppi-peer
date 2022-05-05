@@ -1,0 +1,77 @@
+.mainText {
+    position: relative;
+    width: 80%;
+    /* height: 140px; */
+    left: 99px;
+    top: 130px;
+    text-align: center;
+    /* font-family: 'Rubik' !important; */
+    font-style: normal;
+    font-weight: 500;
+    font-size: 50px;
+    /* line-height: 70px; */
+    /* or 140% */
+    
+
+    color: #0B132A;
+}
+
+.subText {
+    position: relative;
+    width: 80%;
+    /* height: 140px; */
+    left: 99.35px;
+    top: 130px;
+
+    /* font-family: 'Rubik' !important; */
+    font-style: normal;
+    font-weight: 500;
+    font-size: 25px;
+    /* line-height: 70px; */
+    /* or 140% */
+
+    color: #0B132A;
+}
+
+.maskedElbowBump {
+    text-align: center;
+    position: relative;
+    width: 80%;
+    /* height: 60%; */
+    /* left: 717.55px; */
+    top: 50px;
+    background-blend-mode: multiply;
+}
+
+.about {
+    height: 100%;
+}
+
+.transitionText {
+    position: relative;
+    /* width: 80%; */
+    /* height: 140px; */
+    /* left: 99.35px; */
+    /* top: 50px; */
+
+    /* font-family: 'Rubik' !important; */
+    /* font-style: normal;
+    font-weight: 500;
+    font-size: 25px; */
+    /* line-height: 70px; */
+    /* or 140% */
+    text-align: center;
+    color: #0B132A;
+    font-size: 22px;
+    top: 50%;
+    bottom: 50%;
+}
+
+.bottomGridItem {
+    /*align-items: center !important;*/
+    text-align: center !important;
+    top: 50%;
+    left: 99px;
+    font-size: 18px;
+}
+

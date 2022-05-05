@@ -54,9 +54,7 @@ ul a.active {
   text-align: left;
 }
 
-.about {
-  text-align: center !important;
-}
+.about,
 .advanced,
 .data {
   padding: 64px 32px;
