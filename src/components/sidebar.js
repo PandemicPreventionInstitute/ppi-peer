@@ -120,6 +120,10 @@ export default function Sidebar() {
             duration: 500,
             easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t)
           }); */
+
+        /* var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+        var mapDiv = document.getElementById('map');
+        mapDiv.style.width = '100%'; */
     };
 
     const [windowDimension, detectHW] = useState({
@@ -143,7 +147,7 @@ export default function Sidebar() {
     useEffect(() => {
         window.addEventListener('resize', detectSize);
 
-        if (windowDimension.winWidth < 1000) {
+        if (windowDimension.winWidth < 600) {
             handleDrawerClose();
         } else {
             handleDrawerOpen();

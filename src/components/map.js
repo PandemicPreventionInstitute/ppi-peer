@@ -15,7 +15,7 @@ export function useResizeMapClose() {
         easing: (t) => t<.5 ? 2*t*t : -1+(4-2*t)*t 
       });
 }
- 
+
 export default function Map() {
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -149,7 +149,7 @@ export default function Map() {
     }); 
     
     return (
-        <div className="map">
+        <div className="map" id="map">
             <div className="mapfilters">
                 <Filters />
             </div>
