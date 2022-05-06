@@ -39,7 +39,7 @@
 
 .maskedElbowBump {
     position: relative;
-    width: 100%;
+    width: 95%;
     background-blend-mode: multiply;
     display: grid !important;
     padding: 60px 40px 0px 0px;
