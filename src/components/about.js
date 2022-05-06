@@ -39,7 +39,7 @@ export default function About() {
     
     return (
         <Grid sx={{ flexGrow: 1 }} container className={styles.about}>
-            <Grid item xs={8}>
+            <Grid item xs={12} sm={12} md={12} lg={7}>
                 <div>
                     <h1 className={styles.mainText}>PEER - Probability Estimator for Exposure Risk:</h1>
                     <h3 className={styles.subText}>A COVID-19 calculator powered by the PPI and Georgia Tech</h3>
@@ -53,17 +53,17 @@ export default function About() {
                     </p>
                 </div>              
             </Grid>
-            <Grid item xs={4} className={styles.topTextBox}>
+            <Grid item xs={12} sm={12} md={12} lg={5} className={styles.topTextBox}>
                 <div className={styles.maskedElbowBump}>
                     <img className={styles.maskedElbowBump} src={maskedElbowBump} alt='Masked elbow bump' />
                 </div> 
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={12}>
                 <div>
                     <h3 className={styles.transitionText}>We envision a world with...</h3>
                 </div>
             </Grid>
-            <Grid item xs={4} className={styles.bottomGridBox}>
+            <Grid item xs={12} sm={4} className={styles.bottomGridBox}>
                 <div className={styles.bottomGridItem}>
                     <IconButton role='button' color='inherit' onClick={handleConnectClickOpen}>
                         <ConnectWithoutContactIcon fontSize='large'/>
@@ -95,7 +95,7 @@ export default function About() {
                     </Dialog>                                    
                 </div>                
             </Grid>
-            <Grid item xs={4} className={styles.bottomGridBox}>
+            <Grid item xs={12} sm={4} className={styles.bottomGridBox}>
                 <div className={styles.bottomGridItem}>
                     <IconButton role='button' color='inherit' onClick={handleToolsClickOpen}>
                         <BuildIcon fontSize='large'/>
@@ -126,7 +126,7 @@ export default function About() {
                     </Dialog>                                    
                 </div>                
             </Grid>
-            <Grid item xs={4} className={styles.bottomGridBox}>
+            <Grid item xs={12} sm={4} className={styles.bottomGridBox}>
                 <div className={styles.bottomGridItem}>
                     <IconButton role='button' color='inherit' onClick={handleDataClickOpen}>
                         <PublicIcon fontSize='large'/>
