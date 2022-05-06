@@ -1,123 +1,76 @@
 .mainText {
     position: relative;
     width: 80%;
-    /* height: 140px; */
-    left: 99px;
-    top: 80px;
-    text-align: center;
-    /* font-family: 'Rubik' !important; */
-    font-style: normal;
-    font-weight: 500;
-    font-size: 40px;
-    line-height: 45px;
-    /* or 140% */
-    
-
+    font-weight: 600;
+    font-size: 38px;
+    line-height: 42px;
+    padding: 60px 0px 0px 50px;
     color: #0B132A;
 }
 
 .topTextBox {
-    /* overflow: auto; */
-    /* height: 40%; */
-    justify-content: center !important;
     align-content: center !important;
 }
 
 .subText {
     position: relative;
-    width: 80%;
-    /* height: 140px; */
-    left: 99.35px;
-    top: 80px;
-
-    /* font-family: 'Rubik' !important; */
+    font-family: "Noto Serif", serif;
+    padding: 0px 0px 0px 50px;
     font-style: normal;
     font-weight: 500;
     font-size: 25px;
-    /* line-height: 70px; */
-    /* or 140% */
-
     color: #0B132A;
-    text-align: center !important;
+    text-align: left !important;
 }
 
 .smallText {
     position: relative;
-    width: 80%;
-    /* height: 140px; */
-    left: 99.35px;
-    top: 80px;
-
-    /* font-family: 'Rubik' !important; */
-
-    /* font-style: normal;
-    font-weight: 500;
-    font-size: 25px; */
-
-    /* line-height: 70px; */
-    /* or 140% */
-
+    padding: 0px 0px 0px 50px;
     color: #0B132A;
-    text-align: center !important;
+    text-align: left !important;
+}
+
+.modal {
+    position: relative;
+    padding: 50px !important;
+    color: #0B132A;
+    text-align: left !important;
 }
 
 .maskedElbowBump {
-    text-align: center !important;
     position: relative;
-    width: 90%;
-    /* height: 60%; */
-    /* left: 717.55px; */
-    top: 20px;
-    bottom: 100px;
+    width: 100%;
     background-blend-mode: multiply;
-    align-content: center !important;
-    justify-content: center !important;
     display: grid !important;
-    padding: 20px;
+    padding: 60px 40px 0px 0px;
 }
 
 .about {
-    height: 100%;
+    overflow: auto;
 }
 
 .transitionText {
     position: relative;
-    /* width: 80%; */
-    /* height: 140px; */
-    /* left: 99.35px; */
-    /* top: 50px; */
-
-    /* font-family: 'Rubik' !important; */
-    /* font-style: normal;
-    font-weight: 500;
-    font-size: 25px; */
-    /* line-height: 70px; */
-    /* or 140% */
     text-align: center;
     color: #0B132A;
     font-size: 28px;
-    top: 38px !important;
-    bottom: 50%;
-}
-
-.transitionBox {
-    height: fit-content;
 }
 
 .bottomGridItem {
-    /*align-items: center !important;*/
     text-align: center !important;
-    top: 30% !important;
-    left: 99px;
     font-size: 18px;
 }
 
 .bottomGridBox {
     height: 30%;
-    padding: 30px;
+    padding: 0px 30px;
 }
 
 h3 {
     text-align: center !important; 
+}
+
+.visionsText {
+    font-size: 24px !important;
 }
 
