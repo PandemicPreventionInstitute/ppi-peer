@@ -27,10 +27,10 @@ function App() {
       </Box>
     </Box>
     // <Grid container className="App" spacing={0}>  
-    //   <Grid item xs={12} sm='auto' md='auto' lg='auto'/* xs={12} sm={4} md={3} */>
+    //   <Grid item id='sidebarGrid' xs={12} sm={4} md={2}/* xs={12} sm={4} md={3} */>
     //     <Sidebar className={styles.sidebar}/>
     //   </Grid>
-    //   <Grid item xs={12} sm='auto' md='auto' lg='auto'/* xs={12} sm={8} md={9} */ component="main" className={styles.mapbox} sx={{ flexGrow: 1, p: 0 }}>
+    //   <Grid item xs={12} sm={8} md={10}/* xs={12} sm={8} md={9} */ component="main" className={styles.mapbox} sx={{ flexGrow: 1, p: 0 }}>
     //     <Routes>
     //         <Route path="/" element={<Map />} />
     //         <Route path="about" element={<About />} />
@@ -39,6 +39,19 @@ function App() {
     //     </Routes>
     //   </Grid>
     // </Grid>
+    // <div sx={{ display: 'grid' }} className="App">  
+    //   <div sx={{ display: 'block' }}>
+    //     <Sidebar className={styles.sidebar}/>
+    //   </div>     
+    //   <div component="main" className={styles.mapbox} sx={{ flexGrow: 2, p: 0, display: 'block' }}>
+    //     <Routes>
+    //         <Route path="/" element={<Map />} />
+    //         <Route path="about" element={<About />} />
+    //         <Route path="advanced" element={<Advanced />} />
+    //         <Route path="data" element={<Data />} />
+    //     </Routes>
+    //   </div>
+    // </div>
   );
 }
 

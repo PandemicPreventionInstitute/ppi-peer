@@ -101,12 +101,15 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Sidebar() {
 
     const [open, setOpen] = React.useState(true);
+    
 
     /**
      * Open sidebar
      */
     const handleDrawerOpen = () => {
         setOpen(true);
+        /* var mapFilters = document.getElementsByClassName('mapfilters')[0];      
+        mapFilters.style.left = '27%'; */
     };
 
     /**
@@ -123,7 +126,12 @@ export default function Sidebar() {
 
         /* var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
         var mapDiv = document.getElementById('map');
-        mapDiv.style.width = '100%'; */
+        mapDiv.style.width = '100%'; */ 
+        /* var mapFilters = document.getElementsByClassName('mapfilters')[0];      
+        mapFilters.style.left = '6%'; */
+
+        /* var sidebarDiv = document.getElementById('sidebarGrid');
+        sidebarDiv.style.width = '8.33% !important'; */
     };
 
     const [windowDimension, detectHW] = useState({
