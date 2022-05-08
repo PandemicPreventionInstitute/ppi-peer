@@ -1,19 +1,31 @@
+.sidebar {
+    background: #318AD0;
+    color: #ffffff;
+    height: 100vh;
+    text-align: left;
+    overflow: auto;
+}
+
+.sidebarBox {
+    width: inherit;
+}
+
 .title {
-    padding: 0 40px 0;
+    padding: 0px 40px 0px;
 }
 
 .subtitle {
-    padding: 0 10px 0 40px;
+    padding: 0 40px;
 }
 
 .leftNav {
-    padding-left: 45px !important;
+    padding-left: 5% !important;
+    justify-content: center !important;
 }
 
 .leftNavItem {
-    padding: 24px 12px;
+    padding: 24px 12px !important;
     border-radius: 12px 0 0 12px !important;
-    color: #ffffff;
 }
 
 .blurb {
@@ -34,20 +46,15 @@
     font-weight: 700;
 }
 
-.mapbox {
-    width: 100% !important;
-    height: 100vh;
-    visibility: inherit;
-    position: relative;
-    outline: none;
-    justify-content: flex-end;
-    overflow: auto;
-    display: box;
-}
-
 .chevronIcon {
     font-size: 40px !important;
     color: #ffffff;
+}
+
+.navigationIcons {
+    justify-content: center !important;
+    font-size: x-large;
+    color: white;
 }
 
 @media (max-width: 600px) {
@@ -56,30 +63,37 @@
     }
 
     .leftNavItem {
+        padding: 24px 12px 24px 24px !important;
         border-radius: 12px 12px 0 0 !important;
-        font-size: 12px;
     }
     .title {
-        padding: 0 10px;
-        font-size: 20px;
+        padding: 60px 40px 0;
     }
     
     .subtitle {
-        padding: 0 10px;
-        font-size: 14px;
+        padding: 0 40px;
     }
     
     .leftNav {
         padding-left: 40px !important;
     }
-    
     .blurb {
-        padding: 0 10px;
-        font-size: 14px;
-    }
-
-    .serif {
-        font-size: 14px;
+        padding: 0 40px;
     }
     
+}
+
+.showElement {
+    display: block !important;
+    visibility: visible !important;
+}
+
+.hideElement {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.inherit {
+    display: inherit;
+    visibility: inherit;
 }

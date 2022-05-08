@@ -1,215 +1,84 @@
-import React, { useState, useEffect } from 'react'; 
+import React from 'react';  
 import { Box } from '@mui/system';
 import { 
+    MenuList,
+    MenuItem,
     ListItemText,
-    ListItemIcon,
-    IconButton
+    ListItemIcon
 } from '@mui/material';
-import {NavLink} from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemButton from '@mui/material/ListItemButton';
+
+import {NavLink} from 'react-router-dom'
+
 import {
     MapOutlined,
     BarChartOutlined,
     InfoOutlined,
     ContentCopy
 } from '@mui/icons-material';
+
 import styles from '../css/sidebar.module.css';
-import Map from './map';
-import { resizeMapClose } from './map';
-
-/**
- * Sidebar width
- */
-const drawerWidth = '20%';
-
-/**
- * 
- * @param {*} theme 
- * Sidebar opened styling
- */
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-  overflowy: 'auto',
-  
-});
-
-/**
- * 
- * @param {*} theme 
- * Sidebar closed styling
- */
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  }
-});
-
-/**
- * Sidebar button and icon styling
- */
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: theme.spacing(1, 1)
-}));
-
-/**
- * Sidebar styling
- */
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    display: 'flex',
-    boxSizing: 'border-box',   
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-      '& .MuiPaper-root': {
-        background: '#318AD0',
-        color: '#ffffff'
-      }
-    }),
-    ...(!open && {
-      ...closedMixin(theme),   
-      '& .MuiDrawer-paper': closedMixin(theme),
-      '& .MuiPaper-root': {
-        background: '#318AD0',
-        color: '#ffffff'
-      }
-    }),
-  }),
-);
  
-export default function Sidebar() {
-
-    const [open, setOpen] = React.useState(true);
-    
-
-    /**
-     * Open sidebar
-     */
-    const handleDrawerOpen = () => {
-        setOpen(true);
-        /* var mapFilters = document.getElementsByClassName('mapfilters')[0];      
-        mapFilters.style.left = '27%'; */
-    };
-
-    /**
-     * Collapse sidebar
-     */
-    const handleDrawerClose = () => {
-        setOpen(false);
-        /* MINA TO FIX */
-        //useResizeMapClose();
-        /* Map.map.current.panBy([100 * -1, 0], {
-            duration: 500,
-            easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t)
-          }); */
-
-        /* var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
-        var mapDiv = document.getElementById('map');
-        mapDiv.style.width = '100%'; */ 
-        /* var mapFilters = document.getElementsByClassName('mapfilters')[0];      
-        mapFilters.style.left = '6%'; */
-
-        /* var sidebarDiv = document.getElementById('sidebarGrid');
-        sidebarDiv.style.width = '8.33% !important'; */
-    };
-
-    const [windowDimension, detectHW] = useState({
-        winWidth: window.innerWidth,
-        winHeight: window.innerHeight,
-    });
-    
-    /**
-     * Get the current window's screen size
-     */
-    const detectSize = () => {
-        detectHW({
-            winWidth: window.innerWidth,
-            winHeight: window.innerHeight,
-        });        
-    };
-    
-    /**
-     * Used to adjust sidebar state depending on window screen width size
-     */
-    useEffect(() => {
-        window.addEventListener('resize', detectSize);
-
-        if (windowDimension.winWidth < 600) {
-            handleDrawerClose();
-        } else {
-            handleDrawerOpen();
-        }
-
-        return () => {
-            window.removeEventListener('resize', detectSize);
-        }
-    }, [windowDimension]);
+export default function Sidebar(props) {
     
     return (
-        <Drawer variant='permanent' open={open} id='sidebar'>
-            <DrawerHeader>
-                <IconButton id='sidebarToggle' onClick={open ? handleDrawerClose : handleDrawerOpen}>
-                    {open ? <ChevronLeftIcon className={styles.chevronIcon}/> : <ChevronRightIcon className={styles.chevronIcon}/>}
-                </IconButton>
-            </DrawerHeader>
-            <Box sx={{ display: open ? 'block' : 'none', alignItems: 'center' }}>
-                <div>                   
-                    <h1 className={styles.title}>COVID-19 Presence Estimator</h1>
-                    <h2 className={styles.subtitle}>for event planning</h2>                                                    
-                </div>               
+        <Box className={styles.sidebarBox}>
+            <div className={props.open ? styles.showElement : styles.hideElement}>
+                <h1 className={styles.title}>COVID-19 Presence Estimator</h1>
+                <h2 className={styles.subtitle}>for event planning</h2>
                 <div className={styles.blurb}>
                     <p className={styles.serif}>Are you planning to host or attend a special event? Are you worried about someone bringing the virus to the occassion? We can help you estimate the probability.</p>
                     <p>Estimate the probability that one person could be infected with COVID-19 in the event, so you can take precautions and make safer decisions</p>
                 </div>
-            </Box>  
-            <List>
-                {['MAP', 'ADVANCED DATA TOOL', 'DATA SOURCES', 'ABOUT THE TOOL'].map((text, index) => (
-                    <ListItemButton
-                    activeclassname='active'
-                    component={NavLink}
-                    to={index === 0 ? '/' : index === 1 ? '/advanced' : index === 2 ? '/data' : '/about'}                
-                    key={text}
-                    sx={{
-                        minHeight: 48,
-                        justifyContent: open ? 'initial' : 'center',
-                        px: 2.5
-                    }}
+            </div>           
+            <MenuList className={styles.leftNav}>
+                <MenuItem 
+                    component={NavLink} 
+                    className={styles.leftNavItem} 
+                    activeclassname="active"
+                    to="/" 
                     >
-                        <ListItemIcon
-                            sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : 'auto',
-                            justifyContent: 'center',
-                            color: '#ffffff'
-                            }}
-                        >
-                            {index === 0 ? <MapOutlined /> : index === 1 ? <BarChartOutlined /> : index === 2 ? <ContentCopy /> : <InfoOutlined />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                    </ListItemButton>
-                ))}
-            </List>
-        </Drawer>       
+                    <ListItemIcon>
+                        <MapOutlined className={styles.navigationIcons} />
+                    </ListItemIcon>
+                    <ListItemText className={props.open ? styles.inherit : styles.hideElement}>MAP</ListItemText>
+                </MenuItem>
+
+                <MenuItem 
+                    component={NavLink} 
+                    className={styles.leftNavItem} 
+                    activeclassname="active"
+                    to="/advanced" 
+                    >
+                    <ListItemIcon>
+                        <BarChartOutlined className={styles.navigationIcons}/>
+                    </ListItemIcon>
+                    <ListItemText className={props.open ? styles.inherit : styles.hideElement}>ADVANCED DATA TOOL</ListItemText>
+                </MenuItem>
+
+                <MenuItem 
+                    component={NavLink} 
+                    className={styles.leftNavItem} 
+                    activeclassname="active"
+                    to="/data" 
+                    >
+                    <ListItemIcon>
+                        <ContentCopy className={styles.navigationIcons} />
+                    </ListItemIcon>
+                    <ListItemText className={props.open ? styles.inherit : styles.hideElement}>DATA SOURCES</ListItemText>
+                </MenuItem>
+
+                <MenuItem 
+                    component={NavLink} 
+                    className={styles.leftNavItem} 
+                    activeclassname="active"
+                    to="/about" 
+                    >
+                    <ListItemIcon>
+                        <InfoOutlined className={styles.navigationIcons}/>
+                    </ListItemIcon>
+                    <ListItemText className={props.open ? styles.inherit : styles.hideElement}>ABOUT THE TOOL</ListItemText>
+                </MenuItem>
+            </MenuList>
+        </Box>
     );
 }
