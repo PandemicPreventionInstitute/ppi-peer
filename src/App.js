@@ -47,6 +47,9 @@ function App() {
       });        
   };
 
+  /**
+   * If window's screen size is xs, then set 'open' to true so the sidebar doesn't collapse in mobile view
+   */
   useEffect(() => {
     window.addEventListener('resize', detectSize);
 

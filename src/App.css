@@ -41,28 +41,22 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  /* padding: theme.spacing(1, 1); */
 }
 
 .sidebarButtonClosed {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  /* padding: theme.spacing(1, 1); */
 }
 
 .sidebarOpen {
   display: flex;
-  /* align-items: center; */
   justify-content: center;
-  /* padding: theme.spacing(1, 1); */
   width: 100%;
 }
 
 .sidebarClosed {
   display: flex;
-  /* align-items: center; */
   justify-content: center;
-  /* padding: theme.spacing(1, 1); */
   width: 100%;
 }

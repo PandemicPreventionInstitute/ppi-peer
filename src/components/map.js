@@ -92,6 +92,9 @@ export default function Map(props) {
         });
     });
 
+    /**
+     * If the sidebar is closed, resize the map so the width does not cause the canvas to stretch
+     */
     useEffect(() => {
         if (!map.current) return; // wait for map to initialize
         if (!props.open) {
