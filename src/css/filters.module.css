@@ -25,7 +25,7 @@
     font-size: 14px;
 }
 
-.precautionBlock {
+.precautionHeader {
     margin-bottom: 20px;
     align-items: center;
 }
@@ -52,7 +52,7 @@
     font-size: larger;
 }
 
-.shieldOutlined {
+.mainIcons {
     color: #318AD0;
     margin-bottom: -4px;
     margin-right: 3px;
@@ -66,4 +66,41 @@
 
 .iconBlocks {
     display: block;
+}
+
+.estimateHeader {
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.veryLowEstimate {
+    color: #fef0d9;
+}
+
+.lowEstimate {
+    color: #fdd49e
+}
+
+.lowMidEstimate {
+    color: #fdbb84
+}
+
+.midHighEstimate {
+    color: #fc8d59;
+}
+
+.highEstimate {
+    color: #e34a33;
+}
+
+.veryHighEstimate {
+    color: #b30000;
+}
+
+.estimateBox {
+    background-color: #fef0d9;
+    padding: 0px 32px !important;
+    width: 320px !important;
+    margin-left: -32px !important;
+    border-radius: 16px;
 }

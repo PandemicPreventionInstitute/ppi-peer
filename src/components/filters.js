@@ -19,6 +19,7 @@ import handwashing from '../assets/icon_handwashing.png';
 import outdoors from '../assets/icon_outdoors.png';
 import sanitizer from '../assets/icon_sanitizer.png';
 import vaccines from '../assets/icon_vaccines.png';
+import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 
 const marks = [
     {
@@ -117,10 +118,18 @@ export default function Filters() {
                 markLabel={false}
             />
         </div>
+
+        <div id='Estimate' className={styles.estimateBox} /* style={{ backgroundColor: '#fef0d9', padding: '0px 0px !important', width: '100%'}} */>
+          <Box >
+            <h4 className={styles.estimateHeader}>
+              <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
+            </h4>
+          </Box>
+        </div>
         
         <div id='Precautions'>
-          <h4 className={styles.precautionBlock}>
-            <ShieldOutlined className={styles.shieldOutlined}/>TAKE THE RIGHT PRECAUTIONS
+          <h4 className={styles.precautionHeader}>
+            <ShieldOutlined className={styles.mainIcons}/>TAKE THE RIGHT PRECAUTIONS
             <IconButton aria-label="open precautions" className={styles.expandButton} onClick={open ? handlePrecautionsClose : handlePrecautionsOpen}>
               <ExpandMoreOutlined className={styles.expandOutlined} style={{ display: !open ? 'block' : 'none' }} />
               <ExpandLessOutlined className={styles.expandOutlined} style={{ display: open ? 'block' : 'none' }} />
