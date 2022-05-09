@@ -6,11 +6,20 @@ import Filters from './filters.js';
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
  
 export default function Map() {
+
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(0);
     const [lat, setLat] = useState(45);
     const [zoom, setZoom] = useState(1.5);
+
+    const eventSizeCallback = (eventSize) => {
+        return;
+    }
+
+    const locationCallback = (location) => {
+        return;
+    }
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -28,7 +37,7 @@ export default function Map() {
         map.current.on('load', () => {
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': './constants/data_25.fc.geojson', // load geojson file here; @todo: swap this out for S3 bucket source
+                'data': './constants/data_100.fc.geojson', // load geojson file here; @todo: swap this out for S3 bucket source
                 'generateId': true
             });
 
@@ -40,13 +49,13 @@ export default function Map() {
                 'paint': {
                     'fill-color': {
                         'property': 'risk',
-                        'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091']]
+                        'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
                         1,
-                        0.8,
+                        1,
                     ],
                     'fill-antialias': true,
                 },
@@ -63,11 +72,11 @@ export default function Map() {
                     'line-width': [
                         "interpolate", ["linear"], ["zoom"],
                         // zoom is 5 (or less) -> circle radius will be 1px
-                        3, 0,
-                        5, 0.5,
-                        8, 0.75,
+                        3, 0.25,
+                        5, 0.75,
+                        8, 1,
                         // zoom is 10 (or greater) -> circle radius will be 5px
-                        10, 1
+                        10, 1.5
                     ],
                     'line-opacity': [
                         "interpolate", ["linear"], ["zoom"],
@@ -94,7 +103,7 @@ export default function Map() {
                     features: features
                   });
 
-                map.current.fitBounds(bbox, {padding: 20});    
+                map.current.fitBounds(bbox, {padding: 200});    
     
                 if (!features.length) {
                     return;
@@ -115,9 +124,17 @@ export default function Map() {
                 var feature = features[0];
                 var coordinates = feature.geometry.coordinates;
 
+                var displayRisk = feature.properties.risk;
+
+                if (feature.properties.risk < 1) { 
+                    displayRisk = '< 1'
+                } else {
+                    displayRisk = Math.round(displayRisk)
+                }
+
                 popup
                 .setLngLat(e.lngLat)
-                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + feature.properties.risk + '% </strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
+                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '% </strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
             });
     
@@ -145,9 +162,9 @@ export default function Map() {
             <div ref={mapContainer} className="map-container" />
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
-                <span class="nodata">No Data</span>
-                <span class="range1">Less than 1% </span>
-                <span class="range2">1 - 25 </span>
+                <span class="nodata">&#x3c; 1%</span>
+                <span class="range1">1 - 25 </span>
+                <span class="range2">25 - 50 </span>
                 <span class="range3">25 - 50 </span>
                 <span class="range4">50 - 75 </span>
                 <span class="range5">75 - 99 </span>

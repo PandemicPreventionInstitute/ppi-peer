@@ -10,6 +10,7 @@ import About from './components/about.js';
 import Data from './components/data.js';
 import Advanced from './components/advanced.js';
 import Sidebar from './components/sidebar.js';
+import MapViz from './components/mapviz.js';
 
 import './App.css';
 import styles from './css/sidebar.module.css';
@@ -26,7 +27,7 @@ function App() {
             <Route path="/" element={<Map />} />
             <Route path="about" element={<About />} />
             <Route path="advanced" element={<Advanced />} />
-            <Route path="data" element={<Data />} />
+            <Route path="data" element={<MapViz />} />
           </Routes>
         </Grid>
       </Grid>
