@@ -31,7 +31,7 @@ export default function Map(props) {
         });
 
         map.current.addControl(new mapboxgl.NavigationControl());
-        var clickedStateId = null
+        var clickedStateId = null;
         
         map.current.on('load', () => {
 
