@@ -92,6 +92,23 @@ ul a.active {
   overflow: scroll;
 }
 
+.MuiCardMedia-root {
+  width: 20% !important;
+}
+
+.MuiCardContent-root {
+  text-align: center;
+  
+  /* justify-content: center;
+  align-content: center;
+  vertical-align: middle;
+  align-items: center; */
+}
+
+.MuiCardActions-root {
+  top: -100px;
+}
+
 @media (max-width: 600px) {
   .mapfilters {
     position: relative;

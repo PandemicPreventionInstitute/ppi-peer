@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../css/about.module.css';
+import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import maskedElbowBump from '../assets/masked-elbow-bump.jpeg';
@@ -7,39 +8,57 @@ import BuildIcon from '@mui/icons-material/Build';
 import PublicIcon from '@mui/icons-material/Public';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
+
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Collapse from '@mui/material/Collapse';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import { red } from '@mui/material/colors';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+
+import creditCard from '../assets/credit_card.png';
+
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
    
 export default function About() {
 
     /* Handling for tools modal */
-    const [openTools, setOpenTools] = React.useState(false);
-    const handleToolsClickOpen = () => {
-        setOpenTools(true);
+    const [expandedTools, setExpandedTools] = React.useState(false);
+    const handleExpandedClickTools = () => {
+        setExpandedTools(!expandedTools);
       };   
-    const handleToolsClose = () => {
-        setOpenTools(false);
-    };
 
     /* Handling for connect modal */
-    const [openConnect, setOpenConnect] = React.useState(false);
-    const handleConnectClickOpen = () => {
-        setOpenConnect(true);
+    const [expandedConnect, setExpandedConnect] = React.useState(false);
+    const handleExpandedClickConnect = () => {
+        setExpandedConnect(!expandedConnect);
       };   
-    const handleConnectClose = () => {
-        setOpenConnect(false);
-    };
 
     /* Handling for data modal */
-    const [openData, setOpenData] = React.useState(false);
-    const handleDataClickOpen = () => {
-        setOpenData(true);
+    const [expandedData, setExpandedData] = React.useState(false);
+    const handleExpandedClickData = () => {
+        setExpandedData(!expandedData);
       };   
-    const handleDataClose = () => {
-        setOpenData(false);
-    };
     
     return (
         <Grid sx={{ flexGrow: 1 }} container className={styles.about}>
-            <Grid item xs={12} sm={12} md={12} lg={7}>
+            <Grid item xs={12} sm={12} md={8} lg={7}>
                 <div>
                     <h1 className={styles.mainText}>PEER - Probability Estimator for Exposure Risk:</h1>
                     <h3 className={styles.subText}>A COVID-19 calculator powered by the PPI and Georgia Tech</h3>
@@ -53,7 +72,7 @@ export default function About() {
                     </p>
                 </div>              
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={5} className={styles.topTextBox}>
+            <Grid item xs={12} sm={12} md={4} lg={5} className={styles.topTextBox}>
                 <div className={styles.maskedElbowBump}>
                     <img className={styles.maskedElbowBump} src={maskedElbowBump} alt='Masked elbow bump' />
                 </div> 
@@ -63,13 +82,13 @@ export default function About() {
                     <h3 className={styles.transitionText}>We envision a world with...</h3>
                 </div>
             </Grid>
-            <Grid item xs={12} sm={4} className={styles.bottomGridBox}>
+            <Grid item xs={12} sm={12} className={styles.bottomGridBox}>
                 <div className={styles.bottomGridItem}>
-                    <IconButton role='button' color='inherit' onClick={handleConnectClickOpen}>
+                    {/* <IconButton role='button' color='inherit' onClick={handleConnectClickOpen}>
                         <ConnectWithoutContactIcon fontSize='large'/>
                         <h3 className={styles.visionsText}>A connected, sustainable pandemic data ecosystem</h3>
                     </IconButton>
-                    <Dialog onClose={handleConnectClose} open={openConnect}>
+                    <Dialog onClose={handleConnectClose} open={expandedConnect}>
                         <div className={styles.modal}>
                             <div>
                                 <p>Countless impactful innovations developed by academic researchers struggle to reach sustainable 
@@ -92,16 +111,83 @@ export default function About() {
                                 </p>
                             </div>  
                         </div>                                            
-                    </Dialog>                                    
+                    </Dialog>                                     */}
+                    <Card /* sx={{ maxWidth: 345 }} */>    
+                        {/* <CardHeader
+                            avatar={
+                                <CardMedia
+                                component="img"
+                                image={creditCard}
+                                alt="Credit card"                           
+                            />
+                            }
+                            action={
+                                <ExpandMore
+                                expand={expandedConnect}
+                                onClick={handleExpandedClickConnect}
+                                aria-expanded={expandedConnect}
+                                aria-label="show more"
+                                >
+                                <ExpandMoreIcon />
+                                </ExpandMore>
+                            }
+                            title="A connected, sustainable pandemic data ecosystem"
+                        />                   */}
+                        <CardContent>
+                            <img className={styles.creditCard} src={creditCard} alt="Credit card" ></img>
+                            <h3 className={styles.visionsText}>
+                            A connected, sustainable pandemic data ecosystem
+                            {/* <CardActions disableSpacing> */}
+                                <ExpandMore
+                                expand={expandedConnect}
+                                onClick={handleExpandedClickConnect}
+                                aria-expanded={expandedConnect}
+                                aria-label="show more"
+                                >
+                                <ExpandMoreIcon />
+                                </ExpandMore>
+                            {/* </CardActions> */}
+                            </h3>
+                        </CardContent>
+                        
+                        <Collapse in={expandedConnect} timeout="auto" unmountOnExit>
+                            <CardContent>
+                            <Typography paragraph>
+                            {/* <div className={styles.modal}> */}
+                                <div>
+                                    <p>Countless impactful innovations developed by academic researchers struggle to reach sustainable 
+                                        application at-scale. In the fields of pandemic preparedness and communicable disease, this 
+                                        problem is only more pronounced. Further, these fields need sustainable coordination and innovation 
+                                        but are often fragmented and underfunded, leaving many projects competing with one another 
+                                        and without long-term homes.
+                                    </p>
+                                </div>
+                                <div>
+                                    <p>Our collaboration with Georgia Tech seeks to take on this challenge. 
+                                        Precisely because of its public-facing impact ({'>'}16M visitors and {'>'}60M risk estimates thus far), 
+                                        the Event Risk Assessment Planning Tool by Georgia Tech has highlighted how investments in pandemic 
+                                        data collection and integration can be communicated to the public with interpretable and actionable 
+                                        real-time metrics. We also want to spotlight shortcomings in similar global tools (such as, data 
+                                        dashboards) to convey the time-sensitive opportunity to expand such approaches globally. 
+                                        Rather than introduce another tool, our hope is that the PPI can build on what already exists in the 
+                                        Event Risk Tool by focusing on user-centered product design while enabling Georgia Tech to focus 
+                                        on advancing the science of COVID-19 prevalence estimation and risk assessment.
+                                    </p>
+                                </div>  
+                            {/* </div> */}
+                            </Typography>
+                            </CardContent>
+                        </Collapse>
+                    </Card>
                 </div>                
             </Grid>
-            <Grid item xs={12} sm={4} className={styles.bottomGridBox}>
+            <Grid item xs={12} sm={12} className={styles.bottomGridBox}>
                 <div className={styles.bottomGridItem}>
-                    <IconButton role='button' color='inherit' onClick={handleToolsClickOpen}>
+                    {/* <IconButton role='button' color='inherit' onClick={handleToolsClickOpen}>
                         <BuildIcon fontSize='large'/>
                         <h3 className={styles.visionsText}>Actionable, interpretable public health tools for all</h3> 
                     </IconButton>
-                    <Dialog onClose={handleToolsClose} open={openTools}>
+                    <Dialog onClose={handleToolsClose} open={expandedTools}>
                         <div className={styles.modal}>
                             <div>
                                 <p>The situation with COVID-19 is constantly changing. Restrictions and mask mandates have been rescinded 
@@ -123,16 +209,16 @@ export default function About() {
                                 </p>
                             </div>  
                         </div>                                            
-                    </Dialog>                                    
+                    </Dialog>                                     */}
                 </div>                
             </Grid>
-            <Grid item xs={12} sm={4} className={styles.bottomGridBox}>
+            <Grid item xs={12} sm={12} className={styles.bottomGridBox}>
                 <div className={styles.bottomGridItem}>
-                    <IconButton role='button' color='inherit' onClick={handleDataClickOpen}>
+                    {/* <IconButton role='button' color='inherit' onClick={handleDataClickOpen}>
                         <PublicIcon fontSize='large'/>
                         <h3 className={styles.visionsText}>Data for the entire globe</h3>
                     </IconButton>   
-                    <Dialog onClose={handleDataClose} open={openData}>
+                    <Dialog onClose={handleDataClose} open={expandedData}>
                         <div className={styles.modal}>
                             <p>Just as clearly as the PEER COVID-19 calculator presents the opportunities available with high quality 
                                 and interpretable data, it highlights what stands in our way. We are unable to make risk calculations 
@@ -142,7 +228,7 @@ export default function About() {
                                 spur increased data sharing to enable more equitable access to tools like these.
                             </p>
                         </div>                                            
-                    </Dialog>                 
+                    </Dialog>                  */}
                 </div>                
             </Grid>
         </Grid>
