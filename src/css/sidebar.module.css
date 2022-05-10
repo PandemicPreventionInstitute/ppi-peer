@@ -3,18 +3,24 @@
     color: #ffffff;
     height: 100vh;
     text-align: left;
+    overflow: auto;
+}
+
+.sidebarBox {
+    width: inherit;
 }
 
 .title {
-    padding: 60px 60px 0;
+    padding: 0px 40px 0px;
 }
 
 .subtitle {
-    padding: 0 60px;
+    padding: 0 40px;
 }
 
 .leftNav {
-    padding-left: 60px !important;
+    padding-left: 5% !important;
+    justify-content: center !important;
 }
 
 .leftNavItem {
@@ -23,7 +29,7 @@
 }
 
 .blurb {
-    padding: 0 60px;
+    padding: 0 40px;
 }
 
 .subtitle::after {
@@ -36,8 +42,19 @@
 }
 .serif {
     font-family: 'Noto Serif', serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
+}
+
+.chevronIcon {
+    font-size: 40px !important;
+    color: #ffffff;
+}
+
+.navigationIcons {
+    justify-content: center !important;
+    font-size: x-large;
+    color: white;
 }
 
 @media (max-width: 600px) {
@@ -64,4 +81,19 @@
         padding: 0 40px;
     }
     
+}
+
+.showElement {
+    display: block !important;
+    visibility: visible !important;
+}
+
+.hideElement {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.inherit {
+    display: inherit;
+    visibility: inherit;
 }
