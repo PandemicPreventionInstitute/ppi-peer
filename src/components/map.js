@@ -4,7 +4,7 @@ import Filters from './filters.js';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
  
-export default function Map() {
+export default function Map(props) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(12);
@@ -31,6 +31,9 @@ export default function Map() {
             //     'type': 'geojson',
             //     'data': './constants/usa.geojson'
             // });
+
+            var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+            mapCanvas.style.width = '100%'; // set mapboxgl-canvas width to 100% so map width adjusts when sidebar is collapsed
 
             map.current.addSource('world', {
                 'type': 'geojson',
@@ -87,6 +90,16 @@ export default function Map() {
             setLat(map.current.getCenter().lat.toFixed(4));
             setZoom(map.current.getZoom().toFixed(2));
         });
+    });
+
+    /**
+     * If the sidebar is closed, resize the map so the width does not cause the canvas to stretch
+     */
+    useEffect(() => {
+        if (!map.current) return; // wait for map to initialize
+        if (!props.open) {
+            map.current.resize();
+        }
     });
     
     return (
