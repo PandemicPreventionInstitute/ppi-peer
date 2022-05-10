@@ -36,27 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-.sidebarButtonOpen {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.sidebarButtonClosed {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.sidebarOpen {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.sidebarClosed {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
