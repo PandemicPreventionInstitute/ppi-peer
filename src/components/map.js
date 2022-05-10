@@ -58,7 +58,7 @@ export default function Map(props) {
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
                         1,
-                        1,
+                        0.9,
                     ],
                     'fill-antialias': true,
                 },
