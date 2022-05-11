@@ -1,27 +1,52 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, setState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import turf from 'turf';
-import Filters from './filters.js';
+import Precautions from './precautions';
+import styles from '../css/filters.module.css';
+import { 
+    Slider,
+    TextField,
+    Box
+} from '@mui/material';
+import {
+    PeopleAltOutlined,
+    RoomOutlined
+} from '@mui/icons-material';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
- 
+
+const marks = require('../assets/eventSizes.json');
+  
 export default function Map(props) {
-    const mapContainer = useRef(null);
+    const mapContainer = useRef(true);
     const map = useRef(null);
     const [lng, setLng] = useState(0);
     const [lat, setLat] = useState(45);
     const [zoom, setZoom] = useState(1.5);
+    const [eventSize, setEventSize] = useState(25);
 
-    const eventSizeCallback = (eventSize) => {
-        return;
+    const valuetext = (value) => {
+        return value;
     }
 
-    const locationCallback = (location) => {
-        return;
+    const valueLabelFormat = (value) => {
+        return value * 10; 
     }
 
+    let data ='./constants/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
+
+    const handleSliderChange = (event: any, newValue: value) => {
+        setEventSize(newValue * 10); // set eventsize value on slider
+    };
+    
     useEffect(() => {
-        if (map.current) return; // initialize map only once
+        if (map.current) {
+            // initialize map only once
+            // if map already exists, do not redraw map, update source geojson only
+            const geojsonSource = map.current.getSource('world');
+            geojsonSource.setData(data);
+            return;
+        } 
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create custom PPI account and map style
@@ -33,14 +58,13 @@ export default function Map(props) {
         map.current.addControl(new mapboxgl.NavigationControl());
         var clickedStateId = null;
         
-        map.current.on('load', () => {
-
+        map.current.on('load', () => {            
             var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
             mapCanvas.style.width = '100%'; // set mapboxgl-canvas width to 100% so map width adjusts when sidebar is collapsed
 
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': './constants/data_100.fc.geojson', // load geojson file here; @todo: swap this out for S3 bucket source
+                'data': data, // load geojson file here; @todo: swap this out for S3 bucket source
                 'generateId': true
             });
 
@@ -125,8 +149,6 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                var coordinates = feature.geometry.coordinates;
-
                 var displayRisk = feature.properties.risk;
 
                 if (feature.properties.risk < 1) { 
@@ -167,7 +189,33 @@ export default function Map(props) {
     return (
         <div className="map">
             <div className="mapfilters">
-                <Filters />
+            <Box>
+                <div>
+                    <h3 className="serif">Select your event location and size</h3>
+                    <p>Where will the event or activity take place and how many people will be attending?</p>
+
+                    <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
+                    <TextField 
+                        fullWidth
+                        id="outlined-basic" 
+                        label="Search by country or region" 
+                        variant="outlined" 
+                    />
+
+                    <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
+                    <Slider
+                        aria-label="Restricted values"
+                        defaultValue={2.5}
+                        valueLabelFormat={valueLabelFormat}
+                        getAriaValueText={valuetext}
+                        step={null}
+                        valueLabelDisplay="on"
+                        marks={marks}
+                        onChange={handleSliderChange}
+                    />
+                </div>
+                <Precautions />
+            </Box>
             </div>
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
