@@ -3,27 +3,23 @@
     color: #ffffff;
     height: 100vh;
     text-align: left;
+    overflow: auto;
+}
+
+.sidebarBox {
+    width: inherit;
 }
 
 .title {
-    padding: 60px 60px 0;
+    padding: 0px 40px 0px;
 }
 
 .subtitle {
-    padding: 0 60px;
-}
-
-.leftNav {
-    padding-left: 60px !important;
-}
-
-.leftNavItem {
-    padding: 24px 12px !important;
-    border-radius: 12px 0 0 12px !important;
+    padding: 0 40px;
 }
 
 .blurb {
-    padding: 0 60px;
+    padding: 0 40px;
 }
 
 .subtitle::after {
@@ -36,7 +32,7 @@
 }
 .serif {
     font-family: 'Noto Serif', serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
 }
 
@@ -45,10 +41,6 @@
         height: auto;
     }
 
-    .leftNavItem {
-        padding: 24px 12px 24px 24px !important;
-        border-radius: 12px 12px 0 0 !important;
-    }
     .title {
         padding: 60px 40px 0;
     }
@@ -57,9 +49,6 @@
         padding: 0 40px;
     }
     
-    .leftNav {
-        padding-left: 40px !important;
-    }
     .blurb {
         padding: 0 40px;
     }
