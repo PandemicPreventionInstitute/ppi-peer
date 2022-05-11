@@ -35,12 +35,6 @@ const marks = [
       value: 1,
     },
     {
-      value: 1,
-    },
-    {
-      value: 2,
-    },
-    {
       value: 2,
     },
     {
@@ -78,7 +72,6 @@ const marks = [
     return value * 10; //marks.findIndex((mark) => mark.value === value) + 1;
   }
   
-   
 export default function Filters() {
 
     const [open, setOpen] = React.useState(false);
@@ -114,7 +107,6 @@ export default function Filters() {
                 step={null}
                 valueLabelDisplay="on"
                 marks={marks}
-                markLabel={false}
             />
         </div>
         

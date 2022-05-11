@@ -175,13 +175,13 @@ export default function Map(props) {
             <div ref={mapContainer} className="map-container" />
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
-                <span class="nodata">&#x3c; 1%</span>
-                <span class="range1">1 - 25 </span>
-                <span class="range2">25 - 50 </span>
-                <span class="range3">25 - 50 </span>
-                <span class="range4">50 - 75 </span>
-                <span class="range5">75 - 99 </span>
-                <span class="range6">More than 99% </span>
+                <span className="nodata">&#x3c; 1%</span>
+                <span className="range1">1 - 25 </span>
+                <span className="range2">25 - 50 </span>
+                <span className="range3">25 - 50 </span>
+                <span className="range4">50 - 75 </span>
+                <span className="range5">75 - 99 </span>
+                <span className="range6">More than 99% </span>
             </div>
         </div>
     );
