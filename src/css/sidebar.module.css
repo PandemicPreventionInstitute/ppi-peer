@@ -18,16 +18,6 @@
     padding: 0 40px;
 }
 
-.leftNav {
-    padding-left: 5% !important;
-    justify-content: center !important;
-}
-
-.leftNavItem {
-    padding: 24px 12px !important;
-    border-radius: 12px 0 0 12px !important;
-}
-
 .blurb {
     padding: 0 40px;
 }
@@ -46,26 +36,11 @@
     font-weight: 700;
 }
 
-.chevronIcon {
-    font-size: 40px !important;
-    color: #ffffff;
-}
-
-.navigationIcons {
-    justify-content: center !important;
-    font-size: x-large;
-    color: white;
-}
-
 @media (max-width: 600px) {
     .sidebar {
         height: auto;
     }
 
-    .leftNavItem {
-        padding: 24px 12px 24px 24px !important;
-        border-radius: 12px 12px 0 0 !important;
-    }
     .title {
         padding: 60px 40px 0;
     }
@@ -74,26 +49,8 @@
         padding: 0 40px;
     }
     
-    .leftNav {
-        padding-left: 40px !important;
-    }
     .blurb {
         padding: 0 40px;
     }
     
-}
-
-.showElement {
-    display: block !important;
-    visibility: visible !important;
-}
-
-.hideElement {
-    display: none !important;
-    visibility: hidden !important;
-}
-
-.inherit {
-    display: inherit;
-    visibility: inherit;
 }
