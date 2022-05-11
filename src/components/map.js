@@ -33,7 +33,7 @@ export default function Map(props) {
         return value * 10; 
     }
 
-    let data ='./constants/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
+    let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
 
     const handleSliderChange = (event: any, newValue: value) => {
         setEventSize(newValue * 10); // set eventsize value on slider
@@ -84,6 +84,9 @@ export default function Map(props) {
                         1,
                         0.9,
                     ],
+                    'fill-opacity-transition': {
+                        'duration': 2000
+                    },
                     'fill-antialias': true,
                 },
                 'filter': ['==', '$type', 'Polygon']
