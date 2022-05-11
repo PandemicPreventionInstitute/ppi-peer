@@ -82,8 +82,8 @@ ul a.active {
 .mapfilters {
   width: 320px;
   position: absolute;
-  left: 32px;
-  top: 32px;
+  left: 18px;
+  top: 12px;
   background: #ffffff;
   z-index: 2;
   border-radius: 16px;
@@ -92,21 +92,72 @@ ul a.active {
   overflow: auto;
 }
 
-.MuiCardMedia-root {
-  width: 20% !important;
-}
-
 .MuiCardContent-root {
   text-align: center;
-  
-  /* justify-content: center;
-  align-content: center;
-  vertical-align: middle;
-  align-items: center; */
 }
 
-.MuiCardActions-root {
-  top: -100px;
+div#mapLegend {
+  position: absolute;
+  top: 12px;
+  right: 48px;
+  background: #ffffff;
+  padding: 16px 32px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+div#mapLegend h5 {
+  line-height: 16px;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 0 0 12px 0;
+}
+
+div#mapLegend span {
+  width: calc(100% / 7);
+  display: inline-block;
+  border-top: 5px solid;
+  text-align: center;
+  font-size: 10px;
+  vertical-align: top;
+  padding-top: 4px;
+}
+
+div#mapLegend span.nodata {
+  border-top-color: #eff5d9;
+}
+
+div#mapLegend span.range1 {
+  border-top-color: #d9ed92;
+}
+
+div#mapLegend span.range2 {
+  border-top-color: #b5e48c;
+}
+
+div#mapLegend span.range3 {
+  border-top-color: #76c893;
+}
+
+div#mapLegend span.range4 {
+  border-top-color: #34a0a4;
+}
+
+div#mapLegend span.range5 {
+  border-top-color: #1a759f;
+}
+
+div#mapLegend span.range6 {
+  border-top-color: #184e77;
+}
+
+.mapboxgl-popup-content h3 {
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.mapboxgl-popup-content p {
+  margin-top: 0;
 }
 
 @media (max-width: 600px) {
