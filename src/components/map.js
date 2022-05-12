@@ -74,19 +74,35 @@ export default function Map(props) {
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
+                    // option 1:
+                    // this fill creates smooth gradients through value ranges
                     'fill-color': {
                         'property': 'risk',
                         'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
+                    // optoin 2:
+                    //this fill option creates strict steps between value ranges
+                    // 'fill-color': [
+                    //     'step',
+                    //     ['get', 'risk'],
+                    //     '#eff5d9',
+                    //     1,
+                    //     '#d9ed92',
+                    //     25,
+                    //     '#b5e48c',
+                    //     50,
+                    //     '#76c893',
+                    //     75,
+                    //     '#34a0a4',
+                    //     99,
+                    //     '#1a759f'
+                    // ],
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
                         1,
                         0.9,
                     ],
-                    'fill-opacity-transition': {
-                        'duration': 2000
-                    },
                     'fill-antialias': true,
                 },
                 'filter': ['==', '$type', 'Polygon']
@@ -102,8 +118,8 @@ export default function Map(props) {
                     'line-width': [
                         "interpolate", ["linear"], ["zoom"],
                         // zoom is 5 (or less) -> circle radius will be 1px
-                        3, 0.25,
-                        5, 0.75,
+                        3, 0.5,
+                        5, 0.8,
                         8, 1,
                         // zoom is 10 (or greater) -> circle radius will be 5px
                         10, 1.5
@@ -228,7 +244,6 @@ export default function Map(props) {
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
                 <span className="nodata">&#x3c; 1%</span>
                 <span className="range1">1 - 25 </span>
-                <span className="range2">25 - 50 </span>
                 <span className="range3">25 - 50 </span>
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
