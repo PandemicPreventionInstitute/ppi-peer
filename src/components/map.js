@@ -35,8 +35,8 @@ export default function Map(props) {
 
     let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
 
-    const handleSliderChange = (event: any, newValue: value) => {
-        setEventSize(newValue * 10); // set eventsize value on slider
+    const handleSliderChange = (e, value) => {
+        setEventSize(value * 10); // set eventsize value on slider
     };
     
     useEffect(() => {
