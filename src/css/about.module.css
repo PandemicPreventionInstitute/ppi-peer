@@ -1,0 +1,119 @@
+.mainText {
+    position: relative;
+    width: 80%;
+    font-weight: 600;
+    font-size: 38px;
+    line-height: 42px;
+    padding: 50px 50px 0px;
+    color: #0B132A;
+}
+
+.subText {
+    position: relative;
+    font-family: "Noto Serif", serif;
+    padding: 0px 50px 0px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 25px;
+    color: #0B132A;
+    margin-top: 12px;
+    margin-bottom: 0px;
+}
+
+.smallText {
+    position: relative;
+    padding: 0px 50px 0px;
+    color: #0B132A;
+    margin-bottom: 0px;
+}
+
+h3 {
+    text-align: left;
+}
+
+.transitionText {
+    color: #0B132A;
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.bottomGridBox {
+    padding: 0px 30px 14px;
+}
+
+.visionsText {
+    padding: -5px 0px 0px;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.creditCard {
+    width: 14%;
+    margin-left: 35px;
+    margin-top: 50px;
+}
+
+.calculator {
+    width: 10%;
+    text-align: center;
+    margin-top: 49px;
+    margin-left: 20px;
+}
+
+.camera {
+    width: 15%;
+    margin-left: 30px;
+    text-align: center;
+    margin-top: 49px;
+}
+
+.maskedElbowBumpLarge {
+    width: 40%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+@media screen and (max-width: 1220px) {
+    .maskedElbowBumpLarge {
+        width: 40%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+
+    .smallText {
+        font-size: 30px;
+        position: relative;
+        padding: 0px 50px 0px;
+        color: #0B132A;
+        margin-bottom: 0px;
+    }
+
+    .mainText {
+        position: relative;
+        width: 80%;
+        font-weight: 600;
+        font-size: 56px;
+        line-height: 66px;
+        padding: 50px 50px 20px;
+        color: #0B132A;
+    }
+    
+    .subText {
+        position: relative;
+        font-family: "Noto Serif", serif;
+        padding: 0px 50px 0px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 42px;
+        color: #0B132A;
+        margin-top: 12px;
+        margin-bottom: 0px;
+    }
+}
