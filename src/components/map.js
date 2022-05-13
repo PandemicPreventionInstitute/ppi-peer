@@ -4,6 +4,7 @@ import turf from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
 import { 
+    Autocomplete,
     Slider,
     TextField,
     Box
@@ -14,7 +15,7 @@ import {
 } from '@mui/icons-material';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
-
+const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
   
 export default function Map(props) {
@@ -38,6 +39,16 @@ export default function Map(props) {
     const handleSliderChange = (e, value) => {
         setEventSize(value * 10); // set eventsize value on slider
     };
+
+    const handleRegionSelect = (e, value) => {
+        if(value) {
+            let selectedbbx = turf.bbox(value); 
+            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon
+        } else {
+            map.current.fitBounds(map.current.getBounds());
+        }
+        
+    }
     
     useEffect(() => {
         if (map.current) {
@@ -80,22 +91,12 @@ export default function Map(props) {
                         'property': 'risk',
                         'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
-                    // optoin 2:
+                    // option 2:
                     //this fill option creates strict steps between value ranges
                     // 'fill-color': [
                     //     'step',
                     //     ['get', 'risk'],
-                    //     '#eff5d9',
-                    //     1,
-                    //     '#d9ed92',
-                    //     25,
-                    //     '#b5e48c',
-                    //     50,
-                    //     '#76c893',
-                    //     75,
-                    //     '#34a0a4',
-                    //     99,
-                    //     '#1a759f'
+                    //     '#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
                     // ],
                     'fill-opacity': [
                         'case',
@@ -117,20 +118,18 @@ export default function Map(props) {
                     'line-color': '#000000',
                     'line-width': [
                         "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
-                        3, 0.5,
-                        5, 0.8,
-                        8, 1,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
-                        10, 1.5
+                        // line widths for zoom levels <3, 3-5, 5-8, 8-10, and 10+
+                        3, 0.25,
+                        5, 0.50,
+                        8, 0.75,
+                        10, 1
                     ],
                     'line-opacity': [
                         "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
+                        // line opacities for zoom levels <3, 3-5, 5-8, 8-10, and 10+
                         3, 0,
                         5, 0.25,
                         8, 0.5,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
                         10, 0.75
                     ],
                 },
@@ -214,11 +213,14 @@ export default function Map(props) {
                     <p>Where will the event or activity take place and how many people will be attending?</p>
 
                     <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
-                    <TextField 
+                    <Autocomplete
                         fullWidth
-                        id="outlined-basic" 
-                        label="Search by country or region" 
-                        variant="outlined" 
+                        disablePortal
+                        id="combo-box-demo"
+                        options={regions.features}
+                        getOptionLabel={(option) => option.properties.RegionName}
+                        onChange={handleRegionSelect}
+                        renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                     />
 
                     <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
