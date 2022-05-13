@@ -15,9 +15,7 @@ import {
 } from '@mui/icons-material';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
-
 const regions = require('../assets/regions.json');
-
 const marks = require('../assets/eventSizes.json');
   
 export default function Map(props) {
@@ -41,6 +39,11 @@ export default function Map(props) {
     const handleSliderChange = (e, value) => {
         setEventSize(value * 10); // set eventsize value on slider
     };
+
+    const handleRegionSelect = (e, value) => {
+        let selectedbbx = turf.bbox(value); 
+        map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon
+    }
     
     useEffect(() => {
         if (map.current) {
@@ -221,8 +224,10 @@ export default function Map(props) {
                         fullWidth
                         disablePortal
                         id="combo-box-demo"
+                        // value={(option) => option.geometry.coordinates}
                         options={regions.features}
                         getOptionLabel={(option) => option.properties.RegionName}
+                        onChange={handleRegionSelect}
                         // sx={{ width: 300 }}
                         renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                     />
