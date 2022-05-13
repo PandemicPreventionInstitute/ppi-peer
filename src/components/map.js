@@ -41,8 +41,13 @@ export default function Map(props) {
     };
 
     const handleRegionSelect = (e, value) => {
-        let selectedbbx = turf.bbox(value); 
-        map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon
+        if(value) {
+            let selectedbbx = turf.bbox(value); 
+            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon
+        } else {
+            map.current.fitBounds(map.current.getBounds());
+        }
+        
     }
     
     useEffect(() => {
@@ -86,22 +91,12 @@ export default function Map(props) {
                         'property': 'risk',
                         'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
-                    // optoin 2:
+                    // option 2:
                     //this fill option creates strict steps between value ranges
                     // 'fill-color': [
                     //     'step',
                     //     ['get', 'risk'],
-                    //     '#eff5d9',
-                    //     1,
-                    //     '#d9ed92',
-                    //     25,
-                    //     '#b5e48c',
-                    //     50,
-                    //     '#76c893',
-                    //     75,
-                    //     '#34a0a4',
-                    //     99,
-                    //     '#1a759f'
+                    //     '#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
                     // ],
                     'fill-opacity': [
                         'case',
@@ -123,20 +118,18 @@ export default function Map(props) {
                     'line-color': '#000000',
                     'line-width': [
                         "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
-                        3, 0.5,
-                        5, 0.8,
-                        8, 1,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
-                        10, 1.5
+                        // line widths for zoom levels <3, 3-5, 5-8, 8-10, and 10+
+                        3, 0.25,
+                        5, 0.50,
+                        8, 0.75,
+                        10, 1
                     ],
                     'line-opacity': [
                         "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
+                        // line opacities for zoom levels <3, 3-5, 5-8, 8-10, and 10+
                         3, 0,
                         5, 0.25,
                         8, 0.5,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
                         10, 0.75
                     ],
                 },
@@ -224,11 +217,9 @@ export default function Map(props) {
                         fullWidth
                         disablePortal
                         id="combo-box-demo"
-                        // value={(option) => option.geometry.coordinates}
                         options={regions.features}
                         getOptionLabel={(option) => option.properties.RegionName}
                         onChange={handleRegionSelect}
-                        // sx={{ width: 300 }}
                         renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                     />
 
