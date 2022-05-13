@@ -4,6 +4,7 @@ import turf from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
 import { 
+    Autocomplete,
     Slider,
     TextField,
     Box
@@ -14,6 +15,8 @@ import {
 } from '@mui/icons-material';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+
+const regions = require('../assets/regions.json');
 
 const marks = require('../assets/eventSizes.json');
   
@@ -214,11 +217,14 @@ export default function Map(props) {
                     <p>Where will the event or activity take place and how many people will be attending?</p>
 
                     <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
-                    <TextField 
+                    <Autocomplete
                         fullWidth
-                        id="outlined-basic" 
-                        label="Search by country or region" 
-                        variant="outlined" 
+                        disablePortal
+                        id="combo-box-demo"
+                        options={regions.features}
+                        getOptionLabel={(option) => option.properties.RegionName}
+                        // sx={{ width: 300 }}
+                        renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                     />
 
                     <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
