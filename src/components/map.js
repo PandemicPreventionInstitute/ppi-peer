@@ -20,7 +20,7 @@ import { styled } from '@mui/material/styles';
   
 mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
