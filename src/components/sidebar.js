@@ -89,7 +89,7 @@ export default function Sidebar(params) {
                     <SidebarMenuItemIcon>
                         <BarChartOutlined />
                     </SidebarMenuItemIcon>
-                    <SidebarMenuItemText open={params.open}>ADVANCED DATA TOOL</SidebarMenuItemText>
+                    <SidebarMenuItemText open={params.open}>ADVANCED DATA TOOLS</SidebarMenuItemText>
                 </SidebarMenuItem>
 
                 <SidebarMenuItem 

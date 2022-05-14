@@ -4,6 +4,7 @@ import turf, { center } from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
 import { 
+    Autocomplete,
     Slider,
     TextField,
     Box
@@ -17,9 +18,10 @@ import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import CoughingMan from '../assets/man_coughing.png';
 import { styled } from '@mui/material/styles';
   
-//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
 
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
 const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'mapClick' })(
@@ -85,9 +87,19 @@ export default function Map(props) {
 
     let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
 
-    const handleSliderChange = (event, newValue) => {
-        setEventSize(newValue * 10); // set eventsize value on slider
+    const handleSliderChange = (e, value) => {
+        setEventSize(value * 10); // set eventsize value on slider
     };
+
+    const handleRegionSelect = (e, value) => {
+        if(value) {
+            let selectedbbx = turf.bbox(value); 
+            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon
+        } else {
+            map.current.fitBounds(map.current.getBounds());
+        }
+        
+    }
     
     useEffect(() => {
         if (map.current) {
@@ -124,19 +136,25 @@ export default function Map(props) {
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
+                    // option 1:
+                    // this fill creates smooth gradients through value ranges
                     'fill-color': {
                         'property': 'risk',
                         'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
+                    // option 2:
+                    //this fill option creates strict steps between value ranges
+                    // 'fill-color': [
+                    //     'step',
+                    //     ['get', 'risk'],
+                    //     '#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
+                    // ],
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
                         1,
                         0.9,
                     ],
-                    'fill-opacity-transition': {
-                        'duration': 2000
-                    },
                     'fill-antialias': true,
                 },
                 'filter': ['==', '$type', 'Polygon']
@@ -151,20 +169,18 @@ export default function Map(props) {
                     'line-color': '#000000',
                     'line-width': [
                         "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
+                        // line widths for zoom levels <3, 3-5, 5-8, 8-10, and 10+
                         3, 0.25,
-                        5, 0.75,
-                        8, 1,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
-                        10, 1.5
+                        5, 0.50,
+                        8, 0.75,
+                        10, 1
                     ],
                     'line-opacity': [
                         "interpolate", ["linear"], ["zoom"],
-                        // zoom is 5 (or less) -> circle radius will be 1px
+                        // line opacities for zoom levels <3, 3-5, 5-8, 8-10, and 10+
                         3, 0,
                         5, 0.25,
                         8, 0.5,
-                        // zoom is 10 (or greater) -> circle radius will be 5px
                         10, 0.75
                     ],
                 },
@@ -290,7 +306,6 @@ export default function Map(props) {
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
                 <span className="nodata">&#x3c; 1%</span>
                 <span className="range1">1 - 25 </span>
-                <span className="range2">25 - 50 </span>
                 <span className="range3">25 - 50 </span>
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
