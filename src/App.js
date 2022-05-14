@@ -99,7 +99,7 @@ function App() {
             <Sidebar open={open}/> 
           </div>                 
         </Grid>
-        <Grid item xs={12} sm={open ? 9.6 : 11.3} md={open ? 9.6 : 11.3} lg={open ? 9.6 : 11.6} className={styles.mapbox}>
+        <Grid item xs={12} sm={open ? 9.6 : 11.3} md={open ? 9.6 : 11.3} lg={open ? 9.6 : 11.6}>
           <Routes>
             <Route path="/" element={<Map open={open}/>} />
             <Route path="about" element={<About />} />

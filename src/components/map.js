@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, setState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import turf from 'turf';
+import turf, { center } from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
 import { 
@@ -12,10 +12,49 @@ import {
     PeopleAltOutlined,
     RoomOutlined
 } from '@mui/icons-material';
+
+import CoronavirusIcon from '@mui/icons-material/Coronavirus';
+import CoughingMan from '../assets/man_coughing.png';
+import { styled } from '@mui/material/styles';
   
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
 
 const marks = require('../assets/eventSizes.json');
+
+const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'mapClick' })(
+
+    ({ mapClick }) => ({       
+        ...(mapClick && {
+            display: 'flex',
+            visibility: 'visible',
+            width: '100% + 32px',
+            marginLeft: '-32px',
+            marginRight: '-32px',
+            borderBottomRightRadius: '16px',
+            borderBottomLeftRadius: '16px',
+            borderTopRightRadius: '-16px',
+            flexDirection: 'column',
+            alignItems: 'left',
+            padding: '0px 0px',
+
+            // position: static,
+            // marginLeft: '-35px',
+            marginTop: '0px',
+            // textAlign: 'left',
+            // background: '#C51B8A',
+            height: '300px',
+            overflow: 'hidden',
+            backgroundColor: '#d9ed92',
+            // backgroundImage: 'url(/img/man_coughing.png)',
+            backgroundSize: '350px'
+        }),
+        ...(!mapClick && {
+            display: 'none',
+            visibility: 'hidden'
+        }),
+    }),   
+);
   
 export default function Map(props) {
     const mapContainer = useRef(true);
@@ -32,6 +71,17 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value * 10; 
     }
+
+    /* MINA ADDED */
+    const displayRisk = (value) => {
+        return value;
+    }
+
+    /* MINA ADDED Handling for on map click to pass to other components */
+    const [mapClick, setMapClick] = React.useState(false);
+    const handleMapClick = () => {
+        setMapClick(!mapClick);
+    }; 
 
     let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
 
@@ -123,6 +173,7 @@ export default function Map(props) {
             
             // onClick behavior for a region: zoom and popup
             map.current.on('click', 'world-fill', function(e) {
+                setMapClick(true); // MINA ADDED
                 var popup = new mapboxgl.Popup({ offset: [0, -7] });
                 map.current.getCanvas().style.cursor = 'pointer';
                 var features = map.current.queryRenderedFeatures(e.point, {
@@ -192,33 +243,44 @@ export default function Map(props) {
     return (
         <div className="map">
             <div className="mapfilters">
-            <Box>
-                <div>
-                    <h3 className="serif">Select your event location and size</h3>
-                    <p>Where will the event or activity take place and how many people will be attending?</p>
+                <Box>
+                    <div>
+                        <h3 className="serif">Select your event location and size</h3>
+                        <p>Where will the event or activity take place and how many people will be attending?</p>
 
-                    <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
-                    <TextField 
-                        fullWidth
-                        id="outlined-basic" 
-                        label="Search by country or region" 
-                        variant="outlined" 
-                    />
+                        <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
+                        <TextField 
+                            fullWidth
+                            id="outlined-basic" 
+                            label="Search by country or region" 
+                            variant="outlined" 
+                        />
 
-                    <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
-                    <Slider
-                        aria-label="Restricted values"
-                        defaultValue={2.5}
-                        valueLabelFormat={valueLabelFormat}
-                        getAriaValueText={valuetext}
-                        step={null}
-                        valueLabelDisplay="on"
-                        marks={marks}
-                        onChange={handleSliderChange}
-                    />
-                </div>
-                <Precautions />
-            </Box>
+                        <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
+                        <Slider
+                            aria-label="Restricted values"
+                            defaultValue={2.5}
+                            valueLabelFormat={valueLabelFormat}
+                            getAriaValueText={valuetext}
+                            step={null}
+                            valueLabelDisplay="on"
+                            marks={marks}
+                            onChange={handleSliderChange}
+                        />
+                    </div>
+
+                    <EstimateBox id='Estimate' mapClick={mapClick} sx={{display: (mapClick ? 'flex' : 'none')}} /* className={this.displayRisk < 1 ? 'zero' : (this.displayRisk <= 25 ? 'low' : (this.displayRisk <= 50 ? 'low-mid' : (this.displayRisk <= 75 ? 'mid-high' : (this.displayRisk <= 99 ? 'high' : 'very-high'))))} */>
+                        <h4 className={styles.estimateHeader}>
+                            <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
+                        </h4>
+                        <h3 className={styles.estimateRange}>Low</h3>
+                        <h2></h2>
+                        {/* <img src={CoughingMan} alt='Coughing Man' className={styles.coughingMan}></img> */}
+                    </EstimateBox> 
+                    
+                    <Precautions />
+                </Box>
+                                         
             </div>
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
