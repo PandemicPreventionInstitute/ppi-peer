@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, setState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import turf, { center } from 'turf';
+import turf from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
 import { 
@@ -19,9 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
   
-mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
-
-//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
@@ -41,7 +39,6 @@ const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySe
 );
 
 const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect'})(
-
     ({ countrySelect }) => ({       
         ...(countrySelect && {
             display: 'flex',
@@ -87,7 +84,6 @@ export default function Map(props) {
         return value * 10; 
     }
     
-
     let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
 
     const handleSliderChange = (e, value) => {
@@ -310,10 +306,9 @@ export default function Map(props) {
                         </h4>
                         <p>Updated {dateLastUpdated}</p>
                     </EstimateBox> 
-                    
+
                     <Precautions />
-                </Box>
-                                         
+                </Box>                                         
             </div>
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
