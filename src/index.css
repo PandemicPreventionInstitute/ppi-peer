@@ -120,6 +120,12 @@ ul a.active {
   overflow: auto;
 }
 
+.topMapfilters {
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  height: 100%;
+}
+
 .MuiCardContent-root {
   text-align: center;
 }
