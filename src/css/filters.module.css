@@ -25,7 +25,7 @@
     font-size: 14px;
 }
 
-.precautionBlock {
+.precautionHeader {
     margin-bottom: 20px;
     align-items: center;
 }
@@ -52,8 +52,8 @@
     font-size: larger;
 }
 
-.shieldOutlined {
-    color: #318AD0;
+.mainIcons {
+    color: inherit;
     margin-bottom: -4px;
     margin-right: 3px;
     font-size: larger;
@@ -65,4 +65,63 @@
 
 .iconBlocks {
     display: block;
+}
+
+.estimateHeader {
+    margin-bottom: 15px;
+    margin-top: 20px;
+    color: inherit;
+}
+
+.estimateText {
+    margin-top: 12px;
+    color: inherit;
+    margin-bottom: 15px;
+    max-width: 275px;
+}
+
+.estimateRange {
+    margin-top: 0px;
+    margin-bottom: 6px;
+    font-size: 24px;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+.nodata {
+    background-color: #eff5d9;
+    color: #4E585B;
+    background-image: url('../assets/man_coughing_very_low.png');
+}
+  
+.range1 {
+    background-color: #d9ed92;
+    color: #4E585B;
+    background-image: url('../assets/man_coughing_low.png');
+}
+  
+.range3 {
+    background-color: #76c893;
+    color: white;
+    background-image: url('../assets/man_coughing_low_mid.png');
+}
+  
+.range4 {
+    background-color: #34a0a4;
+    color: white;
+    background-image: url('../assets/man_coughing_mid_high.png');
+}
+
+.range5 {
+    background-color: #1a759f;
+    color: white;
+    background-image: url('../assets/man_coughing_high.png');
+}
+
+.range6 {
+    background-color: #184e77;
+    color: white;
+    background-image: url('../assets/man_coughing_very_high.png');
 }

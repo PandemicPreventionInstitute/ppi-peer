@@ -13,11 +13,57 @@ import {
     PeopleAltOutlined,
     RoomOutlined
 } from '@mui/icons-material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import CoronavirusIcon from '@mui/icons-material/Coronavirus';
+import { styled } from '@mui/material/styles';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
-  
+
+const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect' })(
+    ({ countrySelect }) => ({       
+        ...(countrySelect && {
+            borderRadius: '16px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+            height: '100% + 38px',
+            marginTop: '-34px',
+            marginBottom: '-10px',
+            marginLeft: '-32px',
+            marginRight: '-32px',
+            padding: '34px 32px 10px'
+        })
+    })   
+);
+
+const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect'})(
+    ({ countrySelect }) => ({       
+        ...(countrySelect && {
+            display: 'flex',
+            visibility: 'visible',
+            marginLeft: '-32px',
+            marginRight: '-32px',
+            marginTop: '10px',
+            borderRadius: '16px',
+            flexDirection: 'column',
+            alignItems: 'left',
+            padding: '10px 32px',
+            height: 'auto',
+            overflow: 'hidden',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '330px',
+            backgroundOrigin: 'content-box',
+            backgroundPosition: '130px 70px'
+        }),
+        ...(!countrySelect && {
+            display: 'none',
+            visibility: 'hidden'
+        }),
+    })
+);
+ 
 export default function Map(props) {
     const mapContainer = useRef(true);
     const map = useRef(null);
@@ -26,6 +72,10 @@ export default function Map(props) {
     const [zoom, setZoom] = useState(1.5);
     const [eventSize, setEventSize] = useState(25);
 
+    const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
+    const [dateLastUpdated, setDateLastUpdated] = useState('');
+    const [countrySelect, setCountrySelect] = React.useState(false);
+
     const valuetext = (value) => {
         return value;
     }
@@ -33,7 +83,7 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value * 10; 
     }
-
+    
     let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
 
     const handleSliderChange = (e, value) => {
@@ -42,12 +92,15 @@ export default function Map(props) {
 
     const handleRegionSelect = (e, value) => {
         if(value) {
-            let selectedbbx = turf.bbox(value); 
-            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon
+            setCountrySelect(true); // set to true so estimate component is displayed
+            let selectedbbx = turf.bbox(value);
+            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon        
+            setBoxDisplayRisk(value.properties.risk); // set risk for selected country
+            setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
+            setCountrySelect(false); // set to false so estimate component closes
             map.current.fitBounds(map.current.getBounds());
         }
-        
     }
     
     useEffect(() => {
@@ -207,36 +260,55 @@ export default function Map(props) {
     return (
         <div className="map">
             <div className="mapfilters">
-            <Box>
-                <div>
-                    <h3 className="serif">Select your event location and size</h3>
-                    <p>Where will the event or activity take place and how many people will be attending?</p>
+                <Box>
+                    <FilterBox countrySelect={countrySelect}>
+                        <h3 className="serif">Select your event location and size</h3>
+                        <p>Where will the event or activity take place and how many people will be attending?</p>
 
-                    <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
-                    <Autocomplete
-                        fullWidth
-                        disablePortal
-                        id="combo-box-demo"
-                        options={regions.features}
-                        getOptionLabel={(option) => option.properties.RegionName}
-                        onChange={handleRegionSelect}
-                        renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
-                    />
+                        <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
+                        <Autocomplete
+                            fullWidth
+                            disablePortal
+                            id="combo-box-demo"
+                            options={regions.features}
+                            getOptionLabel={(option) => option.properties.RegionName}
+                            onChange={handleRegionSelect}
+                            renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
+                        />
 
-                    <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
-                    <Slider
-                        aria-label="Restricted values"
-                        defaultValue={2.5}
-                        valueLabelFormat={valueLabelFormat}
-                        getAriaValueText={valuetext}
-                        step={null}
-                        valueLabelDisplay="on"
-                        marks={marks}
-                        onChange={handleSliderChange}
-                    />
-                </div>
-                <Precautions />
-            </Box>
+                        <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
+                        <Slider
+                            aria-label="Restricted values"
+                            defaultValue={2.5}
+                            valueLabelFormat={valueLabelFormat}
+                            getAriaValueText={valuetext}
+                            step={null}
+                            valueLabelDisplay="on"
+                            marks={marks}
+                            onChange={handleSliderChange}
+                        />
+                    </FilterBox>
+
+                    <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 1 ? styles.nodata : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6))))}>
+                        <h4 className={styles.estimateHeader}>
+                            <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
+                        </h4>
+                        <h3 className={styles.estimateRange}>
+                            {boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High'))))}
+                        </h3>
+                        <h1>{boxDisplayRisk}% probable</h1>
+                        <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
+                            <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                <IconButton>
+                                    <InfoOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </h4>
+                        <p>Updated {dateLastUpdated}</p>
+                    </EstimateBox> 
+
+                    <Precautions />
+                </Box>                                         
             </div>
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
