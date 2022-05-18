@@ -28,8 +28,8 @@ export default function Precautions() {
     
     return (
         <div id='Precautions'>
-            <h4 className={styles.precautionBlock}>
-                <ShieldOutlined className={styles.shieldOutlined}/>TAKE THE RIGHT PRECAUTIONS
+            <h4>
+                <ShieldOutlined className={styles.roomOutlined}/> TAKE THE RIGHT PRECAUTIONS
                 <IconButton aria-label="open precautions" className={styles.expandButton} onClick={open ? handlePrecautionsClose : handlePrecautionsOpen}>
                 <ExpandMoreOutlined className={styles.expandOutlined} style={{ display: !open ? 'block' : 'none' }} />
                 <ExpandLessOutlined className={styles.expandOutlined} style={{ display: open ? 'block' : 'none' }} />

@@ -94,6 +94,18 @@ ul a.active {
   overflow: auto;
 }
 
+@media screen and (min-width: 1600px) {
+  .mapfilters {
+    max-height: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .mapfilters {
+    overflow: none;
+  }
+}
+
 .topMapfilters {
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);

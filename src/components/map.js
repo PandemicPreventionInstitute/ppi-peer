@@ -19,7 +19,8 @@ import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
   
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
@@ -28,12 +29,11 @@ const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySe
         ...(countrySelect && {
             borderRadius: '16px',
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
-            height: '100% + 38px',
-            marginTop: '-34px',
+            marginTop: '-16px',
             marginBottom: '-10px',
             marginLeft: '-32px',
             marginRight: '-32px',
-            padding: '34px 32px 10px'
+            padding: '16px 32px 10px'
         })
     })   
 );
