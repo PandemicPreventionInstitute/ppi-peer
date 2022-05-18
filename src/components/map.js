@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, setState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import turf from 'turf';
 import Precautions from './precautions';
@@ -69,12 +69,18 @@ export default function Map(props) {
     const map = useRef(null);
     const [lng, setLng] = useState(0);
     const [lat, setLat] = useState(45);
-    const [zoom, setZoom] = useState(1.5);
-    const [eventSize, setEventSize] = useState(25);
+    const [zoom, setZoom] = useState(2);
+    const [eventSize, setEventSize] = useState(100);
 
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
-    const [countrySelect, setCountrySelect] = React.useState(false);
+    const [countrySelect, setCountrySelect] = useState(false);
+    const [currentRegion, setCurrentRegion] = useState({});
+    const [filterState, setFilterState] = useState({
+        region: {},
+        size: 10,
+    })
+    const [mapData, setMapData]=useState([]);
 
     const valuetext = (value) => {
         return value;
@@ -83,32 +89,52 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value * 10; 
     }
-    
-    let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
+
+    const getData = () => {
+        fetch('https://ppi-estimator.s3.amazonaws.com/globalData.json')
+        .then(function(response) {
+            console.log("response: ", response)
+            return response.json();
+        })
+        .then(function(myJson) {
+            console.log("my json: ", myJson);
+            setMapData(myJson);
+        })
+    }
 
     const handleSliderChange = (e, value) => {
-        setEventSize(value * 10); // set eventsize value on slider
+            let newSize = 'size_' + (value * 10);
+            setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+            setFilterState({
+                size: value
+            })
     };
 
     const handleRegionSelect = (e, value) => {
         if(value) {
             setCountrySelect(true); // set to true so estimate component is displayed
+            setCurrentRegion(value); // set as current region for slider handler
             let selectedbbx = turf.bbox(value);
             map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon        
-            setBoxDisplayRisk(value.properties.risk); // set risk for selected country
+            let thisCrowd = 'size_' + eventSize;
+            setBoxDisplayRisk(value.properties[thisCrowd]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
             setCountrySelect(false); // set to false so estimate component closes
             map.current.fitBounds(map.current.getBounds());
         }
     }
+
+    useEffect(() => {
+        getData()
+    },[])
     
     useEffect(() => {
         if (map.current) {
             // initialize map only once
             // if map already exists, do not redraw map, update source geojson only
             const geojsonSource = map.current.getSource('world');
-            geojsonSource.setData(data);
+            geojsonSource.setData(mapData);
             return;
         } 
         map.current = new mapboxgl.Map({
@@ -128,7 +154,8 @@ export default function Map(props) {
 
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': data, // load geojson file here; @todo: swap this out for S3 bucket source
+                'buffer': 1,
+                'data': {mapData}, // load geojson file here; @todo: swap this out for S3 bucket source
                 'generateId': true
             });
 
@@ -141,7 +168,7 @@ export default function Map(props) {
                     // option 1:
                     // this fill creates smooth gradients through value ranges
                     'fill-color': {
-                        'property': 'risk',
+                        'property': 'size_'+eventSize,
                         'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
                     // option 2:
@@ -220,13 +247,18 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                var displayRisk = feature.properties.risk;
+                let thisCrowd = 'size_' + eventSize;
+                var displayRisk = feature.properties[thisCrowd];
+                // console.log("size: ", eventSize);
+                // console.log("this crowd size: ", thisCrowd);
+                // console.log("risk: ", displayRisk);
+                // console.log("feature properties: ", feature.properties[thisCrowd]);
 
-                if (feature.properties.risk < 1) { 
-                    displayRisk = '< 1'
-                } else {
-                    displayRisk = Math.round(displayRisk)
-                }
+                // if (feature.properties.thisCrowd < 1) { 
+                //     displayRisk = '< 1'
+                // } else {
+                //     displayRisk = Math.round(displayRisk)
+                // }
 
                 popup
                 .setLngLat(e.lngLat)
@@ -269,9 +301,10 @@ export default function Map(props) {
                         <Autocomplete
                             fullWidth
                             disablePortal
-                            id="combo-box-demo"
-                            options={regions.features}
-                            getOptionLabel={(option) => option.properties.RegionName}
+                            name="region"
+                            id="selector-region"
+                            options={mapData.features}
+                            getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
                             onChange={handleRegionSelect}
                             renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                         />
@@ -279,7 +312,10 @@ export default function Map(props) {
                         <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
                         <Slider
                             aria-label="Restricted values"
-                            defaultValue={2.5}
+                            id="selector-eventSize"
+                            value={filterState.size}
+                            name="size"
+                            // defaultValue={2.5}
                             valueLabelFormat={valueLabelFormat}
                             getAriaValueText={valuetext}
                             step={null}
