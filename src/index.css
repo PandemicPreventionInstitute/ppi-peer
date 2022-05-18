@@ -83,14 +83,14 @@ ul a.active {
   width: 320px;
   position: absolute;
   height: auto;
-  max-height: 730px;
+  max-height: calc(100vh - 80px);
   left: 18px;
   top: 12px;
   background: #ffffff;
   z-index: 2;
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  padding: 16px 32px 32px;
+  padding: 16px 32px;
   overflow: auto;
 }
 

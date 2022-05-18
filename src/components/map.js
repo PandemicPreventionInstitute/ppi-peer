@@ -30,10 +30,10 @@ const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySe
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
             height: '100% + 38px',
             marginTop: '-34px',
-            marginBottom: '-10px',
+            marginBottom: '-52px',
             marginLeft: '-32px',
             marginRight: '-32px',
-            padding: '34px 32px 10px'
+            padding: '34px 32px 68px'
         })
     })   
 );
@@ -104,10 +104,15 @@ export default function Map(props) {
 
     const handleSliderChange = (e, value) => {
             let newSize = 'size_' + (value * 10);
-            setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
             setFilterState({
                 size: value
             })
+            map.current.setPaintProperty('world-fill', 'fill-color', {
+                "property": newSize,
+                'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+            });
+
+            setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
     };
 
     const handleRegionSelect = (e, value) => {
@@ -249,16 +254,12 @@ export default function Map(props) {
                 var feature = features[0];
                 let thisCrowd = 'size_' + eventSize;
                 var displayRisk = feature.properties[thisCrowd];
-                // console.log("size: ", eventSize);
-                // console.log("this crowd size: ", thisCrowd);
-                // console.log("risk: ", displayRisk);
-                // console.log("feature properties: ", feature.properties[thisCrowd]);
 
-                // if (feature.properties.thisCrowd < 1) { 
-                //     displayRisk = '< 1'
-                // } else {
-                //     displayRisk = Math.round(displayRisk)
-                // }
+                if (feature.properties.thisCrowd < 1) { 
+                    displayRisk = '< 1'
+                } else {
+                    displayRisk = Math.round(displayRisk)
+                }
 
                 popup
                 .setLngLat(e.lngLat)
