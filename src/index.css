@@ -87,7 +87,7 @@ ul a.active {
   left: 18px;
   top: 12px;
   background: #ffffff;
-  z-index: 2;
+  z-index: 4;
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   padding: 16px 32px 10px;
@@ -185,6 +185,20 @@ div#mapLegend span.range6 {
     width: auto;
     overflow: unset;
     max-height: unset;
+    padding: 16px 32px 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.523);
+  }
+
+  .serif {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    font-size: 17px;
+  }
+
+  .filtersQuestion {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    font-size: 14px;
   }
 
   .MuiListItemText-root {
@@ -195,14 +209,33 @@ div#mapLegend span.range6 {
     display: inline-block !important;
   }
 
+  .MuiList-root {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  .MuiSlider-markLabel {
+    display: none;
+  }
+
   div#mapLegend {
-    bottom: 75px;
+    bottom: 90px;
     left: 12px;
     top: unset;
     right: 12px;
   }
 
   .mapboxgl-ctrl-top-right {
+    display: none;
+    visibility: hidden;
+  }
+
+  .mapboxgl-ctrl-bottom-right {
+    display: none;
+    visibility: hidden;
+  }
+
+  .longlat {
     display: none;
     visibility: hidden;
   }

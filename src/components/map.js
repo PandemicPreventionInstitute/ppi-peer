@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, setState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import turf from 'turf';
 import Precautions from './precautions';
@@ -7,7 +7,8 @@ import {
     Autocomplete,
     Slider,
     TextField,
-    Box
+    Box,
+    Grid
 } from '@mui/material';
 import {
     PeopleAltOutlined,
@@ -19,12 +20,11 @@ import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
   
-mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
-//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
-const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect' })(
+const FilterBox = styled(Box)(
     ({ countrySelect }) => ({       
         ...(countrySelect && {
             borderRadius: '16px',
@@ -38,7 +38,7 @@ const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySe
     })   
 );
 
-const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect'})(
+const EstimateBox = styled(Box)(
     ({ countrySelect }) => ({       
         ...(countrySelect && {
             display: 'flex',
@@ -96,21 +96,21 @@ export default function Map(props) {
     const handleRegionSelect = (e, value) => {
         if (value) {
             let selectedbbx = turf.bbox(value); 
-            if (props.windowDimension.winWidth < 600) { // if display width is less than 600, when the user selects a country hide the top text and jump to the map filters
+            if (props.windowDimension.winWidth < 600) { // mobile map display
                 let filtersTopText = document.getElementById('filtersTopText');
                 filtersTopText.style.display = 'none';
                 filtersTopText.style.visibility = 'hidden';
-                document.getElementById("filterBox").scrollIntoView();
+                document.getElementById("filterBox").scrollIntoView(); // when the user selects a country hide the top text and jump to the map filters
                 map.current.fitBounds(selectedbbx, { // on region select, zoom to region polygon for mobile map view 
                     padding: {
-                        top: 100,
+                        top: 0,
                         left: 100,
                         right: 100,
-                        bottom: 50
+                        bottom: 500
                     } 
                 });
-                map.current.scrollZoom.disable();
-                map.current.dragPan.disable();
+                map.current.scrollZoom.disable(); // disable scrolling/zooming for mobile map view
+                map.current.dragPan.disable(); // disable panning for mobile map view
             } else {
                 map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
             }
@@ -284,31 +284,36 @@ export default function Map(props) {
                     <FilterBox id='filterBox' countrySelect={countrySelect}>
                         <div id='filtersTopText'>
                             <h3 className="serif">Select your event location and size</h3>
-                            <p>Where will the event or activity take place and how many people will be attending?</p>
+                            <p className='filtersQuestion'>Where will the event or activity take place and how many people will be attending?</p>
                         </div>
                         
-                        <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
-                        <Autocomplete
-                            fullWidth
-                            disablePortal
-                            id="combo-box-demo"
-                            options={regions.features}
-                            getOptionLabel={(option) => option.properties.RegionName}
-                            onChange={handleRegionSelect}
-                            renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
-                        />
-
-                        <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
-                        <Slider
-                            aria-label="Restricted values"
-                            defaultValue={2.5}
-                            valueLabelFormat={valueLabelFormat}
-                            getAriaValueText={valuetext}
-                            step={null}
-                            valueLabelDisplay="on"
-                            marks={marks}
-                            onChange={handleSliderChange}
-                        />
+                        <Grid container >
+                            <Grid item xs={countrySelect ? 7 : 12} sm={12} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
+                                <h4 className={styles.locationText}><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
+                                <Autocomplete
+                                    fullWidth
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={regions.features}
+                                    getOptionLabel={(option) => option.properties.RegionName}
+                                    onChange={handleRegionSelect}
+                                    renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
+                                />
+                            </Grid>
+                            <Grid item xs={countrySelect ? 5 : 12} sm={12} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
+                                <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
+                                <Slider
+                                    aria-label="Restricted values"
+                                    defaultValue={2.5}
+                                    valueLabelFormat={valueLabelFormat}
+                                    getAriaValueText={valuetext}
+                                    step={null}
+                                    valueLabelDisplay="on"
+                                    marks={marks}
+                                    onChange={handleSliderChange}
+                                />
+                            </Grid>
+                        </Grid>                        
                     </FilterBox>
 
                     <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 1 ? styles.nodata : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6))))}>
@@ -327,11 +332,12 @@ export default function Map(props) {
                             </Tooltip>
                         </h4>
                         <p>Updated {dateLastUpdated}</p>
-                    </EstimateBox> 
+                    </EstimateBox>
 
-                    <Precautions />
-                </Box>                                         
+                    <Box sx={{display: (props.windowDimension.winWidth > 600) ? 'block' : 'none', visibility: (props.windowDimension.winWidth > 600) ? 'visible' : 'hidden'}}><Precautions winWidth={props.windowDimension.winWidth}/></Box>                    
+                </Box>                                                       
             </div>
+            <Box sx={{display: props.windowDimension.winWidth < 600 ? 'block' : 'none', visibility: props.windowDimension.winWidth < 600 ? 'visible' : 'hidden'}}><Precautions winWidth={props.windowDimension.winWidth}/></Box>          
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
