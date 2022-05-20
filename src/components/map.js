@@ -71,8 +71,6 @@ export default function Map(props) {
     const [lng, setLng] = useState(0);
     const [lat, setLat] = useState(45);
     const [zoom, setZoom] = useState(2);
-    const [eventSize, setEventSize] = useState(100);
-
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
     const [countrySelect, setCountrySelect] = useState(false);
