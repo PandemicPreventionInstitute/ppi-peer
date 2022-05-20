@@ -50,6 +50,9 @@ const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'country
             flexDirection: 'column',
             alignItems: 'left',
             padding: '10px 32px',
+            '@media (max-width:600px)': {
+                padding: '10px 16px'
+            },
             height: 'auto',
             overflow: 'hidden',
             backgroundRepeat: 'no-repeat',
@@ -91,10 +94,27 @@ export default function Map(props) {
     };
 
     const handleRegionSelect = (e, value) => {
-        if(value) {
-            setCountrySelect(true); // set to true so estimate component is displayed
-            let selectedbbx = turf.bbox(value);
-            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon        
+        if (value) {
+            let selectedbbx = turf.bbox(value); 
+            if (props.windowDimension.winWidth < 600) { // if display width is less than 600, when the user selects a country hide the top text and jump to the map filters
+                let filtersTopText = document.getElementById('filtersTopText');
+                filtersTopText.style.display = 'none';
+                filtersTopText.style.visibility = 'hidden';
+                document.getElementById("filterBox").scrollIntoView();
+                map.current.fitBounds(selectedbbx, { // on region select, zoom to region polygon for mobile map view 
+                    padding: {
+                        top: 100,
+                        left: 100,
+                        right: 100,
+                        bottom: 50
+                    } 
+                });
+                map.current.scrollZoom.disable();
+                map.current.dragPan.disable();
+            } else {
+                map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
+            }
+            setCountrySelect(true); // set to true so estimate component is displayed                            
             setBoxDisplayRisk(value.properties.risk); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
@@ -261,10 +281,12 @@ export default function Map(props) {
         <div className="map">
             <div className="mapfilters">
                 <Box>
-                    <FilterBox countrySelect={countrySelect}>
-                        <h3 className="serif">Select your event location and size</h3>
-                        <p>Where will the event or activity take place and how many people will be attending?</p>
-
+                    <FilterBox id='filterBox' countrySelect={countrySelect}>
+                        <div id='filtersTopText'>
+                            <h3 className="serif">Select your event location and size</h3>
+                            <p>Where will the event or activity take place and how many people will be attending?</p>
+                        </div>
+                        
                         <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
                         <Autocomplete
                             fullWidth

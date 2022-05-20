@@ -29,8 +29,19 @@
 }
 
 .Main {
-  overflow: auto;
   height: 100vh;
+}
+
+@media (max-width: 600px) {
+  .Main {
+    margin-top: -25px !important;
+  }
+}
+
+@media (min-width: 900px) {
+  .Main {
+    overflow: auto;
+  }
 }
 
 @keyframes App-logo-spin {

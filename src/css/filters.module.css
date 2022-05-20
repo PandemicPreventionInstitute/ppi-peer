@@ -125,3 +125,9 @@ h1 {
     color: white;
     background-image: url('../assets/man_coughing_very_high.png');
 }
+
+@media (max-width: 600px) {
+    .precautions {
+        margin-right: -32px;
+    }
+}

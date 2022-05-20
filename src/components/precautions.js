@@ -27,7 +27,7 @@ export default function Precautions() {
     };
     
     return (
-        <div id='Precautions'>
+        <div id='Precautions' className={styles.precautions}>
             <h4>
                 <ShieldOutlined className={styles.roomOutlined}/> TAKE THE RIGHT PRECAUTIONS
                 <IconButton aria-label="open precautions" className={styles.expandButton} onClick={open ? handlePrecautionsClose : handlePrecautionsOpen}>

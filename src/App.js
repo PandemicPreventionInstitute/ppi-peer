@@ -89,19 +89,19 @@ function App() {
   return (
     <div className="App">
       <Grid container spacing={0}>
-        <Grid item xs={12} sm={open ? 2.4 : 0.7} md={open ? 2.4 : 0.7} lg={open ? 2.4 : 0.5} className={styles.sidebar}>
+        <Grid item xs={12} sm={open ? 4.5 : 1} md={open ? 3 : 0.7} lg={open ? 2.4 : 0.5} className={styles.sidebar}>
           <SidebarToggle open={open}>
             <IconButton onClick={open ? handleSidebarClose : handleSidebarOpen} sx={{ display: (windowDimension.winWidth < 600) ?  'none' : 'flex'}}>
               {open ? <SidebarToggleIconClose /> : <SidebarToggleIconOpen />}
             </IconButton>
           </SidebarToggle>
-          <div> 
+          <Box> 
             <Sidebar open={open}/> 
-          </div>                 
+          </Box>   
         </Grid>
-        <Grid item xs={12} sm={open ? 9.6 : 11.3} md={open ? 9.6 : 11.3} lg={open ? 9.6 : 11.5} className='Main'>
+        <Grid item xs={12} sm={open ? 7.5 : 11} md={open ? 9 : 11.3} lg={open ? 9.6 : 11.5} className='Main'>
           <Routes>
-            <Route path="/" element={<Map open={open}/>} />
+            <Route path="/" element={<Map open={open} windowDimension={windowDimension}/>} />
             <Route path="about" element={<About />} />
             <Route path="advanced" element={<Advanced />} />
             <Route path="data" element={<Data />} />

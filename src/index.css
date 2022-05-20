@@ -90,19 +90,13 @@ ul a.active {
   z-index: 2;
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  padding: 16px 32px 32px;
+  padding: 16px 32px 10px;
   overflow: auto;
 }
 
 @media screen and (min-width: 1600px) {
   .mapfilters {
     max-height: none;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .mapfilters {
-    overflow: none;
   }
 }
 
@@ -182,13 +176,15 @@ div#mapLegend span.range6 {
 
 @media (max-width: 600px) {
   .mapfilters {
-    position: relative;
+    position: sticky;
     left: auto;
     top: -12px;
     margin-bottom: -24px;
     background: #ffffff;
     box-shadow: none;
     width: auto;
+    overflow: unset;
+    max-height: unset;
   }
 
   .MuiListItemText-root {
@@ -197,5 +193,26 @@ div#mapLegend span.range6 {
   
   ul.MuiList-padding > a {
     display: inline-block !important;
+  }
+
+  div#mapLegend {
+    bottom: 75px;
+    left: 12px;
+    top: unset;
+    right: 12px;
+  }
+
+  .mapboxgl-ctrl-top-right {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1195px) {
+  div#mapLegend {
+    bottom: 55px;
+    left: unset;
+    top: unset;
+    right: 4px;
   }
 }

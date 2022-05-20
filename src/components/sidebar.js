@@ -36,6 +36,9 @@ const SidebarTextBox= styled(Box, { shouldForwardProp: (prop) => prop !== 'open'
         ...(open && {
             display: 'block',
             visibility: 'visible',
+            '@media (max-width: 600px)': {
+                marginBottom: '0px'
+            }
         }),
         ...(!open && {
             display: 'none',
@@ -58,7 +61,7 @@ const SidebarMenuItemText = styled(ListItemText, { shouldForwardProp: (prop) => 
 );
  
 export default function Sidebar(params) {
-   
+
     return (
         <Box className={styles.sidebarBox}>
             <SidebarTextBox open={params.open}>
@@ -68,7 +71,7 @@ export default function Sidebar(params) {
                     <p className={styles.serif}>Are you planning to host or attend a special event? Are you worried about someone bringing the virus to the occassion? We can help you estimate the probability.</p>
                     <p>Estimate the probability that one person could be infected with COVID-19 in the event, so you can take precautions and make safer decisions</p>
                 </div>  
-            </SidebarTextBox>       
+            </SidebarTextBox>  
             <MenuList sx={{paddingLeft: '5%'}}>
                 <SidebarMenuItem 
                     component={NavLink} 
