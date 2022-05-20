@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import geojsonvt from 'geojson-vt';
 import turf from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
@@ -18,9 +19,9 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
+import { display } from '@mui/system';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
-const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
 const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect' })(
@@ -78,7 +79,7 @@ export default function Map(props) {
     const [currentRegion, setCurrentRegion] = useState({});
     const [filterState, setFilterState] = useState({
         region: {},
-        size: 10,
+        size: 2.5,
     })
     const [mapData, setMapData]=useState([]);
 
@@ -99,29 +100,36 @@ export default function Map(props) {
         .then(function(myJson) {
             console.log("my json: ", myJson);
             setMapData(myJson);
+            var tileIndex = geojsonvt(mapData);
+            console.log("Tileindex: ", tileIndex);
         })
     }
 
     const handleSliderChange = (e, value) => {
-            let newSize = 'size_' + (value * 10);
-            setFilterState({
-                size: value
-            })
-            map.current.setPaintProperty('world-fill', 'fill-color', {
-                "property": newSize,
-                'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
-            });
+        let newSize = 'size_' + (value * 10);
+        setFilterState({
+            ...filterState,
+            size: value
+        })
+        map.current.setPaintProperty('world-fill', 'fill-color', {
+            "property": newSize,
+            'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+        });
 
-            setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+        setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
     };
 
     const handleRegionSelect = (e, value) => {
+        setFilterState({
+            ...filterState,
+            region: value
+        })
         if(value) {
             setCountrySelect(true); // set to true so estimate component is displayed
             setCurrentRegion(value); // set as current region for slider handler
             let selectedbbx = turf.bbox(value);
             map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon        
-            let thisCrowd = 'size_' + eventSize;
+            let thisCrowd = 'size_' + (filterState.size * 10);
             setBoxDisplayRisk(value.properties[thisCrowd]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
@@ -173,7 +181,7 @@ export default function Map(props) {
                     // option 1:
                     // this fill creates smooth gradients through value ranges
                     'fill-color': {
-                        'property': 'size_'+eventSize,
+                        'property': 'size_'+(filterState.size*10),
                         'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
                     // option 2:
@@ -252,14 +260,17 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                let thisCrowd = 'size_' + eventSize;
-                var displayRisk = feature.properties[thisCrowd];
+                let thisCrowd = 'size_' + (filterState.size * 10);
+                let displayRisk = feature.properties[thisCrowd];
 
-                if (feature.properties.thisCrowd < 1) { 
-                    displayRisk = '< 1'
-                } else {
-                    displayRisk = Math.round(displayRisk)
-                }
+                console.log("risko: ", displayRisk);
+
+
+                // if (feature.properties.thisCrowd < 1) { 
+                //     displayRisk = '< 1'
+                // } else {
+                //     displayRisk = displayRisk
+                // }
 
                 popup
                 .setLngLat(e.lngLat)
@@ -316,7 +327,7 @@ export default function Map(props) {
                             id="selector-eventSize"
                             value={filterState.size}
                             name="size"
-                            // defaultValue={2.5}
+                            defaultValue={2.5}
                             valueLabelFormat={valueLabelFormat}
                             getAriaValueText={valuetext}
                             step={null}
