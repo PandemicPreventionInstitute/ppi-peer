@@ -81,7 +81,7 @@ export default function Map(props) {
         region: {},
         size: 2.5,
     })
-    const [mapData, setMapData]=useState([]);
+    const [data, setData]=useState([]);
 
     const valuetext = (value) => {
         return value;
@@ -99,8 +99,8 @@ export default function Map(props) {
         })
         .then(function(myJson) {
             console.log("my json: ", myJson);
-            setMapData(myJson);
-            var tileIndex = geojsonvt(mapData);
+            setData(myJson);
+            var tileIndex = geojsonvt(data);
             console.log("Tileindex: ", tileIndex);
         })
     }
@@ -147,7 +147,7 @@ export default function Map(props) {
             // initialize map only once
             // if map already exists, do not redraw map, update source geojson only
             const geojsonSource = map.current.getSource('world');
-            geojsonSource.setData(mapData);
+            geojsonSource.setData(data);
             return;
         } 
         map.current = new mapboxgl.Map({
@@ -168,7 +168,7 @@ export default function Map(props) {
             map.current.addSource('world', {
                 'type': 'geojson',
                 'buffer': 1,
-                'data': {mapData}, // load geojson file here; @todo: swap this out for S3 bucket source
+                'data': {data}, // load geojson file here; @todo: swap this out for S3 bucket source
                 'generateId': true
             });
 
@@ -315,7 +315,7 @@ export default function Map(props) {
                             disablePortal
                             name="region"
                             id="selector-region"
-                            options={mapData.features}
+                            options={data.features}
                             getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
                             onChange={handleRegionSelect}
                             renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
