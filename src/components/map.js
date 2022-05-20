@@ -94,12 +94,10 @@ export default function Map(props) {
     const getData = () => {
         fetch('https://ppi-estimator.s3.amazonaws.com/globalData.json')
         .then(function(response) {
-            console.log("response: ", response)
             return response.json();
         })
-        .then(function(myJson) {
-            console.log("my json: ", myJson);
-            setData(myJson);
+        .then(function(jsonData) {
+            setData(jsonData);
             var tileIndex = geojsonvt(data);
             console.log("Tileindex: ", tileIndex);
         })
@@ -262,9 +260,6 @@ export default function Map(props) {
                 var feature = features[0];
                 let thisCrowd = 'size_' + (filterState.size * 10);
                 let displayRisk = feature.properties[thisCrowd];
-
-                console.log("risko: ", displayRisk);
-
 
                 // if (feature.properties.thisCrowd < 1) { 
                 //     displayRisk = '< 1'
