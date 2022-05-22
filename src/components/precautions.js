@@ -73,7 +73,7 @@ export default function Precautions(props) {
     return (
         <div id='Precautions' className={styles.precautions}>
             <PrecautionsContent open={openUp} /> 
-            <h4>
+            <h4 className={styles.precautionsLabel}>
                 <ShieldOutlined className={styles.roomOutlined}/> TAKE THE RIGHT PRECAUTIONS
                 <IconButton aria-label="open precautions" className={styles.expandButton} onClick={(props.winWidth < 600) ? handlePrecautionsOpenUp : handlePrecautionsOpenDown}>
                     <ExpandMoreOutlined className={styles.expandOutlined} style={{ display: ((!openDown && (props.winWidth > 600)) || ((props.winWidth < 600) && openUp)) ? 'block' : 'none' }} />

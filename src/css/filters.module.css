@@ -34,6 +34,8 @@
     display: inline;
     line-height: 30px;
     margin-top: -6px !important;
+    margin-left: -5px !important;
+    margin-right: -10px !important;
 }
 
 .crowdSize {
@@ -128,24 +130,28 @@ h1 {
 
 @media (max-width: 600px) {
     .precautions {
-        margin-top: -20px;
-        margin-bottom: -3px;
+        margin: -20px 0px;
         bottom: 0px !important;
         position: fixed !important;
         height: auto;
         background: #ffffff;
         z-index: 3;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 16px;
+        border-radius: 16px;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        padding: 0px 32px;
+        padding: 0px 12px;
         left: auto;        
-        width: 85%;
+        width: auto;
+        align-items: center;
+    }
+
+    .precautionsLabel {
+        text-align: center;
     }
 
     .iconGrid {
         padding-top: 10px;
-        margin-bottom: 0px;
+        margin-bottom: -10px;
+        padding-right: 10px;
     }
 
     .locationGrid {
@@ -159,6 +165,12 @@ h1 {
 
     .crowdSize {
         margin-top: 20px;
+        margin-bottom: 35px !important;
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
+    .estimateText {
         margin-bottom: 0px;
     }
 }
