@@ -8,7 +8,8 @@ import {
     Autocomplete,
     Slider,
     TextField,
-    Box
+    Box,
+    Grid
 } from '@mui/material';
 import {
     PeopleAltOutlined,
@@ -19,26 +20,28 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
-  
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
 
-const FilterBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect' })(
+const FilterBox = styled(Box)(
     ({ countrySelect }) => ({       
         ...(countrySelect && {
             borderRadius: '16px',
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
-            height: '100% + 38px',
-            marginTop: '-34px',
-            marginBottom: '-52px',
+            marginTop: '-16px',
+            marginBottom: '-10px',
+            '@media (max-width: 600px)': {
+                marginBottom: '-50px'
+            },
             marginLeft: '-32px',
             marginRight: '-32px',
-            padding: '34px 32px 68px'
+            padding: '16px 32px 10px'
         })
     })   
 );
 
-const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'countrySelect'})(
+const EstimateBox = styled(Box)(
     ({ countrySelect }) => ({       
         ...(countrySelect && {
             display: 'flex',
@@ -50,6 +53,9 @@ const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'country
             flexDirection: 'column',
             alignItems: 'left',
             padding: '10px 32px',
+            '@media (max-width:600px)': {
+                padding: '10px 16px'
+            },
             height: 'auto',
             overflow: 'hidden',
             backgroundRepeat: 'no-repeat',
@@ -63,7 +69,27 @@ const EstimateBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'country
         }),
     })
 );
+
+const PrecautionsBox = styled(Box)(() => ({
+    display: 'flex',
+    visibility: 'visible',
+    '@media (max-width: 600px)': {
+        display: 'none',
+        visibility: 'hidden'
+    }
+}));
  
+const MobilePrecautionsBox = styled(Box)(() => ({
+    display: 'flex',
+    visibility: 'visible',
+    '@media (min-width: 600px)': {
+        display: 'none',
+        visibility: 'hidden'
+    },    
+    flexDirection: 'column',
+    alignItems: 'center'
+}));
+
 export default function Map(props) {
     const mapContainer = useRef(true);
     const map = useRef(null);
@@ -122,11 +148,29 @@ export default function Map(props) {
             ...filterState,
             region: value
         })
-        if(value) {
+        if (value) {
             setCountrySelect(true); // set to true so estimate component is displayed
             setCurrentRegion(value); // set as current region for slider handler
-            let selectedbbx = turf.bbox(value);
-            map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon        
+            let selectedbbx = turf.bbox(value); 
+            if (props.windowDimension.winWidth < 600) { // mobile map display
+                let filtersTopText = document.getElementById('filtersTopText');
+                filtersTopText.style.display = 'none';
+                filtersTopText.style.visibility = 'hidden';
+                document.getElementById("filterBox").scrollIntoView(); // when the user selects a country hide the top text and jump to the map filters
+                map.current.fitBounds(selectedbbx, { // on region select, zoom to region polygon for mobile map view 
+                    padding: {
+                        top: 0,
+                        left: 100,
+                        right: 100,
+                        bottom: 500
+                    } 
+                });
+                map.current.scrollZoom.disable(); // disable scrolling/zooming for mobile map view
+                map.current.dragPan.disable(); // disable panning for mobile map view
+            } else {
+                map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
+            }
+            setCountrySelect(true); // set to true so estimate component is displayed                            
             let thisCrowd = 'size_' + (filterState.size * 10);
             setBoxDisplayRisk(value.properties[thisCrowd]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
@@ -306,61 +350,67 @@ export default function Map(props) {
     return (
         <div className="map">
             <div className="mapfilters">
-                <Box>
-                    <FilterBox countrySelect={countrySelect}>
+                <FilterBox id='filterBox' countrySelect={countrySelect}>
+                    <div id='filtersTopText'>
                         <h3 className="serif">Select your event location and size</h3>
-                        <p>Where will the event or activity take place and how many people will be attending?</p>
+                        <p className='filtersQuestion'>Where will the event or activity take place and how many people will be attending?</p>
+                    </div>
+                    
+                    <Grid container>
+                        <Grid item xs={countrySelect ? 7 : 12} sm={12} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
+                            <h4 className={styles.locationText}><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
+                            <Autocomplete
+                                fullWidth
+                                disablePortal
+                                name="region"
+                                id="selector-region"
+                                options={data.features}
+                                // value={currentRegion ? currentRegion : []}
+                                getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
+                                onChange={handleRegionSelect}
+                                renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
+                            />
+                        </Grid>
+                        <Grid item xs={countrySelect ? 5 : 12} sm={12} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
+                            <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
+                            <Slider
+                                aria-label="Restricted values"
+                                id="selector-eventSize"
+                                value={filterState.size}
+                                name="size"
+                                defaultValue={2.5}
+                                valueLabelFormat={valueLabelFormat}
+                                getAriaValueText={valuetext}
+                                step={null}
+                                valueLabelDisplay="on"
+                                marks={marks}
+                                onChange={handleSliderChange}
+                            />
+                        </Grid>
+                    </Grid>                        
+                </FilterBox>
 
-                        <h4><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
-                        <Autocomplete
-                            fullWidth
-                            disablePortal
-                            name="region"
-                            id="selector-region"
-                            options={data.features}
-                            // value={currentRegion ? currentRegion : []}
-                            getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
-                            onChange={handleRegionSelect}
-                            renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
-                        />
+                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 1 ? styles.nodata : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6))))}>
+                    <h4 className={styles.estimateHeader}>
+                        <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
+                    </h4>
+                    <h3 className={styles.estimateRange}>
+                        {boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High'))))}
+                    </h3>
+                    <h1>{boxDisplayRisk > 99 ? '> 99' : boxDisplayRisk}% probable</h1>
+                    <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
+                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                            <IconButton>
+                                <InfoOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </h4>
+                    <p>Updated {dateLastUpdated}</p>
+                </EstimateBox>
 
-                        <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
-                        <Slider
-                            aria-label="Restricted values"
-                            id="selector-eventSize"
-                            value={filterState.size}
-                            name="size"
-                            defaultValue={2.5}
-                            valueLabelFormat={valueLabelFormat}
-                            getAriaValueText={valuetext}
-                            step={null}
-                            valueLabelDisplay="on"
-                            marks={marks}
-                            onChange={handleSliderChange}
-                        />
-                    </FilterBox>
-
-                    <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 1 ? styles.nodata : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6))))}>
-                        <h4 className={styles.estimateHeader}>
-                            <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
-                        </h4>
-                        <h3 className={styles.estimateRange}>
-                            {boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High'))))}
-                        </h3>
-                        <h1>{boxDisplayRisk > 99 ? '> 99' : boxDisplayRisk}% probable</h1>
-                        <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
-                            <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
-                                <IconButton>
-                                    <InfoOutlinedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </h4>
-                        <p>Updated {dateLastUpdated}</p>
-                    </EstimateBox> 
-
-                    <Precautions />
-                </Box>                                         
-            </div>
+                <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
+            </div> 
+            <MobilePrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></MobilePrecautionsBox>         
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
