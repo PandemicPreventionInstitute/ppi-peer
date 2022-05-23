@@ -19,7 +19,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
-import { display } from '@mui/system';
   
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
@@ -103,16 +102,19 @@ export default function Map(props) {
 
     const handleSliderChange = (e, value) => {
         let newSize = 'size_' + (value * 10);
+        let newVal = value;
         setFilterState({
             ...filterState,
-            size: value
+            size: newVal
         })
         map.current.setPaintProperty('world-fill', 'fill-color', {
             "property": newSize,
             'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
         });
 
-        setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+        if(countrySelect) {
+            setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+        }
     };
 
     const handleRegionSelect = (e, value) => {
@@ -256,7 +258,14 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
+                console.log("this feature: ", feature);
+                console.log("this size: ", filterState.size * 10);
                 let thisCrowd = 'size_' + (filterState.size * 10);
+                setCountrySelect(true);
+                setFilterState({
+                    region: feature
+                });
+                setBoxDisplayRisk(feature.properties[thisCrowd]);
                 let displayRisk = feature.properties[thisCrowd];
 
                 // if (feature.properties.thisCrowd < 1) { 
@@ -309,6 +318,7 @@ export default function Map(props) {
                             name="region"
                             id="selector-region"
                             options={data.features}
+                            // value={currentRegion ? currentRegion : []}
                             getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
                             onChange={handleRegionSelect}
                             renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
@@ -337,7 +347,7 @@ export default function Map(props) {
                         <h3 className={styles.estimateRange}>
                             {boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High'))))}
                         </h3>
-                        <h1>{boxDisplayRisk}% probable</h1>
+                        <h1>{boxDisplayRisk > 99 ? '> 99' : boxDisplayRisk}% probable</h1>
                         <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
                             <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
                                 <IconButton>
