@@ -304,11 +304,13 @@ export default function Map(props) {
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
 
-                // if (feature.properties.thisSize < 1) { 
-                //     displayRisk = '< 1'
-                // } else {
-                //     displayRisk = displayRisk
-                // }
+                if (feature.properties[thisSize] < 1) { 
+                    displayRisk = '< 1';
+                } elseif (feature.properties[thisSize] > 99){
+                    displayRisk = '> 99';
+                } else {
+                    displayRisk = displayRisk;
+                }
 
                 popup
                 .setLngLat(e.lngLat)
@@ -357,8 +359,7 @@ export default function Map(props) {
                                 name="region"
                                 id="selector-region"
                                 options={data.features}
-                                // value={currentRegion ? currentRegion : []}
-                                getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
+                                getOptionLabel={(option) => option.properties.RegionName}
                                 onChange={handleRegionSelect}
                                 renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                             />
