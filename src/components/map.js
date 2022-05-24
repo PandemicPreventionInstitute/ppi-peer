@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import geojsonvt from 'geojson-vt';
 import turf from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
@@ -121,8 +120,6 @@ export default function Map(props) {
         })
         .then(function(jsonData) {
             setData(jsonData);
-            var tileIndex = geojsonvt(data);
-            console.log("Tileindex: ", tileIndex);
         })
     }
 
@@ -171,8 +168,8 @@ export default function Map(props) {
                 map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
-            let thisCrowd = 'size_' + (filterState.size * 10);
-            setBoxDisplayRisk(value.properties[thisCrowd]); // set risk for selected country
+            let thisSize = 'size_' + (filterState.size * 10);
+            setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
             setCountrySelect(false); // set to false so estimate component closes
@@ -182,7 +179,7 @@ export default function Map(props) {
 
     useEffect(() => {
         getData()
-    },[])
+    })
     
     useEffect(() => {
         if (map.current) {
@@ -302,17 +299,12 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                console.log("this feature: ", feature);
-                console.log("this size: ", filterState.size * 10);
-                let thisCrowd = 'size_' + (filterState.size * 10);
+                let thisSize = 'size_' + (filterState.size * 10);
                 setCountrySelect(true);
-                setFilterState({
-                    region: feature
-                });
-                setBoxDisplayRisk(feature.properties[thisCrowd]);
-                let displayRisk = feature.properties[thisCrowd];
+                setBoxDisplayRisk(feature.properties[thisSize]);
+                let displayRisk = feature.properties[thisSize];
 
-                // if (feature.properties.thisCrowd < 1) { 
+                // if (feature.properties.thisSize < 1) { 
                 //     displayRisk = '< 1'
                 // } else {
                 //     displayRisk = displayRisk
