@@ -306,12 +306,12 @@ export default function Map(props) {
 
                 if (feature.properties[thisSize] < 1) { 
                     displayRisk = '< 1';
-                } elseif (feature.properties[thisSize] > 99){
+                } else if (feature.properties[thisSize] > 99) {
                     displayRisk = '> 99';
                 } else {
-                    displayRisk = displayRisk;
+                    return displayRisk;
                 }
-
+                
                 popup
                 .setLngLat(e.lngLat)
                 .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '% </strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
