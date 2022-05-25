@@ -176,7 +176,6 @@ export default function Map(props) {
 
     const sourceCallback = () => {
         if (map.current.getSource('world') && map.current.isSourceLoaded('world')) {
-            console.log("data loaded!");
         }
     }
 
@@ -302,14 +301,13 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                console.log("this feature: ", feature);
                 let thisSize = 'risk_' + (filterState.size * 10);
                 setCountrySelect(true);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
 
                 if (feature.properties[thisSize] < 0) {
-                    displayRisk = 'No data available for the last 14 days.';
+                    displayRisk = 'No data has been reported from this region within the last 14 days.';
                 } else if (feature.properties[thisSize] < 1) { 
                     displayRisk = '< 1%';
                 } else if (feature.properties[thisSize] > 99) {
@@ -397,7 +395,7 @@ export default function Map(props) {
                     <h3 className={styles.estimateRange}>
                         {boxDisplayRisk < 0 ? 'No Data' : (boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High')))))}
                     </h3>
-                    <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable')}</h1>
+                    <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))}</h1>
                     {boxDisplayRisk > 0 ? 
                         <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
                             <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
@@ -406,7 +404,7 @@ export default function Map(props) {
                                 </IconButton>
                             </Tooltip>
                         </h4>
-                    : <h4 className={styles.estimateText}>No data was reported from this region in at least 14 days.</h4>
+                    : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
                     }
                     <p>Last Updated: {dateLastUpdated}</p>
                 </EstimateBox>
