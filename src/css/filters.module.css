@@ -93,6 +93,11 @@ h1 {
 }
 
 .nodata {
+    background-color: #efefef;
+    color: #4E585B;
+}
+
+.range0 {
     background-color: #eff5d9;
     color: #4E585B;
     background-image: url('../assets/man_coughing_very_low.png');
