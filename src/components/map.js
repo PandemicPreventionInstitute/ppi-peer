@@ -364,8 +364,15 @@ export default function Map(props) {
                                 name="region"
                                 id="selector-region"
                                 options={data.features}
-                                getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
+                                getOptionLabel={(option) => option.properties.RegionName}
                                 onChange={handleRegionSelect}
+                                renderOption = {(props, option) => { // use unique geoid as key to pacify MUI's unique key errors for autocomplete
+                                    return (
+                                        <li {...props} key={option.properties.geoid}>
+                                            {option.properties.RegionName}
+                                        </li>
+                                    )
+                                }}
                                 renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                             />
                         </Grid>
@@ -425,7 +432,7 @@ export default function Map(props) {
                 <span className="range5">75 - 99 </span>
                 <span className="range6">More than 99% </span>
             </div>
-            <div id="loading" class="loading"></div>
+            <div id="loading" className="loading"></div>
         </div>
     );
 }
