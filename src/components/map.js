@@ -151,12 +151,16 @@ export default function Map(props) {
     const map = useRef(null);
     const [lng, setLng] = useState(0);
     const [lat, setLat] = useState(45);
-    const [zoom, setZoom] = useState(1.5);
-    const [eventSize, setEventSize] = useState(25);
-
+    const [zoom, setZoom] = useState(2);
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
-    const [countrySelect, setCountrySelect] = React.useState(false);
+    const [countrySelect, setCountrySelect] = useState(false);
+    const [currentRegion, setCurrentRegion] = useState({});
+    const [filterState, setFilterState] = useState({
+        region: {},
+        size: 2.5,
+    })
+    const [data, setData]=useState([]);
 
     const valuetext = (value) => {
         return value;
@@ -165,15 +169,39 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value * 10; 
     }
-    
-    let data ='https://ppi-estimator.s3.amazonaws.com/data_'+ eventSize +'.fc.geojson'; // set datasource to depend on eventsize value
+
+    const getData = () => {
+        fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.json')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(jsonData) {
+            setData(jsonData);
+        })
+    }
 
     const handleSliderChange = (e, value) => {
-        setEventSize(value * 10); // set eventsize value on slider
-    };
+        let newSize = 'risk_' + (value * 10);
+        let newVal = value;
+        setFilterState({
+            ...filterState,
+            size: newVal
+        })
+        map.current.setPaintProperty('world-fill', 'fill-color', {
+            "property": newSize,
+            'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+        });
+        // setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+    }
 
     const handleRegionSelect = (e, value) => {
+        setFilterState({
+            ...filterState,
+            region: value
+        })
         if (value) {
+            setCountrySelect(true); // set to true so estimate component is displayed
+            setCurrentRegion(value); // set as current region for slider handler
             let selectedbbx = turf.bbox(value); 
             if (props.windowDimension.winWidth < 600) { // mobile map display
                 let filtersTopText = document.getElementById('filtersTopText');
@@ -194,13 +222,24 @@ export default function Map(props) {
                 map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
-            setBoxDisplayRisk(value.properties.risk); // set risk for selected country
+            let thisSize = 'risk_' + (filterState.size * 10);
+            setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
             setCountrySelect(false); // set to false so estimate component closes
             map.current.fitBounds(map.current.getBounds());
         }
     }
+
+    const sourceCallback = () => {
+        if (map.current.getSource('world') && map.current.isSourceLoaded('world')) {
+            console.log("data loaded!");
+        }
+    }
+
+    useEffect(() => {
+        getData()
+    },[])
     
     useEffect(() => {
         if (map.current) {
@@ -227,7 +266,7 @@ export default function Map(props) {
 
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': data, // load geojson file here; @todo: swap this out for S3 bucket source
+                'data': {data}, // load geojson file here; @todo: swap this out for S3 bucket source
                 'generateId': true
             });
 
@@ -237,18 +276,19 @@ export default function Map(props) {
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
+                    // 'fill-color': '#99d98c',
                     // option 1:
                     // this fill creates smooth gradients through value ranges
                     'fill-color': {
-                        'property': 'risk',
-                        'stops': [[0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+                        'property': 'risk_'+(filterState.size*10),
+                        'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                       },
                     // option 2:
                     //this fill option creates strict steps between value ranges
                     // 'fill-color': [
                     //     'step',
-                    //     ['get', 'risk'],
-                    //     '#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
+                    //     ['get', 'risk_25'],
+                    //     '#000000',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
                     // ],
                     'fill-opacity': [
                         'case',
@@ -319,22 +359,31 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                var displayRisk = feature.properties.risk;
+                console.log("this feature: ", feature);
+                let thisSize = 'risk_' + (filterState.size * 10);
+                setCountrySelect(true);
+                setBoxDisplayRisk(feature.properties[thisSize]);
+                let displayRisk = feature.properties[thisSize];
 
-                if (feature.properties.risk < 1) { 
-                    displayRisk = '< 1'
+                if (feature.properties[thisSize] < 0) {
+                    displayRisk = 'No data available for the last 14 days.';
+                } else if (feature.properties[thisSize] < 1) { 
+                    displayRisk = '< 1%';
+                } else if (feature.properties[thisSize] > 99) {
+                    displayRisk = '> 99%';
                 } else {
-                    displayRisk = Math.round(displayRisk)
+                    return Math.round(displayRisk) + '%';
                 }
-
+                
                 popup
                 .setLngLat(e.lngLat)
-                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '% </strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
+                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '</strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
             });
+
+            map.current.on('sourcedata', sourceCallback);
     
-        });
-            
+        });            
     });
     
     useEffect(() => {
@@ -417,9 +466,10 @@ export default function Map(props) {
                             <Autocomplete
                                 fullWidth
                                 disablePortal
-                                id="combo-box-demo"
-                                options={regions.features}
-                                getOptionLabel={(option) => option.properties.RegionName}
+                                name="region"
+                                id="selector-region"
+                                options={data.features}
+                                getOptionLabel={(option) => option.properties.RegionName + ' (' + option.properties.geoid + ')'}
                                 onChange={handleRegionSelect}
                                 renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                             />
@@ -451,6 +501,9 @@ export default function Map(props) {
                             <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
                             <Slider
                                 aria-label="Restricted values"
+                                id="selector-eventSize"
+                                value={filterState.size}
+                                name="size"
                                 defaultValue={2.5}
                                 valueLabelFormat={valueLabelFormat}
                                 getAriaValueText={valuetext}
@@ -475,22 +528,25 @@ export default function Map(props) {
                     </Grid>                        
                 </FilterBox>
 
-                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 1 ? styles.nodata : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6))))}>
+                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range0 : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
                     </h4>
                     <h3 className={styles.estimateRange}>
-                        {boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High'))))}
+                        {boxDisplayRisk < 0 ? 'No Data' : (boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High')))))}
                     </h3>
-                    <h1>{boxDisplayRisk}% probable</h1>
-                    <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
-                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
-                            <IconButton>
-                                <InfoOutlinedIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </h4>
-                    <p>Updated {dateLastUpdated}</p>
+                    <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable')}</h1>
+                    {boxDisplayRisk > 0 ? 
+                        <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
+                            <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                <IconButton>
+                                    <InfoOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </h4>
+                    : <h4 className={styles.estimateText}>No data was reported from this region in at least 14 days.</h4>
+                    }
+                    <p>Last Updated: {dateLastUpdated}</p>
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
@@ -526,6 +582,7 @@ export default function Map(props) {
                 <span className="range5">75 - 99 </span>
                 <span className="range6">More than 99% </span>
             </div>
+            <div id="loading" class="loading"></div>
         </div>
     );
 }
