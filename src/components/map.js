@@ -3,12 +3,14 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import turf from 'turf';
 import Precautions from './precautions';
 import styles from '../css/filters.module.css';
+import OnboardingStyles from '../css/onboarding.module.css'
 import { 
     Autocomplete,
     Slider,
     TextField,
     Box,
-    Grid
+    Grid,
+    Backdrop
 } from '@mui/material';
 import {
     PeopleAltOutlined,
@@ -19,8 +21,14 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
+import Popper from '@mui/material/Popper';
+import Fade from '@mui/material/Fade';
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+import OnboardingSteps from './onboardingSteps';
+import Onboarding from './onboarding.js';
+
+mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
@@ -88,6 +96,54 @@ const MobilePrecautionsBox = styled(Box)(() => ({
     },    
     flexDirection: 'column',
     alignItems: 'center'
+}));
+
+const OnboardingPopper = styled(Popper)(() => ({
+    zIndex: 6, 
+    width: 'auto', 
+    maxWidth: '350px', 
+    padding: '10px',
+    '&[x-placement*="right"] $arrow': {
+        left: 0,
+        marginLeft: "-0.71em",
+        height: "1em",
+        width: "0.71em",
+        marginTop: 4,
+        marginBottom: 4,
+        "&::before": {
+        transformOrigin: "100% 100%"
+        }
+    },
+    '&[x-placement*="left"] $arrow': {
+        right: 0,
+        marginRight: "-0.71em",
+        height: "1em",
+        width: "0.71em",
+        marginTop: 4,
+        marginBottom: 4,
+        "&::before": {
+        transformOrigin: "0 0"
+        }
+    },
+    // Stolen from https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/Tooltip/Tooltip.js
+    arrow: {
+        overflow: "hidden",
+        position: "absolute",
+        width: "1em",
+        height: "0.71em" /* = width / sqrt(2) = (length of the hypotenuse) */,
+        boxSizing: "border-box",
+        // color,
+        "&::before": {
+          content: '""',
+          margin: "auto",
+          display: "block",
+          width: "100%",
+          height: "100%",
+        //   boxShadow: theme.shadows[1],
+          backgroundColor: "currentColor",
+          transform: "rotate(45deg)"
+        }
+      }
 }));
 
 export default function Map(props) {
@@ -299,9 +355,64 @@ export default function Map(props) {
             map.current.resize();
         }
     });
+
+    const localChecked = () => {
+        const checked = JSON.parse(localStorage.getItem('checked'));
+        if (checked) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const [locationPopperOpen, setLocationPopperOpen] = useState(false);
+    const [crowdSizePopperOpen, setCrowdSizePopperOpen] = useState(false);
+    const [mapControlPopperOpen, setMapControlPopperOpen] = useState(false);
+
+    
+    const [arrowRef, setArrowRef] = React.useState(null);
+    const gridLocationRef = React.useRef();
+    const gridCrowdSizeRef = React.useRef();
+
+    const [locationAnchorEl, setLocationAnchorEl] = useState(null);
+    const [crowdSizeAnchorEl, setCrowdSizeAnchorEl] = useState(null);
+    const [mapControlAnchorEl, setMapControlAnchorEl] = useState(null);
+
+    const handleTutorialStep1 = () => {
+        setLocationAnchorEl(gridLocationRef.current);
+        setLocationPopperOpen(true);  
+    }
+
+    const handleTutorialStep2 = () => {
+        setCrowdSizeAnchorEl(gridCrowdSizeRef.current);
+        setLocationPopperOpen(false);
+        setCrowdSizePopperOpen(true);
+    }
+
+    const handleTutorialStep3 = () => {
+        let mapControl = document.getElementsByClassName('mapboxgl-ctrl-top-right');
+        setMapControlAnchorEl(mapControl[0]);
+        setCrowdSizePopperOpen(false);
+        setMapControlPopperOpen(true);
+    }
+
+    const handleLocationPopperClose = () => {
+        setLocationPopperOpen(false);
+    }
+
+    const handleCrowdSizePopperClose = () => {
+        setCrowdSizePopperOpen(false);
+    }
+
+    const handleMapControlPopperClose = () => {
+        setMapControlPopperOpen(false);
+    }
     
     return (
         <div className="map">
+            <div style={{display: localChecked() ? 'none' : 'flex', visibility: localChecked() ? 'hidden' : 'visible'}}>
+                <Onboarding handleTutorialStep1={handleTutorialStep1}/>
+            </div>
             <div className="mapfilters">
                 <FilterBox id='filterBox' countrySelect={countrySelect}>
                     <div id='filtersTopText'>
@@ -310,7 +421,7 @@ export default function Map(props) {
                     </div>
                     
                     <Grid container>
-                        <Grid item xs={countrySelect ? 7 : 12} sm={12} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
+                        <Grid item xs={countrySelect ? 7 : 12} sm={12} ref={gridLocationRef} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
                             <h4 className={styles.locationText}><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
                             <Autocomplete
                                 fullWidth
@@ -322,7 +433,30 @@ export default function Map(props) {
                                 renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                             />
                         </Grid>
-                        <Grid item xs={countrySelect ? 5 : 12} sm={12} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
+                        <Backdrop open={locationPopperOpen}>
+                            <OnboardingPopper 
+                                open={locationPopperOpen} 
+                                anchorEl={locationAnchorEl} 
+                                placement='right' 
+                                transition 
+                                // modifiers={{
+                                //     arrow: {
+                                //       enabled: true,
+                                //       element: arrowRef,
+                                //     }
+                                //   }}
+                                /* sx={{zIndex: 6, width: 'auto', maxWidth: '350px', padding: '10px'}} */>
+                            {({ TransitionProps }) => (
+                                <Fade {...TransitionProps}>
+                                <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper', padding: '0px 20px 0px 10px'}}>
+                                    <OnboardingSteps step1={true} handleLocationPopperClose={handleLocationPopperClose} handleTutorialStep2={handleTutorialStep2}/>
+                                </Box>
+                                </Fade>
+                            )}
+                            </OnboardingPopper>
+                            {/* {<span className={OnboardingStyles.arrow} ref={setArrowRef} />} */}
+                        </Backdrop>
+                        <Grid item xs={countrySelect ? 5 : 12} sm={12} ref={gridCrowdSizeRef} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
                             <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
                             <Slider
                                 aria-label="Restricted values"
@@ -335,6 +469,18 @@ export default function Map(props) {
                                 onChange={handleSliderChange}
                             />
                         </Grid>
+                        <Backdrop open={crowdSizePopperOpen}>
+                            <Popper open={crowdSizePopperOpen} anchorEl={crowdSizeAnchorEl} placement='right' transition sx={{zIndex: 6, width: 'auto', maxWidth: '350px', padding: '30px'}}>
+                            {({ TransitionProps }) => (
+                                <Fade {...TransitionProps}>
+                                <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper', padding: '0px 20px 0px 10px'}}>
+                                    <OnboardingSteps step2={true} handleCrowdSizePopperClose={handleCrowdSizePopperClose} handleTutorialStep3={handleTutorialStep3}/>
+                                </Box>
+                                </Fade>
+                            )}
+                            </Popper>
+                        </Backdrop>
+                        
                     </Grid>                        
                 </FilterBox>
 
@@ -357,12 +503,29 @@ export default function Map(props) {
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
-            </div> 
+            </div>
             <MobilePrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></MobilePrecautionsBox>         
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
             <div ref={mapContainer} className="map-container" />
+            <Backdrop open={mapControlPopperOpen} sx={{zIndex: 6}}>
+                <Popper 
+                    open={mapControlPopperOpen} 
+                    anchorEl={mapControlAnchorEl} 
+                    placement='left' 
+                    transition 
+                    sx={{zIndex: 7, width: 'auto', maxWidth: '350px', padding: '20px'}}>
+                    {({ TransitionProps }) => (
+                        <Fade {...TransitionProps}>
+                        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper', padding: '0px 20px 0px 10px'}}>
+                            <OnboardingSteps step3={true} handleMapControlPopperClose={handleMapControlPopperClose} />
+                        </Box>
+                        </Fade>
+                    )}
+                </Popper>
+            </Backdrop>
+            
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
                 <span className="nodata">&#x3c; 1%</span>
