@@ -356,15 +356,6 @@ export default function Map(props) {
         }
     });
 
-    const localChecked = () => {
-        const checked = JSON.parse(localStorage.getItem('checked'));
-        if (checked) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
     const [locationPopperOpen, setLocationPopperOpen] = useState(false);
     const [crowdSizePopperOpen, setCrowdSizePopperOpen] = useState(false);
     const [mapControlPopperOpen, setMapControlPopperOpen] = useState(false);
@@ -410,7 +401,7 @@ export default function Map(props) {
     
     return (
         <div className="map">
-            <div style={{display: localChecked() ? 'none' : 'flex', visibility: localChecked() ? 'hidden' : 'visible'}}>
+            <div>
                 <Onboarding handleTutorialStep1={handleTutorialStep1}/>
             </div>
             <div className="mapfilters">
@@ -454,7 +445,7 @@ export default function Map(props) {
                                 </Fade>
                             )}
                             </OnboardingPopper>
-                            {/* {<span className={OnboardingStyles.arrow} ref={setArrowRef} />} */}
+                            {<span className={OnboardingStyles.arrow} ref={setArrowRef} />}
                         </Backdrop>
                         <Grid item xs={countrySelect ? 5 : 12} sm={12} ref={gridCrowdSizeRef} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
                             <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
