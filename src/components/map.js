@@ -26,8 +26,7 @@ import Fade from '@mui/material/Fade';
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
 
-mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGs3c2tzMDBqdzNjbGMyd2hkOGE1byJ9.A35zlxC_ItZ8C_sPzpO8vQ';
-//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
@@ -95,6 +94,14 @@ const MobilePrecautionsBox = styled(Box)(() => ({
     },    
     flexDirection: 'column',
     alignItems: 'center'
+}));
+
+const OnboardingBox = styled(Box)(() => ({
+    p: 1,  
+    boxShadow: '0 0 10px rgba(0,0,0,0.2)', 
+    borderRadius: '16px', 
+    padding: '0px 20px 0px 10px',
+    backgroundColor: 'white'
 }));
 
 const OnboardingPopper = styled(Popper)(({ theme }) => ({
@@ -447,7 +454,7 @@ export default function Map(props) {
     return (
         <div className="map">
             <div>
-                <Onboarding handleTutorialStep1={handleTutorialStep1}/>
+                {props.windowDimension.winWidth > 600 ? <Onboarding handleTutorialStep1={handleTutorialStep1}/> : null}
             </div>
             <div className="mapfilters">
                 <FilterBox id='filterBox' countrySelect={countrySelect}>
@@ -488,10 +495,10 @@ export default function Map(props) {
                             >                           
                             {({ TransitionProps }) => (
                                 <Fade {...TransitionProps}>
-                                <Box sx={{ p: 1, bgcolor: 'background.paper', boxShadow: '0 0 10px rgba(0,0,0,0.2)', borderRadius: '16px', padding: '0px 20px 0px 10px'}}>
+                                <OnboardingBox>
                                     <Arrow className='MuiPopper-arrow' ref={setArrowRef1} />
                                     <OnboardingSteps step1={true} handleLocationPopperClose={handleLocationPopperClose} handleTutorialStep2={handleTutorialStep2}/>
-                                </Box>
+                                </OnboardingBox>
                                 </Fade>
                             )}
                             </OnboardingPopper>
@@ -529,10 +536,10 @@ export default function Map(props) {
                             ]}>
                             {({ TransitionProps }) => (
                                 <Fade {...TransitionProps}>
-                                <Box sx={{ p: 1, bgcolor: 'background.paper', boxShadow: '0 0 10px rgba(0,0,0,0.2)', borderRadius: '16px', padding: '0px 20px 0px 10px'}}>
+                                <OnboardingBox>
                                     <Arrow className='MuiPopper-arrow' ref={setArrowRef2} />
                                     <OnboardingSteps step2={true} handleCrowdSizePopperClose={handleCrowdSizePopperClose} handleTutorialStep3={handleTutorialStep3}/>
-                                </Box>
+                                </OnboardingBox>
                                 </Fade>
                             )}
                             </OnboardingPopper>
@@ -586,10 +593,10 @@ export default function Map(props) {
                     ]}>
                     {({ TransitionProps }) => (
                         <Fade {...TransitionProps}>
-                        <Box sx={{ p: 1, bgcolor: 'background.paper', boxShadow: '0 0 10px rgba(0,0,0,0.2)', borderRadius: '16px', padding: '0px 20px 0px 10px'}}>
+                        <OnboardingBox>
                             <Arrow className='MuiPopper-arrow' ref={setArrowRef3} />
                             <OnboardingSteps step3={true} handleMapControlPopperClose={handleMapControlPopperClose} />
-                        </Box>
+                        </OnboardingBox>
                         </Fade>
                     )}
                 </OnboardingPopper>
