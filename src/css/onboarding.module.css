@@ -1,0 +1,47 @@
+.imageRoot {
+    width: 45%;
+    flex-shrink: 1;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    font-weight: 400;
+    overflow: hidden;
+    animation-name: css-0;
+    animation-duration: 0.367s;
+    animation-timing-function: cubic-bezier(0.1, 0.25, 0.75, 0.9);
+    animation-fill-mode: both;
+    text-overflow: ellipsis;
+}
+
+.image {
+    display: block;
+    opacity: 1;
+    height: auto;
+    width: 100%;
+}
+
+.dialogContent {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-flow: column nowrap;
+    width: auto;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.welcome {
+    color: #318AD0;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 28px;
+}
+
+.dialogText {
+    text-align: center;
+}
+
+.skip {
+    color: inherit !important;
+}
