@@ -27,7 +27,6 @@ import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
-const regions = require('../assets/regions.json');
 const marks = require('../assets/eventSizes.json');
 
 const FilterBox = styled(Box)(
@@ -246,7 +245,7 @@ export default function Map(props) {
             // initialize map only once
             // if map already exists, do not redraw map, update source geojson only
             const geojsonSource = map.current.getSource('world');
-            // geojsonSource.setData({data});
+            geojsonSource.setData({data});
             return;
         } 
         map.current = new mapboxgl.Map({
