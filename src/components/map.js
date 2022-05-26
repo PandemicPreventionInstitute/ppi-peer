@@ -10,7 +10,8 @@ import {
     Slider,
     TextField,
     Box,
-    Grid
+    Grid,
+    Backdrop
 } from '@mui/material';
 import {
     PeopleAltOutlined,
@@ -21,6 +22,11 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
+import Popper from '@mui/material/Popper';
+import Fade from '@mui/material/Fade';
+
+import OnboardingSteps from './onboardingSteps';
+import Onboarding from './onboarding.js';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
@@ -90,6 +96,56 @@ const MobilePrecautionsBox = styled(Box)(() => ({
     flexDirection: 'column',
     alignItems: 'center'
 }));
+
+const OnboardingBox = styled(Box)(() => ({
+    p: 1,  
+    boxShadow: '0 0 10px rgba(0,0,0,0.2)', 
+    borderRadius: '16px', 
+    padding: '0px 20px 0px 10px',
+    backgroundColor: 'white'
+}));
+
+const OnboardingPopper = styled(Popper)(({ theme }) => ({
+    zIndex: 6, 
+    width: 'auto', 
+    maxWidth: '350px', 
+    padding: '10px 0px',
+    '&[data-popper-placement*="right"] .MuiPopper-arrow': {
+        left: 0,
+        marginLeft: '-0.9em',
+        height: '3em',
+        width: '1em',
+        '&::before': {
+            borderWidth: '1em 1em 1em 0',
+            borderColor: `transparent ${theme.palette.background.paper} transparent transparent`,
+        },
+    },
+    '&[data-popper-placement*="left"] .MuiPopper-arrow': {
+        right: 0,
+        marginRight: '-0.9em',
+        height: '3em',
+        width: '1em',
+        '&::before': {
+            borderWidth: '1em 0 1em 1em',
+            borderColor: `transparent transparent transparent ${theme.palette.background.paper}`,
+        },
+    },
+}));
+
+const Arrow = styled('div')({
+    position: 'absolute',
+    fontSize: 7,
+    width: '3em',
+    height: '3em',
+    '&::before': {
+      content: '""',
+      margin: 'auto',
+      display: 'block',
+      width: 0,
+      height: 0,
+      borderStyle: 'solid',
+    },
+  });
 
 export default function Map(props) {
     const mapContainer = useRef(true);
@@ -356,9 +412,58 @@ export default function Map(props) {
             map.current.resize();
         }
     });
+
+    const [locationPopperOpen, setLocationPopperOpen] = useState(false);
+    const [crowdSizePopperOpen, setCrowdSizePopperOpen] = useState(false);
+    const [mapControlPopperOpen, setMapControlPopperOpen] = useState(false);
+
+    
+    const [arrowRef1, setArrowRef1] = React.useState(null);
+    const [arrowRef2, setArrowRef2] = React.useState(null);
+    const [arrowRef3, setArrowRef3] = React.useState(null);
+
+    const gridLocationRef = React.useRef();
+    const gridCrowdSizeRef = React.useRef();
+
+    const [locationAnchorEl, setLocationAnchorEl] = useState(null);
+    const [crowdSizeAnchorEl, setCrowdSizeAnchorEl] = useState(null);
+    const [mapControlAnchorEl, setMapControlAnchorEl] = useState(null);
+
+    const handleTutorialStep1 = () => {
+        setLocationAnchorEl(gridLocationRef.current);
+        setLocationPopperOpen(true);  
+    }
+
+    const handleTutorialStep2 = () => {
+        setCrowdSizeAnchorEl(gridCrowdSizeRef.current);
+        setLocationPopperOpen(false);
+        setCrowdSizePopperOpen(true);
+    }
+
+    const handleTutorialStep3 = () => {
+        let mapControl = document.getElementsByClassName('mapboxgl-ctrl-top-right');
+        setMapControlAnchorEl(mapControl[0]);
+        setCrowdSizePopperOpen(false);
+        setMapControlPopperOpen(true);
+    }
+
+    const handleLocationPopperClose = () => {
+        setLocationPopperOpen(false);
+    }
+
+    const handleCrowdSizePopperClose = () => {
+        setCrowdSizePopperOpen(false);
+    }
+
+    const handleMapControlPopperClose = () => {
+        setMapControlPopperOpen(false);
+    }
     
     return (
         <div className="map">
+            <div>
+                {props.windowDimension.winWidth > 600 ? <Onboarding handleTutorialStep1={handleTutorialStep1}/> : null}
+            </div>
             <div className="mapfilters">
                 <FilterBox id='filterBox' countrySelect={countrySelect}>
                     <div id='filtersTopText'>
@@ -367,7 +472,7 @@ export default function Map(props) {
                     </div>
                     
                     <Grid container>
-                        <Grid item xs={countrySelect ? 7 : 12} sm={12} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
+                        <Grid item xs={countrySelect ? 7 : 12} sm={12} ref={gridLocationRef} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
                             <h4 className={styles.locationText}><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
                             <Autocomplete
                                 fullWidth
@@ -387,7 +492,33 @@ export default function Map(props) {
                                 renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
                             />
                         </Grid>
-                        <Grid item xs={countrySelect ? 5 : 12} sm={12} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
+                        <Backdrop open={locationPopperOpen}>
+                            <OnboardingPopper 
+                                open={locationPopperOpen} 
+                                anchorEl={locationAnchorEl} 
+                                placement='right' 
+                                transition 
+                                modifiers={[
+                                    {
+                                        name: 'arrow',
+                                        enabled: true,
+                                        options: {
+                                            element: arrowRef1,
+                                        }
+                                    }
+                                ]}
+                            >                           
+                            {({ TransitionProps }) => (
+                                <Fade {...TransitionProps}>
+                                <OnboardingBox>
+                                    <Arrow className='MuiPopper-arrow' ref={setArrowRef1} />
+                                    <OnboardingSteps step1={true} handleLocationPopperClose={handleLocationPopperClose} handleTutorialStep2={handleTutorialStep2}/>
+                                </OnboardingBox>
+                                </Fade>
+                            )}
+                            </OnboardingPopper>
+                        </Backdrop>
+                        <Grid item xs={countrySelect ? 5 : 12} sm={12} ref={gridCrowdSizeRef} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
                             <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
                             <Slider
                                 aria-label="Restricted values"
@@ -403,6 +534,32 @@ export default function Map(props) {
                                 onChange={handleSliderChange}
                             />
                         </Grid>
+                        <Backdrop open={crowdSizePopperOpen}>
+                            <OnboardingPopper 
+                            open={crowdSizePopperOpen} 
+                            anchorEl={crowdSizeAnchorEl} 
+                            placement='right' 
+                            transition 
+                            modifiers={[
+                                {
+                                    name: 'arrow',
+                                    enabled: true,
+                                    options: {
+                                        element: arrowRef2,
+                                    }
+                                }
+                            ]}>
+                            {({ TransitionProps }) => (
+                                <Fade {...TransitionProps}>
+                                <OnboardingBox>
+                                    <Arrow className='MuiPopper-arrow' ref={setArrowRef2} />
+                                    <OnboardingSteps step2={true} handleCrowdSizePopperClose={handleCrowdSizePopperClose} handleTutorialStep3={handleTutorialStep3}/>
+                                </OnboardingBox>
+                                </Fade>
+                            )}
+                            </OnboardingPopper>
+                        </Backdrop>
+                        
                     </Grid>                        
                 </FilterBox>
 
@@ -428,12 +585,38 @@ export default function Map(props) {
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
-            </div> 
+            </div>
             <MobilePrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></MobilePrecautionsBox>         
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
             <div id="map" ref={mapContainer} className="map-container" />
+            <Backdrop open={mapControlPopperOpen} sx={{zIndex: 6}}>
+                <OnboardingPopper 
+                    open={mapControlPopperOpen} 
+                    anchorEl={mapControlAnchorEl} 
+                    placement='left' 
+                    transition 
+                    modifiers={[
+                        {
+                            name: 'arrow',
+                            enabled: true,
+                            options: {
+                                element: arrowRef3,
+                            }
+                        }
+                    ]}>
+                    {({ TransitionProps }) => (
+                        <Fade {...TransitionProps}>
+                        <OnboardingBox>
+                            <Arrow className='MuiPopper-arrow' ref={setArrowRef3} />
+                            <OnboardingSteps step3={true} handleMapControlPopperClose={handleMapControlPopperClose} />
+                        </OnboardingBox>
+                        </Fade>
+                    )}
+                </OnboardingPopper>
+            </Backdrop>
+            
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
                 <span className="nodata">&#x3c; 1%</span>
