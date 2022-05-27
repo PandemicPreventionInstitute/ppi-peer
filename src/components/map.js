@@ -406,7 +406,6 @@ export default function Map(props) {
     const [crowdSizePopperOpen, setCrowdSizePopperOpen] = useState(false);
     const [mapControlPopperOpen, setMapControlPopperOpen] = useState(false);
 
-    
     const [arrowRef1, setArrowRef1] = React.useState(null);
     const [arrowRef2, setArrowRef2] = React.useState(null);
     const [arrowRef3, setArrowRef3] = React.useState(null);
@@ -447,7 +446,7 @@ export default function Map(props) {
     const handleMapControlPopperClose = () => {
         setMapControlPopperOpen(false);
     }
-    
+
     return (
         <div className="map">
             <div>
