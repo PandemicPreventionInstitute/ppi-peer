@@ -37,13 +37,13 @@ const FilterBox = styled(Box)(
             borderRadius: '16px',
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
             marginTop: '-16px',
-            marginBottom: '-10px',
+            marginBottom: '-30px',
             '@media (max-width: 600px)': {
                 marginBottom: '-50px'
             },
             marginLeft: '-32px',
             marginRight: '-32px',
-            padding: '16px 32px 10px'
+            padding: '16px 32px 40px'
         })
     })   
 );
@@ -311,31 +311,30 @@ export default function Map(props) {
             }, 'road-simple');  
 
             // add map layer for region outlines
-            // map.current.addLayer({
-            //     'id': 'world-outline',
-            //     'type': 'line',
-            //     'source': 'world',
-            //     'paint': {
-            //         'line-color': '#000000',
-            //         'line-width': [
-            //             "interpolate", ["linear"], ["zoom"],
-            //             // line widths for zoom levels <3, 3-5, 5-8, 8-10, and 10+
-            //             3, 0.25,
-            //             5, 0.50,
-            //             8, 0.75,
-            //             10, 1
-            //         ],
-            //         'line-opacity': [
-            //             "interpolate", ["linear"], ["zoom"],
-            //             // line opacities for zoom levels <3, 3-5, 5-8, 8-10, and 10+
-            //             3, 0,
-            //             5, 0.25,
-            //             8, 0.5,
-            //             10, 0.75
-            //         ],
-            //     },
-            //     'filter': ['==', '$type', 'Polygon']
-            // }, 'road-simple');  
+            map.current.addLayer({
+                'id': 'world-outline',
+                'type': 'line',
+                'source': 'world',
+                'paint': {
+                    'line-color': '#000000',
+                    'line-width': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // line widths for zoom levels <3, 3-5, 5-8, 8-10, and 10+
+                        3, 0.25,
+                        5, 0.50,
+                        8, 0.75,
+                        10, 1
+                    ],
+                    'line-opacity': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // line opacities for zoom levels <3, 3-5, 5-8, 8-10, and 10+
+                        3, 0,
+                        5, 0.25,
+                        8, 0.5
+                    ],
+                },
+                'filter': ['==', '$type', 'Polygon']
+            }, 'road-simple');  
             
             // onClick behavior for a region: zoom and popup
             // map.current.on('click', 'world-fill', function(e) {
@@ -532,6 +531,7 @@ export default function Map(props) {
                                 valueLabelDisplay="on"
                                 marks={marks}
                                 onChange={handleSliderChange}
+                                track={false}
                             />
                         </Grid>
                         <Backdrop open={crowdSizePopperOpen}>

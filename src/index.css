@@ -94,6 +94,18 @@ ul a.active {
   overflow: auto;
 }
 
+#selector-eventSize .MuiSlider-markLabel {
+  top: -15px;
+}
+
+#selector-eventSize .MuiSlider-valueLabelOpen.MuiSlider-valueLabel {
+  top: 60px;
+}
+
+#selector-eventSize .MuiSlider-valueLabelOpen.MuiSlider-valueLabel::before {
+  bottom: 26px;
+}
+
 @media screen and (min-width: 1600px) {
   .mapfilters {
     max-height: none;
