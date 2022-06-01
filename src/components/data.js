@@ -46,15 +46,17 @@ export default function Data() {
 
         <h3>Canada</h3>
 
-        <p>Data aggregated by the COVID-19 Canada Open Data Working Group from local health resources at <a target="_blank" href="https://github.com/ccodwg/COVID-19Canada">https://github.com/ccodwg/COVID-19Canada</a>.</p>
+        <p>Data aggregated by the COVID-19 Canada Open Data Working Group from local health resources at <a target="_blank" href="https://github.com/ccodwg/COVID19Canada">https://github.com/ccodwg/COVID19Canada</a>.</p>
 
         <p>Berry I, Soucy J-PR, Tuite A, Fisman D. Open access epidemiologic data and an interactive dashboard to monitor the COVID-19 outbreak in Canada. CMAJ. 2020 
             Apr 14;192(15):E420. doi: <a target="_blank" href="https://doi.org/10.1503/cmaj.75262">https://doi.org/10.1503/cmaj.75262.</a></p>
 
         <h3>Chile</h3>
 
-        <p>Data obtained from COVID-19 Data Hub <a target="_blank" href="https://github.com/M3IT/COVID-19_Data">https://github.com/M3IT/COVID-19_Data</a> and 
-        aggregated by <a target="_blank" href="www.COVID-19data.com.au">www.COVID-19data.com.au</a> from local health resources.</p>
+        <p>Data obtained from COVID-19 Data Hub <a target="_blank" href="https://covid19datahub.io">https://covid19datahub.io</a> and sourced from Ministerio de Ciencia, 
+        Tecnología, Conocimiento e Innovación: <a target="_blank" href="https://www.minciencia.gob.cl/COVID19/">https://www.minciencia.gob.cl/COVID19/</a>.</p>
+
+        <p>Guidotti et al., (2020). COVID-19 Data Hub. Journal of Open Source Software, 5(51), 2376, <a target="_blank" href="https://doi.org/10.21105/joss.02376">https://doi.org/10.21105/joss.02376</a></p>
 
         <h3>China</h3>
 
@@ -88,7 +90,7 @@ export default function Data() {
 
         <p>COVID-19 data from the Statens Serum Institut (SSI):</p>
         <ul>
-        <li><a target="_blank" href="https://COVID-19.ssi.dk/overvagningsdata">https://COVID-19.ssi.dk/overvagningsdata</a></li>
+        <li><a target="_blank" href="https://covid19.ssi.dk/overvagningsdata">https://covid19.ssi.dk/overvagningsdata</a></li>
         <li><a target="_blank" href="https://experience.arcgis.com/experience/aa41b29149f24e20a4007a0c4e13db1d">https://experience.arcgis.com/experience/aa41b29149f24e20a4007a0c4e13db1d</a></li>
         </ul>
 
@@ -156,7 +158,7 @@ export default function Data() {
         <h3>Ireland</h3>
 
         <p>Data is provided by the Health Service Executive (HSE), Health Protection Surveillance Centre (HPSC), The Central Statistics Office (CSO) and Gov.ie and accessed 
-            via Ireland's COVID-19 Data Hub:  <a target="_blank" href="https://COVID-19ireland-geohive.hub.arcgis.com/">https://COVID-19ireland-geohive.hub.arcgis.com/</a>.</p> 
+            via Ireland's COVID-19 Data Hub:  <a target="_blank" href="https://covid19ireland-geohive.hub.arcgis.com/">https://covid19ireland-geohive.hub.arcgis.com/</a>.</p> 
 
         <h3>Italy</h3>
 
