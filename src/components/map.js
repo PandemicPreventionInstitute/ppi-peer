@@ -266,7 +266,7 @@ export default function Map(props) {
         
         map.current = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create custom PPI account and map style
+            style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create PPI account and map style
             center: [lng, lat],
             zoom: zoom,
             maxZoom: 10,
