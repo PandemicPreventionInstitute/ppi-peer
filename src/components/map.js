@@ -278,8 +278,6 @@ export default function Map(props) {
         var clickedStateId = null;
         
         map.current.on('load', () => {      
-            // var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
-            // mapCanvas.style.width = '100%'; // set mapboxgl-canvas width to 100% so map width adjusts when sidebar is collapsed
             map.current.addSource('world', {
                 'type': 'geojson',
                 'data': {mapData}, // load geojson file here; @todo: swap this out for S3 bucket source
