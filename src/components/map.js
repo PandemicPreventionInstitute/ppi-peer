@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import {load} from '@loaders.gl/core';
-import {FlatGeobufLoader} from '@loaders.gl/flatgeobuf';
 import turf from 'turf';
 import Precautions from './precautions';
+import axios from 'axios';
 import styles from '../css/filters.module.css';
 import { 
     Autocomplete,
@@ -11,7 +10,8 @@ import {
     TextField,
     Box,
     Grid,
-    Backdrop
+    Backdrop,
+    CircularProgress
 } from '@mui/material';
 import {
     PeopleAltOutlined,
@@ -153,18 +153,20 @@ export default function Map(props) {
     const [lng, setLng] = useState(20);
     const [lat, setLat] = useState(27);
     const [zoom, setZoom] = useState(2);
+    const [loading, setLoading] = useState(true);
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
     const [countrySelect, setCountrySelect] = useState(false);
-    const [currentRegion, setCurrentRegion] = useState({});
+    const [currentRegion, setCurrentRegion] = useState({
+        type: 'Feature',
+        geometry: [],
+        properties: [],
+    });
     const [filterState, setFilterState] = useState({
         region: {},
         size: 2.5,
     })
-    const [mapData, setMapData]=useState({
-        type: "FeatureCollection",
-        features: []
-    });
+    const [mapData, setMapData]=useState();
 
     const valuetext = (value) => {
         return value;
@@ -173,20 +175,30 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value * 10; 
     }
+        // useEffect to fetch data on mount
+    useEffect(() => {
+        const getData = async () => {
+        // 'await' the data
+        const response = await axios.get("https://ppi-estimator.s3.amazonaws.com/globalDataWide.json", {
+            onDownloadProgress: (progressEvent) => {
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                // setFetchProgress(percentCompleted);
+                if (percentCompleted === 100) {
+                    setTimeout(() => {
+                      setLoading(false);
+                    }, 400);
+                  }
+                // @todo: use onDownloadProgress as value for a determinant progress bar loader
+            }
+        });
+        // save data to state
+        setMapData(response.data);
+        setLoading(false);
+        }
 
-    const getData = () => {
-        fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.fgb')
-        .then(function(response) {
-            let fetchFGB = load(response, FlatGeobufLoader);
-            return fetchFGB;
-        })
-        .then(function(fetchFGB) {
-            setMapData({
-                ...mapData,
-                features: fetchFGB
-            });
-        })
-    }
+        getData()
+
+    }, []);
 
     const handleSliderChange = (e, value) => {
         let newSize = 'risk_' + (value * 10);
@@ -209,7 +221,12 @@ export default function Map(props) {
         })
         if (value) {
             setCountrySelect(true); // set to true so estimate component is displayed
-            setCurrentRegion(value); // set as current region for slider handler
+            setCurrentRegion({
+                ...currentRegion,
+                type: value.type,
+                geometry: value.geometry,
+                properties: value.properties,
+            }); // set as current region for slider handler
             let selectedbbx = turf.bbox(value); 
             if (props.windowDimension.winWidth < 600) { // mobile map display
                 let filtersTopText = document.getElementById('filtersTopText');
@@ -238,19 +255,9 @@ export default function Map(props) {
             map.current.fitBounds(map.current.getBounds());
         }
     }
-
-    const sourceCallback = () => {
-        if (map.current.getSource('world') && map.current.isSourceLoaded('world')) {
-            // console.log("map data source has loaded!")
-        }
-    }
-
-    useEffect(() => {
-        getData()
-    }, [])
     
     useEffect(() => {
-        if (map.current) {
+        if (map.current && !loading) {
             // initialize map only once
             // if map already exists, do not redraw map, update source geojson only
             map.current.getSource('world').setData(mapData);
@@ -285,20 +292,19 @@ export default function Map(props) {
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
-                    // 'fill-color': '#99d98c',
                     // option 1:
                     // this fill creates smooth gradients through value ranges
-                    // 'fill-color': {
-                    //     'property': 'risk_'+(filterState.size*10),
-                    //     'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
-                    //   },
+                    'fill-color': {
+                        'property': 'risk_'+(filterState.size*10),
+                        'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+                      },
                     // option 2:
                     //this fill option creates strict steps between value ranges
-                    'fill-color': [
-                        'step',
-                        ['get', 'risk_'+(filterState.size*10)],
-                        '#cccccc',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
-                    ],
+                    // 'fill-color': [
+                    //     'step',
+                    //     ['get', 'risk_'+(filterState.size*10)],
+                    //     '#cccccc',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
+                    // ],
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
@@ -337,59 +343,63 @@ export default function Map(props) {
             }, 'road-simple');  
             
             // onClick behavior for a region: zoom and popup
-            // map.current.on('click', 'world-fill', function(e) {
-            //     var popup = new mapboxgl.Popup({ offset: [0, -7] });
-            //     map.current.getCanvas().style.cursor = 'pointer';
-            //     var features = map.current.queryRenderedFeatures(e.point, {
-            //         layers: ['world-fill'] 
-            //     });
-            //     var bbox = turf.bbox({
-            //         type: 'FeatureCollection',
-            //         features: features
-            //       });
+            map.current.on('click', 'world-fill', function(e) {
+                var popup = new mapboxgl.Popup({ offset: [0, -7] });
+                map.current.getCanvas().style.cursor = 'pointer';
+                var features = map.current.queryRenderedFeatures(e.point, {
+                    layers: ['world-fill'] 
+                });
+                var bbox = turf.bbox({
+                    type: 'FeatureCollection',
+                    features: features
+                  });
 
-            //     map.current.fitBounds(bbox, {padding: 200});    
+                map.current.fitBounds(bbox, {padding: 200}); 
     
-            //     if (!features.length) {
-            //         return;
-            //     } else {
-            //         if (clickedStateId) {
-            //             map.current.setFeatureState(
-            //                 { source: 'world', id: clickedStateId },
-            //                 { click: false }
-            //             );
-            //         }
-            //         clickedStateId = e.features[0].id;
-            //         map.current.setFeatureState(
-            //             { source: 'world', id: clickedStateId },
-            //             { click: true }
-            //         );
-            //     }
+                if (!features.length) {
+                    return;
+                } else {
+                    if (clickedStateId) {
+                        map.current.setFeatureState(
+                            { source: 'world', id: clickedStateId },
+                            { click: false }
+                        );
+                    }
+                    clickedStateId = e.features[0].id;                
+                    map.current.setFeatureState(
+                        { source: 'world', id: clickedStateId },
+                        { click: true }
+                    );
+                }
 
-            //     var feature = features[0];
-            //     let thisSize = 'risk_' + (filterState.size * 10);
-            //     setCountrySelect(true);
-            //     setBoxDisplayRisk(feature.properties[thisSize]);
-            //     let displayRisk = feature.properties[thisSize];
+                var feature = features[0];
+                // workaround for queryRenderedFeatures's nonstandard object returned
+                let featureCopy = {
+                    type: feature.type,
+                    geometry: feature._geometry,
+                    properties: feature.properties
+                }
+                let thisSize = 'risk_' + (filterState.size * 10);
+                setCurrentRegion(featureCopy);
+                setCountrySelect(true);
+                setBoxDisplayRisk(feature.properties[thisSize]);
+                let displayRisk = feature.properties[thisSize];
 
-            //     if (feature.properties[thisSize] < 0) {
-            //         displayRisk = 'No data has been reported from this region within the last 14 days.';
-            //     } else if (feature.properties[thisSize] < 1) { 
-            //         displayRisk = '< 1%';
-            //     } else if (feature.properties[thisSize] > 99) {
-            //         displayRisk = '> 99%';
-            //     } else {
-            //         return Math.round(displayRisk) + '%';
-            //     }
+                if (feature.properties[thisSize] < 0) {
+                    displayRisk = 'No data has been reported from this region within the last 14 days.';
+                } else if (feature.properties[thisSize] < 1) { 
+                    displayRisk = '< 1%';
+                } else if (feature.properties[thisSize] > 99) {
+                    displayRisk = '> 99%';
+                } else {
+                    return Math.round(displayRisk) + '%';
+                }
                 
-            //     popup
-            //     .setLngLat(e.lngLat)
-            //     .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '</strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
-            //     .addTo(map.current);
-            // });
-
-            map.current.on('sourcedata', sourceCallback);
-    
+                popup
+                .setLngLat(e.lngLat)
+                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '</strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
+                .addTo(map.current);
+            });    
         });            
     });
     
@@ -462,6 +472,17 @@ export default function Map(props) {
             <div>
                 {props.windowDimension.winWidth > 600 ? <Onboarding handleTutorialStep1={handleTutorialStep1}/> : null}
             </div>
+            { loading ? 
+                <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                className="loadingBackdrop"
+                open={loading}
+              > 
+                <CircularProgress size={100} color="inherit" />
+              </Backdrop>
+
+              : null 
+            }
             <div className="mapfilters">
                 <FilterBox id='filterBox' countrySelect={countrySelect}>
                     <div id='filtersTopText'>
@@ -477,7 +498,8 @@ export default function Map(props) {
                                 disablePortal
                                 name="region"
                                 id="selector-region"
-                                options={mapData.features}
+                                disabled={loading ? true : false}
+                                options={loading ? null : mapData.features}
                                 getOptionLabel={(option) => option.properties.RegionName}
                                 onChange={handleRegionSelect}
                                 renderOption = {(props, option) => { // use unique geoid as key to pacify MUI's unique key errors for autocomplete
@@ -487,7 +509,7 @@ export default function Map(props) {
                                         </li>
                                     )
                                 }}
-                                renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
+                                renderInput={(params) => <TextField fullWidth {...params} label={loading ? "Loading data ..." : "Search by country or region"} />}
                             />
                         </Grid>
                         <Backdrop open={locationPopperOpen}>
@@ -524,6 +546,7 @@ export default function Map(props) {
                                 value={filterState.size}
                                 name="size"
                                 defaultValue={2.5}
+                                disabled={loading ? true : false}
                                 valueLabelFormat={valueLabelFormat}
                                 getAriaValueText={valuetext}
                                 step={null}
@@ -580,7 +603,7 @@ export default function Map(props) {
                         </h4>
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
                     }
-                    <p>Last Updated: {dateLastUpdated}</p>
+                    <p><strong>Last Updated:</strong> {dateLastUpdated}</p>
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         

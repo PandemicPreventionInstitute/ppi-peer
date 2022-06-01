@@ -54,6 +54,10 @@ ul a.active {
   text-align: left;
 }
 
+.map .loadingBackdrop {
+  position: absolute;
+}
+
 .about,
 .advanced,
 .data {

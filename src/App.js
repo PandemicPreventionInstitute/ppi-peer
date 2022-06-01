@@ -104,6 +104,7 @@ function App() {
             <Route path="/" element={<Map open={open} windowDimension={windowDimension}/>} />
             <Route path="about" element={<About />} />
             <Route path="advanced" element={<Advanced />} />
+            {/* <Route path="data" element={<LeafletMap open={open} windowDimension={windowDimension}/>} /> */}
             <Route path="data" element={<Data />} />
           </Routes>
         </Grid>
