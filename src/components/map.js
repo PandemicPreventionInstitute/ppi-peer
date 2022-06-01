@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import turf from 'turf';
 import Precautions from './precautions';
+import axios from 'axios';
 import styles from '../css/filters.module.css';
 import { 
     Autocomplete,
@@ -9,7 +10,8 @@ import {
     TextField,
     Box,
     Grid,
-    Backdrop
+    Backdrop,
+    CircularProgress
 } from '@mui/material';
 import {
     PeopleAltOutlined,
@@ -35,13 +37,13 @@ const FilterBox = styled(Box)(
             borderRadius: '16px',
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
             marginTop: '-16px',
-            marginBottom: '-10px',
+            marginBottom: '-30px',
             '@media (max-width: 600px)': {
                 marginBottom: '-50px'
             },
             marginLeft: '-32px',
             marginRight: '-32px',
-            padding: '16px 32px 10px'
+            padding: '16px 32px 40px'
         })
     })   
 );
@@ -148,18 +150,23 @@ const Arrow = styled('div')({
 export default function Map(props) {
     const mapContainer = useRef(true);
     const map = useRef(null);
-    const [lng, setLng] = useState(0);
-    const [lat, setLat] = useState(45);
+    const [lng, setLng] = useState(20);
+    const [lat, setLat] = useState(27);
     const [zoom, setZoom] = useState(2);
+    const [loading, setLoading] = useState(true);
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
     const [countrySelect, setCountrySelect] = useState(false);
-    const [currentRegion, setCurrentRegion] = useState({});
+    const [currentRegion, setCurrentRegion] = useState({
+        type: 'Feature',
+        geometry: [],
+        properties: [],
+    });
     const [filterState, setFilterState] = useState({
         region: {},
         size: 2.5,
     })
-    const [data, setData]=useState([]);
+    const [mapData, setMapData]=useState();
 
     const valuetext = (value) => {
         return value;
@@ -168,16 +175,30 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value * 10; 
     }
+        // useEffect to fetch data on mount
+    useEffect(() => {
+        const getData = async () => {
+        // 'await' the data
+        const response = await axios.get("https://ppi-estimator.s3.amazonaws.com/globalDataWide.json", {
+            onDownloadProgress: (progressEvent) => {
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                // setFetchProgress(percentCompleted);
+                if (percentCompleted === 100) {
+                    setTimeout(() => {
+                      setLoading(false);
+                    }, 400);
+                  }
+                // @todo: use onDownloadProgress as value for a determinant progress bar loader
+            }
+        });
+        // save data to state
+        setMapData(response.data);
+        setLoading(false);
+        }
 
-    const getData = () => {
-        fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.json')
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(jsonData) {
-            setData(jsonData);
-        })
-    }
+        getData()
+
+    }, []);
 
     const handleSliderChange = (e, value) => {
         let newSize = 'risk_' + (value * 10);
@@ -200,7 +221,12 @@ export default function Map(props) {
         })
         if (value) {
             setCountrySelect(true); // set to true so estimate component is displayed
-            setCurrentRegion(value); // set as current region for slider handler
+            setCurrentRegion({
+                ...currentRegion,
+                type: value.type,
+                geometry: value.geometry,
+                properties: value.properties,
+            }); // set as current region for slider handler
             let selectedbbx = turf.bbox(value); 
             if (props.windowDimension.winWidth < 600) { // mobile map display
                 let filtersTopText = document.getElementById('filtersTopText');
@@ -229,43 +255,33 @@ export default function Map(props) {
             map.current.fitBounds(map.current.getBounds());
         }
     }
-
-    const sourceCallback = () => {
-        if (map.current.getSource('world') && map.current.isSourceLoaded('world')) {
-        }
-    }
-
-    useEffect(() => {
-        getData()
-    },[])
     
     useEffect(() => {
-        if (map.current) {
+        if (map.current && !loading) {
             // initialize map only once
             // if map already exists, do not redraw map, update source geojson only
-            const geojsonSource = map.current.getSource('world');
-            geojsonSource.setData({data});
+            map.current.getSource('world').setData(mapData);
             return;
         } 
+        
         map.current = new mapboxgl.Map({
-            container: mapContainer.current,
-            style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create custom PPI account and map style
+            container: 'map',
+            style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create PPI account and map style
             center: [lng, lat],
             zoom: zoom,
+            maxZoom: 10,
+            minZoom: 2,
             renderWorldCopies: false
         });
 
         map.current.addControl(new mapboxgl.NavigationControl());
         var clickedStateId = null;
         
-        map.current.on('load', () => {            
-            var mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
-            mapCanvas.style.width = '100%'; // set mapboxgl-canvas width to 100% so map width adjusts when sidebar is collapsed
-
+        map.current.on('load', () => {      
             map.current.addSource('world', {
                 'type': 'geojson',
-                'data': {data}, // load geojson file here; @todo: swap this out for S3 bucket source
-                'generateId': true
+                'data': {mapData}, // load geojson file here; @todo: swap this out for S3 bucket source
+                'generateId': true,
             });
 
             // add map layer for filled choropleth polygon regions
@@ -274,7 +290,6 @@ export default function Map(props) {
                 'type': 'fill',
                 'source': 'world',
                 'paint': {
-                    // 'fill-color': '#99d98c',
                     // option 1:
                     // this fill creates smooth gradients through value ranges
                     'fill-color': {
@@ -285,8 +300,8 @@ export default function Map(props) {
                     //this fill option creates strict steps between value ranges
                     // 'fill-color': [
                     //     'step',
-                    //     ['get', 'risk_25'],
-                    //     '#000000',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
+                    //     ['get', 'risk_'+(filterState.size*10)],
+                    //     '#cccccc',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
                     // ],
                     'fill-opacity': [
                         'case',
@@ -319,8 +334,7 @@ export default function Map(props) {
                         // line opacities for zoom levels <3, 3-5, 5-8, 8-10, and 10+
                         3, 0,
                         5, 0.25,
-                        8, 0.5,
-                        10, 0.75
+                        8, 0.5
                     ],
                 },
                 'filter': ['==', '$type', 'Polygon']
@@ -338,7 +352,7 @@ export default function Map(props) {
                     features: features
                   });
 
-                map.current.fitBounds(bbox, {padding: 200});    
+                map.current.fitBounds(bbox, {padding: 200}); 
     
                 if (!features.length) {
                     return;
@@ -349,7 +363,7 @@ export default function Map(props) {
                             { click: false }
                         );
                     }
-                    clickedStateId = e.features[0].id;
+                    clickedStateId = e.features[0].id;                
                     map.current.setFeatureState(
                         { source: 'world', id: clickedStateId },
                         { click: true }
@@ -357,7 +371,14 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
+                // workaround for queryRenderedFeatures's nonstandard object returned
+                let featureCopy = {
+                    type: feature.type,
+                    geometry: feature._geometry,
+                    properties: feature.properties
+                }
                 let thisSize = 'risk_' + (filterState.size * 10);
+                setCurrentRegion(featureCopy);
                 setCountrySelect(true);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
@@ -376,10 +397,7 @@ export default function Map(props) {
                 .setLngLat(e.lngLat)
                 .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '</strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
-            });
-
-            map.current.on('sourcedata', sourceCallback);
-    
+            });    
         });            
     });
     
@@ -452,6 +470,17 @@ export default function Map(props) {
             <div>
                 {props.windowDimension.winWidth > 600 ? <Onboarding handleTutorialStep1={handleTutorialStep1}/> : null}
             </div>
+            { loading ? 
+                <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                className="loadingBackdrop"
+                open={loading}
+              > 
+                <CircularProgress size={100} color="inherit" />
+              </Backdrop>
+
+              : null 
+            }
             <div className="mapfilters">
                 <FilterBox id='filterBox' countrySelect={countrySelect}>
                     <div id='filtersTopText'>
@@ -467,7 +496,8 @@ export default function Map(props) {
                                 disablePortal
                                 name="region"
                                 id="selector-region"
-                                options={data.features}
+                                disabled={loading ? true : false}
+                                options={loading ? null : mapData.features}
                                 getOptionLabel={(option) => option.properties.RegionName}
                                 onChange={handleRegionSelect}
                                 renderOption = {(props, option) => { // use unique geoid as key to pacify MUI's unique key errors for autocomplete
@@ -477,7 +507,7 @@ export default function Map(props) {
                                         </li>
                                     )
                                 }}
-                                renderInput={(params) => <TextField fullWidth {...params} label="Search by country or region" />}
+                                renderInput={(params) => <TextField fullWidth {...params} label={loading ? "Loading data ..." : "Search by country or region"} />}
                             />
                         </Grid>
                         <Backdrop open={locationPopperOpen}>
@@ -514,12 +544,14 @@ export default function Map(props) {
                                 value={filterState.size}
                                 name="size"
                                 defaultValue={2.5}
+                                disabled={loading ? true : false}
                                 valueLabelFormat={valueLabelFormat}
                                 getAriaValueText={valuetext}
                                 step={null}
                                 valueLabelDisplay="on"
                                 marks={marks}
                                 onChange={handleSliderChange}
+                                track={false}
                             />
                         </Grid>
                         <Backdrop open={crowdSizePopperOpen}>
@@ -569,7 +601,7 @@ export default function Map(props) {
                         </h4>
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
                     }
-                    <p>Last Updated: {dateLastUpdated}</p>
+                    <p><strong>Last Updated:</strong> {dateLastUpdated}</p>
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
@@ -578,7 +610,7 @@ export default function Map(props) {
             <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
-            <div ref={mapContainer} className="map-container" />
+            <div id="map" ref={mapContainer} className="map-container" />
             <Backdrop open={mapControlPopperOpen} sx={{zIndex: 6}}>
                 <OnboardingPopper 
                     open={mapControlPopperOpen} 

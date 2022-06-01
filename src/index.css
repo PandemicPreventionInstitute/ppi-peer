@@ -54,6 +54,10 @@ ul a.active {
   text-align: left;
 }
 
+.map .loadingBackdrop {
+  position: absolute;
+}
+
 .about,
 .advanced,
 .data {
@@ -92,6 +96,18 @@ ul a.active {
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   padding: 16px 32px 10px;
   overflow: auto;
+}
+
+#selector-eventSize .MuiSlider-markLabel {
+  top: -15px;
+}
+
+#selector-eventSize .MuiSlider-valueLabelOpen.MuiSlider-valueLabel {
+  top: 60px;
+}
+
+#selector-eventSize .MuiSlider-valueLabelOpen.MuiSlider-valueLabel::before {
+  bottom: 26px;
 }
 
 @media screen and (min-width: 1600px) {
