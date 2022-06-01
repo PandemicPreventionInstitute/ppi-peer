@@ -612,7 +612,7 @@ export default function Map(props) {
                 <span className="range3">25 - 50 </span>
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
-                <span className="range6">More than 99% </span>
+                <span className="range6">&#62; 99% </span>
             </div>
             <div id="loading" className="loading"></div>
         </div>
