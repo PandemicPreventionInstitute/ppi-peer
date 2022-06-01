@@ -536,7 +536,7 @@ export default function Map(props) {
                             )}
                             </OnboardingPopper>
                         </Backdrop>
-                        <Grid item xs={countrySelect ? 5 : 12} sm={12} ref={gridCrowdSizeRef} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px' }}>
+                        <Grid item xs={countrySelect ? 5 : 12} sm={12} ref={gridCrowdSizeRef} sx={{ marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '10px' : '0px', paddingBottom: '10px' }}>
                             <h4 className={styles.crowdSize}><PeopleAltOutlined className={styles.peopleAltOutlined}/> CROWD SIZE</h4>
                             <Slider
                                 aria-label="Restricted values"
@@ -644,7 +644,7 @@ export default function Map(props) {
                 <span className="range3">25 - 50 </span>
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
-                <span className="range6">More than 99% </span>
+                <span className="range6">&#62; 99% </span>
                 <span className="range7">No cases reported in 14+ days.</span>
             </div>
             <div id="loading" className="loading"></div>
