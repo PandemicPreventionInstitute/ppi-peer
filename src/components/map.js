@@ -207,10 +207,11 @@ export default function Map(props) {
             ...filterState,
             size: newVal
         })
-        map.current.setPaintProperty('world-fill', 'fill-color', {
-            "property": newSize,
-            'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
-        });
+        map.current.setPaintProperty('world-fill', 'fill-color', [
+            'step',
+            ['get', newSize],
+            '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f']
+        );
         // setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
     }
 
@@ -292,17 +293,17 @@ export default function Map(props) {
                 'paint': {
                     // option 1:
                     // this fill creates smooth gradients through value ranges
-                    'fill-color': {
-                        'property': 'risk_'+(filterState.size*10),
-                        'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
-                      },
+                    // 'fill-color': {
+                    //     'property': 'risk_'+(filterState.size*10),
+                    //     'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+                    //   },
                     // option 2:
                     //this fill option creates strict steps between value ranges
-                    // 'fill-color': [
-                    //     'step',
-                    //     ['get', 'risk_'+(filterState.size*10)],
-                    //     '#cccccc',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
-                    // ],
+                    'fill-color': [
+                        'step',
+                        ['get', 'risk_'+(filterState.size*10)],
+                        '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
+                    ],
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
@@ -382,15 +383,16 @@ export default function Map(props) {
                 setCountrySelect(true);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
+                console.log("this risk is: ", displayRisk);
 
-                if (feature.properties[thisSize] < 0) {
+                if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
-                } else if (feature.properties[thisSize] < 1) { 
+                } else if (displayRisk < 1) { 
                     displayRisk = '< 1%';
-                } else if (feature.properties[thisSize] > 99) {
+                } else if (displayRisk > 99) {
                     displayRisk = '> 99%';
                 } else {
-                    return Math.round(displayRisk) + '%';
+                    displayRisk = Math.round(displayRisk) + '%';
                 }
                 
                 popup
