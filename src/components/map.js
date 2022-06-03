@@ -216,7 +216,7 @@ export default function Map(props) {
     }, []);
 
     const handleSliderChange = (e, value) => {
-        const markIndex = Math.floor(value / 25); // get slider index so we can get the real scaled value
+        const markIndex = Math.floor(value / 25); // get slider index so we can get the event size
         const mark = marks[markIndex];
         const eventSize = mark.eventSize; // actual event size
         let newSize = 'risk_' + eventSize;
