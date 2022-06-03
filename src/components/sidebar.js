@@ -84,7 +84,7 @@ export default function Sidebar(params) {
                     <SidebarMenuItemText open={params.open}>MAP</SidebarMenuItemText>
                 </SidebarMenuItem>
 
-                <SidebarMenuItem 
+                {/* <SidebarMenuItem 
                     component={NavLink} 
                     activeclassname="active"
                     to="/advanced" 
@@ -93,7 +93,7 @@ export default function Sidebar(params) {
                         <BarChartOutlined />
                     </SidebarMenuItemIcon>
                     <SidebarMenuItemText open={params.open}>ADVANCED DATA TOOLS</SidebarMenuItemText>
-                </SidebarMenuItem>
+                </SidebarMenuItem> */}
 
                 <SidebarMenuItem 
                     component={NavLink} 

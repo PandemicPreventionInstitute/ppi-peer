@@ -207,10 +207,11 @@ export default function Map(props) {
             ...filterState,
             size: newVal
         })
-        map.current.setPaintProperty('world-fill', 'fill-color', {
-            "property": newSize,
-            'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
-        });
+        map.current.setPaintProperty('world-fill', 'fill-color', [
+            'step',
+            ['get', newSize],
+            '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
+        );
         // setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
     }
 
@@ -292,17 +293,17 @@ export default function Map(props) {
                 'paint': {
                     // option 1:
                     // this fill creates smooth gradients through value ranges
-                    'fill-color': {
-                        'property': 'risk_'+(filterState.size*10),
-                        'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
-                      },
+                    // 'fill-color': {
+                    //     'property': 'risk_'+(filterState.size*10),
+                    //     'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
+                    //   },
                     // option 2:
                     //this fill option creates strict steps between value ranges
-                    // 'fill-color': [
-                    //     'step',
-                    //     ['get', 'risk_'+(filterState.size*10)],
-                    //     '#cccccc',-1,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
-                    // ],
+                    'fill-color': [
+                        'step',
+                        ['get', 'risk_'+(filterState.size*10)],
+                        '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77'
+                    ],
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'click'], false],
@@ -382,15 +383,16 @@ export default function Map(props) {
                 setCountrySelect(true);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
+                console.log("this risk is: ", displayRisk);
 
-                if (feature.properties[thisSize] < 0) {
+                if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
-                } else if (feature.properties[thisSize] < 1) { 
+                } else if (displayRisk < 1) { 
                     displayRisk = '< 1%';
-                } else if (feature.properties[thisSize] > 99) {
+                } else if (displayRisk > 99) {
                     displayRisk = '> 99%';
                 } else {
-                    return Math.round(displayRisk) + '%';
+                    displayRisk = Math.round(displayRisk) + '%';
                 }
                 
                 popup
@@ -583,7 +585,7 @@ export default function Map(props) {
                     </Grid>                        
                 </FilterBox>
 
-                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range0 : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
+                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
                     </h4>
@@ -639,13 +641,13 @@ export default function Map(props) {
             
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
-                <span className="nodata">&#x3c; 1%</span>
-                <span className="range1">1 - 25 </span>
+                <span className="range1">&#x3c; 1%</span>
+                <span className="range2">1 - 25 </span>
                 <span className="range3">25 - 50 </span>
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
                 <span className="range6">&#62; 99% </span>
-                <span className="range7">No cases reported in 14+ days.</span>
+                <span className="nodata">No cases reported in 14+ days.</span>
             </div>
             <div id="loading" className="loading"></div>
         </div>

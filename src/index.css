@@ -153,16 +153,12 @@ div#mapLegend span {
   padding-top: 4px;
 }
 
-div#mapLegend span.nodata {
+div#mapLegend span.range1 {
   border-top-color: #eff5d9;
 }
 
-div#mapLegend span.range1 {
-  border-top-color: #d9ed92;
-}
-
 div#mapLegend span.range2 {
-  border-top-color: #b5e48c;
+  border-top-color: #d9ed92;
 }
 
 div#mapLegend span.range3 {
@@ -181,7 +177,7 @@ div#mapLegend span.range6 {
   border-top-color: #184e77;
 }
 
-div#mapLegend .range7 {
+div#mapLegend span.nodata {
   width: auto;
   border-top: 0;
   padding-left: 8px;
@@ -189,7 +185,7 @@ div#mapLegend .range7 {
   padding-left: 24px;
 }
 
-div#mapLegend .range7::before {
+div#mapLegend .nodata::before {
   content: '';
   display: block;
   position: absolute;
@@ -204,6 +200,14 @@ div#mapLegend .range7::before {
 .mapboxgl-popup-content h3 {
   margin-bottom: 0;
   font-size: 16px;
+}
+
+.mapboxgl-popup-content {
+  background: rgba(255,255,255,0.75);
+}
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: rgba(255,255,255,0.75);
 }
 
 .mapboxgl-popup-content p {
