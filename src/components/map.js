@@ -384,7 +384,7 @@ export default function Map(props) {
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
                 console.log("this risk is: ", displayRisk);
-                let expIntroductions = 'exp_introductions_' + (filterState.size * 10);
+                let expIntroductions = 'exp_introductions_' + (filterState.size * 10); // @todo: Delete the multiplication by 10 when filterState.size changes
                 let infectedAttendees = feature.properties[expIntroductions];
 
                 if (displayRisk < 0) {
