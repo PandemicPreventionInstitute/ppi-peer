@@ -210,7 +210,7 @@ export default function Map(props) {
         map.current.setPaintProperty('world-fill', 'fill-color', [
             'step',
             ['get', newSize],
-            '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f']
+            '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
         );
         // setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
     }
@@ -302,7 +302,7 @@ export default function Map(props) {
                     'fill-color': [
                         'step',
                         ['get', 'risk_'+(filterState.size*10)],
-                        '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#b5e48c',50,'#76c893',75,'#34a0a4',99,'#1a759f'
+                        '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77'
                     ],
                     'fill-opacity': [
                         'case',
@@ -585,7 +585,7 @@ export default function Map(props) {
                     </Grid>                        
                 </FilterBox>
 
-                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range0 : (boxDisplayRisk <= 25 ? styles.range1 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
+                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
                     </h4>
@@ -641,13 +641,13 @@ export default function Map(props) {
             
             <div id="mapLegend">
                 <h5>Probability Estimate for Exposure Risk (%)</h5>
-                <span className="nodata">&#x3c; 1%</span>
-                <span className="range1">1 - 25 </span>
+                <span className="range1">&#x3c; 1%</span>
+                <span className="range2">1 - 25 </span>
                 <span className="range3">25 - 50 </span>
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
                 <span className="range6">&#62; 99% </span>
-                <span className="range7">No cases reported in 14+ days.</span>
+                <span className="nodata">No cases reported in 14+ days.</span>
             </div>
             <div id="loading" className="loading"></div>
         </div>

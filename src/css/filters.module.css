@@ -97,13 +97,13 @@ h1 {
     color: #4E585B;
 }
 
-.range0 {
+.range1 {
     background-color: #eff5d9;
     color: #4E585B;
     background-image: url('../assets/man_coughing_very_low.png');
 }
   
-.range1 {
+.range2 {
     background-color: #d9ed92;
     color: #4E585B;
     background-image: url('../assets/man_coughing_low.png');
