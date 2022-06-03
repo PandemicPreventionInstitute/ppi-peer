@@ -384,6 +384,8 @@ export default function Map(props) {
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
                 console.log("this risk is: ", displayRisk);
+                let expIntroductions = 'exp_introductions_' + (filterState.size * 10);
+                let infectedAttendees = feature.properties[expIntroductions];
 
                 if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
@@ -397,7 +399,9 @@ export default function Map(props) {
                 
                 popup
                 .setLngLat(e.lngLat)
-                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Risk: ' + displayRisk + '</strong><br>' + 'Last Updated: ' + feature.properties.DateReport  + '</p>' )
+                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Exposure Risk: ' + displayRisk + '</strong><br>' + 
+                'Infected Attendees: ' + infectedAttendees + '</strong><br>' + 'Cases per 100k in the past 14 days: ' + feature.properties.cases_per_100k_past_14_d + 
+                '</strong><br>' + 'Data Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
             });    
         });            
