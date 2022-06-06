@@ -39,7 +39,7 @@
 }
 
 .crowdSize {
-    margin-bottom: 40px !important;
+    margin-bottom: 24px !important;
 }
 
 .roomOutlined {
@@ -97,13 +97,13 @@ h1 {
     color: #4E585B;
 }
 
-.range0 {
+.range1 {
     background-color: #eff5d9;
     color: #4E585B;
     background-image: url('../assets/man_coughing_very_low.png');
 }
   
-.range1 {
+.range2 {
     background-color: #d9ed92;
     color: #4E585B;
     background-image: url('../assets/man_coughing_low.png');
@@ -170,8 +170,8 @@ h1 {
 
     .crowdSize {
         margin-top: 20px;
-        margin-bottom: 35px !important;
-        margin-left: -10px;
+        margin-bottom: -5px !important;
+        margin-left: 0px;
         margin-right: -10px;
     }
 
