@@ -42,6 +42,10 @@
     margin-bottom: 24px !important;
 }
 
+.locationText {
+    margin-top: 5px;
+}
+
 .roomOutlined {
     color: #318AD0;
     margin-bottom: -3px;
