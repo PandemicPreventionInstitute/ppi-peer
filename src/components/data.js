@@ -23,11 +23,18 @@ export default function Data() {
 
         <h3>Algeria</h3>
 
-        <p>Data obtained via the Algeria Coronavirus Tracker API: <a target="_blank" href="https://health.google.com/covid-19/open-data/">https://health.google.com/covid-19/open-data/</a>.</p>
+        <p>Data obtained via the Algeria Coronavirus Tracker API: </p>
+
+        <ul>
+            <li>Front-end: <a target="_blank" href="https://corona-dz.live">
+            https://corona-dz.live</a></li>
+            <li>GitHub: <a target="_blank" href="https://github.com/Amine27/covid-19-dz">
+            https://github.com/Amine27/covid-19-dz</a></li>
+        </ul>
 
         <h3>Australia</h3>
 
-        <p>COVID-19 data was obtained from <a target="_blank" href="https://github.com/M3IT/COVID-19_Data">https://github.com/M3IT/COVID-19_Data</a> and aggregated by <a target="_blank" href="www.COVID-19data.com.au">www.COVID-19data.com.au</a> from local health resources.</p>
+        <p>COVID-19 data was obtained from <a target="_blank" href="https://github.com/M3IT/COVID-19_Data">https://github.com/M3IT/COVID-19_Data</a> and aggregated by <a target="_blank" href="https://www.covid19data.com.au">https://www.covid19data.com.au</a> from local health resources.</p>
 
         <h3>Austria</h3>
 
@@ -39,22 +46,27 @@ export default function Data() {
 
         <h3>Brazil</h3>
 
-        <p>COVID-19 data are aggregated from Ministério da Saúde and Brasil.IO by <a target="_blank" href="https://github.com/wcota/COVID-19br">https://github.com/wcota/COVID-19br</a>.</p>
+        <p>COVID-19 data are aggregated from Ministério da Saúde and Brasil.IO by <a target="_blank" href="https://github.com/wcota/covid19br">https://github.com/wcota/covid19br</a>.</p>
 
         <p>W. Cota, “Monitoring the number of COVID-19 cases and deaths in brazil at municipal and federative units level”, SciELOPreprints:362 (2020), 
             10.1590/scielopreprints.362</p>
 
         <h3>Canada</h3>
 
-        <p>Data aggregated by the COVID-19 Canada Open Data Working Group from local health resources at <a target="_blank" href="https://github.com/ccodwg/COVID19Canada">https://github.com/ccodwg/COVID19Canada</a>.</p>
+        <p>Data aggregated by the COVID-19 Canada Open Data Working Group from local health resources at <a target="_blank" href="https://github.com/ccodwg/Covid19Canada">https://github.com/ccodwg/Covid19Canada</a>.</p>
 
         <p>Berry I, Soucy J-PR, Tuite A, Fisman D. Open access epidemiologic data and an interactive dashboard to monitor the COVID-19 outbreak in Canada. CMAJ. 2020 
             Apr 14;192(15):E420. doi: <a target="_blank" href="https://doi.org/10.1503/cmaj.75262">https://doi.org/10.1503/cmaj.75262.</a></p>
 
+        <p>Berry, I., O’Neill, M., Sturrock, S. L., Wright, J. E., Acharya, K., Brankston, G., Harish, V., Kornas, K., Maani, N., Naganathan, 
+            T., Obress, L., Rossi, T., Simmons, A. E., Van Camp, M., Xie, X., Tuite, A. R., Greer, A. L., Fisman, D. N., & Soucy, J.-P. R. 
+            (2021). A sub-national real-time epidemiological and vaccination database for the COVID-19 pandemic in Canada. Scientific Data, 
+            8(1). doi: <a target="_blank" href="https://doi.org/10.1038/s41597-021-00955-2">https://doi.org/10.1038/s41597-021-00955-2</a></p>
+
         <h3>Chile</h3>
 
         <p>Data obtained from COVID-19 Data Hub <a target="_blank" href="https://covid19datahub.io">https://covid19datahub.io</a> and sourced from Ministerio de Ciencia, 
-        Tecnología, Conocimiento e Innovación: <a target="_blank" href="https://www.minciencia.gob.cl/COVID19/">https://www.minciencia.gob.cl/COVID19/</a>.</p>
+        Tecnología, Conocimiento e Innovación: <a target="_blank" href="https://www.minciencia.gob.cl/covid19/">https://www.minciencia.gob.cl/covid19/</a>.</p>
 
         <p>Guidotti et al., (2020). COVID-19 Data Hub. Journal of Open Source Software, 5(51), 2376, <a target="_blank" href="https://doi.org/10.21105/joss.02376">https://doi.org/10.21105/joss.02376</a></p>
 
@@ -131,7 +143,7 @@ export default function Data() {
         <p>Data provided on HDX by Safeture from the Ghana Health Service (Ministry of Health): <a target="_blank" href="https://data.humdata.org/dataset/ghana-coronavirus-covid-19-subnational-cases">
             https://data.humdata.org/dataset/ghana-coronavirus-covid-19-subnational-cases</a>.</p>
         
-        <p>Geometry collected by Where Geospatial Media (<a target="_blank" href="www.wheregeospatial.com">www.wheregeospatial.com</a>, <a target="_blank" href="blog.wheregeospatial.com">blog.wheregeospatial.com</a>). 
+        <p>Geometry collected by Where Geospatial Media (<a target="_blank" href="https://wheregeospatial.com">https://wheregeospatial.com</a>, <a target="_blank" href="https://blog.wheregeospatial.com">https://blog.wheregeospatial.com</a>). 
         This Data is not authorized by any government or private institution. It was created from the old authorized Ghana Shapefile using the district boundaries. 
         Any one who uses this for any analysis should note this. Any limitations from the old authorized shapefile are inherited by this shapefile. Created Dec 11, 2019.</p> 
 
@@ -187,8 +199,8 @@ export default function Data() {
 
         <h3>New Zealand</h3>
 
-        <p>COVID-19 Data Repository by the Institute of Environmental Science and Research: <a target="_blank" href="https://github.com/ESR-NZ/NZ_COVID-19_Data/">
-            https://github.com/ESR-NZ/NZ_COVID-19_Data/</a>.</p>
+        <p>COVID-19 Data Repository by the Institute of Environmental Science and Research: <a target="_blank" href="https://github.com/ESR-NZ/NZ_COVID19_Data/">
+            https://github.com/ESR-NZ/NZ_COVID19_Data/</a>.</p>
         <p>Institute for Environmental Science and Research, New Zealand COVID-19 Dashboard. <a target="_blank" href="https://nzcoviddashboard.esr.cri.nz/">
             https://nzcoviddashboard.esr.cri.nz/</a> (2020).</p>
 
@@ -240,8 +252,8 @@ export default function Data() {
 
         <h3>South Korea</h3>
 
-        <p>Data collated by <a target="_blank" href="https://github.com/staedi/nCOV-summary/">https://github.com/staedi/nCOV-summary/</a> from the South Korea CDC: 
-         <a target="_blank" href="http://ncov.mohw.go.kr/">http://ncov.mohw.go.kr/</a>.</p>
+        <p>Data collated by <a target="_blank" href="https://github.com/staedi/nCOV-summary/">https://github.com/staedi/nCOV-summary/</a> from 
+        the South Korea CDC: <a target="_blank" href="http://ncov.mohw.go.kr/">http://ncov.mohw.go.kr/</a>.</p>
 
         <h3>Spain</h3>
 
