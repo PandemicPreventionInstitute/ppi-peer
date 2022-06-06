@@ -585,7 +585,7 @@ export default function Map(props) {
                     </Grid>                        
                 </FilterBox>
 
-                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
+                <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nocases : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
                     </h4>
@@ -647,7 +647,8 @@ export default function Map(props) {
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
                 <span className="range6">&#62; 99% </span>
-                <span className="nodata">No cases reported in 14+ days.</span>
+                <span className="nocases">No cases reported in 14+ days.</span>
+                <span className="nodata">No data available.</span>
             </div>
             <div id="loading" className="loading"></div>
         </div>

@@ -177,12 +177,31 @@ div#mapLegend span.range6 {
   border-top-color: #184e77;
 }
 
+div#mapLegend span.nocases {
+  width: auto;
+  border-top: 0;
+  position: relative;
+  padding-left: 24px;
+}
+
 div#mapLegend span.nodata {
   width: auto;
   border-top: 0;
-  padding-left: 8px;
   position: relative;
   padding-left: 24px;
+  left: 40px;
+}
+
+div#mapLegend .nocases::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #cccccc;
 }
 
 div#mapLegend .nodata::before {
@@ -194,7 +213,8 @@ div#mapLegend .nodata::before {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #cccccc;
+  background: white;
+  border: 1px solid #4E585B;
 }
 
 .mapboxgl-popup-content h3 {
