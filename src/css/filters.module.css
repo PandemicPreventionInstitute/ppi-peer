@@ -82,14 +82,33 @@
     max-width: 275px;
 }
 
+.estimateTextAttendees {
+    margin-top: 6px;
+    color: inherit;
+    margin-bottom: 10px;
+    max-width: 300px;
+}
+
 .estimateRange {
     margin-top: 0px;
     margin-bottom: 6px;
     font-size: 24px;
 }
 
+.infectedAttendees {
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
 h1 {
     font-size: 32px;
+}
+
+hr {
+    border-top: 1px dotted;
+    background-color: black;
+    width: 100%; 
+    margin-top: 0px;
 }
 
 .nodata {

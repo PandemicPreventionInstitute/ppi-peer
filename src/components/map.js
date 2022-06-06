@@ -156,6 +156,7 @@ export default function Map(props) {
     const [loading, setLoading] = useState(true);
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
+    const [infectedAttendees, setInfectedAttendees] = useState('');
     const [countrySelect, setCountrySelect] = useState(false);
     const [currentRegion, setCurrentRegion] = useState({
         type: 'Feature',
@@ -384,12 +385,17 @@ export default function Map(props) {
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
                 console.log("this risk is: ", displayRisk);
-                let expIntroductions = 'exp_introductions_' + (filterState.size * 10); // @todo: Delete the multiplication by 10 when filterState.size changes
-                let infectedAttendees = feature.properties[expIntroductions];
+                let expIntroductionsSize = 'exp_introductions_' + (filterState.size * 10); // @todo: Delete the multiplication by 10 when filterState.size changes
+                let expIntroductions = feature.properties[expIntroductionsSize];
+                setInfectedAttendees(expIntroductions);
+                let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
 
                 if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
-                } else if (displayRisk < 1) { 
+                    expIntroductions = 'N/A';
+                    setInfectedAttendees('N/A');
+                    casesPer100k = 'N/A';
+                } else if (displayRisk < 1) {
                     displayRisk = '< 1%';
                 } else if (displayRisk > 99) {
                     displayRisk = '> 99%';
@@ -400,7 +406,7 @@ export default function Map(props) {
                 popup
                 .setLngLat(e.lngLat)
                 .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Exposure Risk: ' + displayRisk + '</strong><br>' + 
-                'Infected Attendees: ' + infectedAttendees + '</strong><br>' + 'Cases per 100k in the past 14 days: ' + feature.properties.cases_per_100k_past_14_d + 
+                'Infected Attendees: ' + expIntroductions + '</strong><br>' + 'Cases per 100k in the past 14 days: ' + casesPer100k + 
                 '</strong><br>' + 'Data Last Updated: ' + feature.properties.DateReport  + '</p>' )
                 .addTo(map.current);
             });    
@@ -591,14 +597,14 @@ export default function Map(props) {
 
                 <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nodata : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     <h4 className={styles.estimateHeader}>
-                        <CoronavirusIcon className={styles.mainIcons} />COVID-19 PRESENCE ESTIMATION IS:
+                        <CoronavirusIcon className={styles.mainIcons} />COVID-19 EXPOSURE RISK IS:
                     </h4>
                     <h3 className={styles.estimateRange}>
                         {boxDisplayRisk < 0 ? 'No Data' : (boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High')))))}
                     </h3>
                     <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))}</h1>
                     {boxDisplayRisk > 0 ? 
-                        <h4 className={styles.estimateText}>that at least ONE PERSON would be infected in the event
+                        <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
                             <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
                                 <IconButton>
                                     <InfoOutlinedIcon />
@@ -607,7 +613,17 @@ export default function Map(props) {
                         </h4>
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
                     }
-                    <p><strong>Last Updated:</strong> {dateLastUpdated}</p>
+                    <hr />
+                    <h3 className={styles.infectedAttendees}>{infectedAttendees} attendees</h3>
+                    <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event
+                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                            <IconButton>
+                                <InfoOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </h4>
+                    <hr />
+                    <p><strong>Data Last Updated:</strong> {dateLastUpdated}</p>
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
