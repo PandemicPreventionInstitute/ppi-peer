@@ -147,6 +147,18 @@ const Arrow = styled('div')({
     },
   });
 
+  const scale = value => {
+    const previousMarkIndex = Math.floor(value / 25);
+    const previousMark = marks[previousMarkIndex];
+    const remainder = value % 25;
+    if (remainder === 0) {
+      return previousMark.eventSize;
+    }
+    const nextMark = marks[previousMarkIndex + 1];
+    const increment = (nextMark.eventSize - previousMark.eventSize) / 25;
+    return remainder * increment + previousMark.eventSize;
+  };
+
 export default function Map(props) {
     const mapContainer = useRef(true);
     const map = useRef(null);
@@ -164,7 +176,10 @@ export default function Map(props) {
     });
     const [filterState, setFilterState] = useState({
         region: {},
-        size: 2.5,
+        size: 20
+    })
+    const [sliderValue, setSliderValue] = useState({
+        size: 50
     })
     const [mapData, setMapData]=useState();
 
@@ -173,7 +188,7 @@ export default function Map(props) {
     }
 
     const valueLabelFormat = (value) => {
-        return value * 10; 
+        return value;
     }
         // useEffect to fetch data on mount
     useEffect(() => {
@@ -201,12 +216,18 @@ export default function Map(props) {
     }, []);
 
     const handleSliderChange = (e, value) => {
-        let newSize = 'risk_' + (value * 10);
+        const markIndex = Math.floor(value / 25); // get slider index so we can get the event size
+        const mark = marks[markIndex];
+        const eventSize = mark.eventSize; // actual event size
+        let newSize = 'risk_' + eventSize;
         let newVal = value;
         setFilterState({
             ...filterState,
+            size: eventSize
+        });
+        setSliderValue({
             size: newVal
-        })
+        });
         map.current.setPaintProperty('world-fill', 'fill-color', [
             'step',
             ['get', newSize],
@@ -248,7 +269,7 @@ export default function Map(props) {
                 map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
-            let thisSize = 'risk_' + (filterState.size * 10);
+            let thisSize = 'risk_' + (filterState.size);
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
@@ -294,14 +315,14 @@ export default function Map(props) {
                     // option 1:
                     // this fill creates smooth gradients through value ranges
                     // 'fill-color': {
-                    //     'property': 'risk_'+(filterState.size*10),
+                    //     'property': 'risk_'+(filterState.size),
                     //     'stops': [[-1, '#cccccc'], [0, '#eff5d9'], [1, '#d9ed92'], [25, '#99d98c'], [50, '#52b69a'], [75, '#168aad'], [99, '#1e6091'],[100, '#184e77']]
                     //   },
                     // option 2:
                     //this fill option creates strict steps between value ranges
                     'fill-color': [
                         'step',
-                        ['get', 'risk_'+(filterState.size*10)],
+                        ['get', 'risk_'+(filterState.size)],
                         '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77'
                     ],
                     'fill-opacity': [
@@ -378,7 +399,7 @@ export default function Map(props) {
                     geometry: feature._geometry,
                     properties: feature.properties
                 }
-                let thisSize = 'risk_' + (filterState.size * 10);
+                let thisSize = 'risk_' + (filterState.size);
                 setCurrentRegion(featureCopy);
                 setCountrySelect(true);
                 setBoxDisplayRisk(feature.properties[thisSize]);
@@ -543,15 +564,18 @@ export default function Map(props) {
                             <Slider
                                 aria-label="Restricted values"
                                 id="selector-eventSize"
-                                value={filterState.size}
+                                value={sliderValue.size}
                                 name="size"
-                                defaultValue={2.5}
+                                defaultValue={50}
                                 disabled={loading ? true : false}
                                 valueLabelFormat={valueLabelFormat}
                                 getAriaValueText={valuetext}
                                 step={null}
                                 valueLabelDisplay="on"
                                 marks={marks}
+                                scale={scale}
+                                min={0}
+                                max={225}
                                 onChange={handleSliderChange}
                                 track={false}
                             />
