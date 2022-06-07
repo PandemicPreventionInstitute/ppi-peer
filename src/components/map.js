@@ -407,7 +407,7 @@ export default function Map(props) {
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
                 console.log("this risk is: ", displayRisk);
-                let expIntroductionsSize = 'exp_introductions_' + (filterState.size * 10); // @todo: Delete the multiplication by 10 when filterState.size changes
+                let expIntroductionsSize = 'exp_introductions_' + (filterState.size);
                 let expIntroductions = feature.properties[expIntroductionsSize];
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
@@ -628,7 +628,7 @@ export default function Map(props) {
                         {boxDisplayRisk < 0 ? 'No Data' : (boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High')))))}
                     </h3>
                     <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))}</h1>
-                    {boxDisplayRisk > 0 ? 
+                    {boxDisplayRisk >= 0 ? 
                         <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
                             <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
                                 <IconButton>
