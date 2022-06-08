@@ -248,12 +248,12 @@ export default function Map(props) {
             ['get', newSize],
             '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
         );
-        setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+        setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
         let expIntroductionsSize = 'exp_introductions_' + (eventSize);
         let expIntroductions = currentRegion.properties[expIntroductionsSize];
         setInfectedAttendees(expIntroductions);
 
-        // update popup if open
+        // update popup risk and infected attendees if open
         if(popupState) {
             let popupRisk = document.getElementById('popup_risk');
             let risk = currentRegion.properties[newSize];
@@ -479,7 +479,7 @@ export default function Map(props) {
 
                 popup.on('close', function(e) {
                     setPopupState(false);
-                })
+                });
             });    
         });            
     });
