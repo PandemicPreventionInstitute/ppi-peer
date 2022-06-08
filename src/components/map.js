@@ -682,25 +682,27 @@ export default function Map(props) {
                     </h3>
                     <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))}</h1>
                     {boxDisplayRisk >= 0 ? 
-                        <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
-                            <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
-                                <IconButton>
-                                    <InfoOutlinedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </h4>
+                        <div>
+                            <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
+                                <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                    <IconButton>
+                                        <InfoOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </h4>
+                            <hr />
+                            <h3 className={styles.infectedAttendees}>{infectedAttendees} attendees</h3>
+                            <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event
+                                <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                    <IconButton>
+                                        <InfoOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </h4>
+                            <hr />
+                        </div>
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
                     }
-                    <hr />
-                    <h3 className={styles.infectedAttendees}>{infectedAttendees} attendees</h3>
-                    <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event
-                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
-                            <IconButton>
-                                <InfoOutlinedIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </h4>
-                    <hr />
                     <p><strong>Data Last Updated:</strong> {dateLastUpdated}</p>
                 </EstimateBox>
 
