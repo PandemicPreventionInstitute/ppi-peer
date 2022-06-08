@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import ReactDOM from "react-dom/client";
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import turf from 'turf';
 import Precautions from './precautions';
@@ -147,21 +148,32 @@ const Arrow = styled('div')({
     },
   });
 
-  const scale = value => {
+const scale = value => {
     const previousMarkIndex = Math.floor(value / 25);
     const previousMark = marks[previousMarkIndex];
     const remainder = value % 25;
     if (remainder === 0) {
-      return previousMark.eventSize;
+        return previousMark.eventSize;
     }
     const nextMark = marks[previousMarkIndex + 1];
     const increment = (nextMark.eventSize - previousMark.eventSize) / 25;
     return remainder * increment + previousMark.eventSize;
-  };
+};
+
+const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k }) => (
+    <div>
+      <h3>{featureProperties.RegionName}</h3><br />
+      <strong><p id='popup_risk'>Exposure Risk: {displayRisk}</p></strong>
+      <strong><p id='infected_attendees'>Infected Attendees: {expIntroductions}</p></strong>
+      <strong><p>Cases per 100k in the past 14 days: {casesPer100k}</p></strong>   
+      <strong><p>Data Last Updated: {featureProperties.DateReport}</p></strong>
+    </div>
+);
 
 export default function Map(props) {
     const mapContainer = useRef(true);
     const map = useRef(null);
+    const [popupState, setPopupState] = useState(false);
     const [lng, setLng] = useState(20);
     const [lat, setLat] = useState(27);
     const [zoom, setZoom] = useState(2);
@@ -179,6 +191,7 @@ export default function Map(props) {
         region: {},
         size: 20
     })
+    const filterStateRef = useRef(20);
     const [sliderValue, setSliderValue] = useState({
         size: 50
     })
@@ -222,6 +235,7 @@ export default function Map(props) {
         const eventSize = mark.eventSize; // actual event size
         let newSize = 'risk_' + eventSize;
         let newVal = value;
+        filterStateRef.current = eventSize; // update filter state reference for popup
         setFilterState({
             ...filterState,
             size: eventSize
@@ -234,7 +248,27 @@ export default function Map(props) {
             ['get', newSize],
             '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
         );
-        // setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+        setBoxDisplayRisk(currentRegion.properties[newSize]);  // udpate state and estimation
+        let expIntroductionsSize = 'exp_introductions_' + (eventSize);
+        let expIntroductions = currentRegion.properties[expIntroductionsSize];
+        setInfectedAttendees(expIntroductions);
+
+        // update popup if open
+        if(popupState) {
+            let popupRisk = document.getElementById('popup_risk');
+            let risk = currentRegion.properties[newSize];
+            let infectedAttendees = document.getElementById('infected_attendees');
+            
+            if (risk < 1) {
+                risk = '< 1%';
+            } else if (risk > 99) {
+                risk = '> 99%';
+            } else {
+                risk = Math.round(risk) + '%';
+            }
+            popupRisk.innerText = 'Exposure Risk: ' + risk;
+            infectedAttendees.innerText = 'Infected Attendees: ' + expIntroductions;
+        }       
     }
 
     const handleRegionSelect = (e, value) => {
@@ -367,6 +401,7 @@ export default function Map(props) {
             map.current.on('click', 'world-fill', function(e) {
                 var popup = new mapboxgl.Popup({ offset: [0, -7] });
                 map.current.getCanvas().style.cursor = 'pointer';
+                setPopupState(true);
                 var features = map.current.queryRenderedFeatures(e.point, {
                     layers: ['world-fill'] 
                 });
@@ -400,14 +435,14 @@ export default function Map(props) {
                     geometry: feature._geometry,
                     properties: feature.properties
                 }
-                let thisSize = 'risk_' + (filterState.size);
+                let thisSize = 'risk_' + filterStateRef.current;
                 setCurrentRegion(featureCopy);
                 setCountrySelect(true);
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
                 console.log("this risk is: ", displayRisk);
-                let expIntroductionsSize = 'exp_introductions_' + (filterState.size);
+                let expIntroductionsSize = 'exp_introductions_' + (filterStateRef.current);
                 let expIntroductions = feature.properties[expIntroductionsSize];
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
@@ -424,13 +459,27 @@ export default function Map(props) {
                 } else {
                     displayRisk = Math.round(displayRisk) + '%';
                 }
+
+                //create popup node and root
+                const popupNode = document.createElement("div");     
+                const popupRoot = ReactDOM.createRoot(popupNode); // Create a root.           
+                popupRoot.render(
+                <Popup
+                    featureProperties={feature.properties}
+                    displayRisk={displayRisk}
+                    expIntroductions={expIntroductions}
+                    casesPer100k={casesPer100k}
+                />
+                );
                 
                 popup
                 .setLngLat(e.lngLat)
-                .setHTML('<h3>' + feature.properties.RegionName + '</h3><p><strong>Exposure Risk: ' + displayRisk + '</strong><br>' + 
-                'Infected Attendees: ' + expIntroductions + '</strong><br>' + 'Cases per 100k in the past 14 days: ' + casesPer100k + 
-                '</strong><br>' + 'Data Last Updated: ' + feature.properties.DateReport  + '</p>' )
+                .setDOMContent(popupNode)
                 .addTo(map.current);
+
+                popup.on('close', function(e) {
+                    setPopupState(false);
+                })
             });    
         });            
     });
