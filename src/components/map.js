@@ -660,9 +660,9 @@ export default function Map(props) {
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         
             </div>
             <MobilePrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></MobilePrecautionsBox>         
-            <div className="longlat">
+            {/* <div className="longlat">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-            </div>
+            </div> */}
             <div id="map" ref={mapContainer} className="map-container" />
             <Backdrop open={mapControlPopperOpen} sx={{zIndex: 6}}>
                 <OnboardingPopper 
