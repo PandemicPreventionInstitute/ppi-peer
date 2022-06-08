@@ -258,8 +258,12 @@ export default function Map(props) {
             let popupRisk = document.getElementById('popup_risk');
             let risk = currentRegion.properties[newSize];
             let infectedAttendees = document.getElementById('infected_attendees');
-            
-            if (risk < 1) {
+
+            if (risk < 0) {
+                risk = 'No data has been reported from this region within the last 14 days.';
+                expIntroductions = 'N/A';
+            }
+            else if (risk < 1) {
                 risk = '< 1%';
             } else if (risk > 99) {
                 risk = '> 99%';
