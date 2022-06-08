@@ -3,6 +3,8 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import turf from 'turf';
 import Precautions from './precautions';
 import axios from 'axios';
+import {load} from '@loaders.gl/core';
+import {FlatGeobufLoader} from '@loaders.gl/flatgeobuf';
 import styles from '../css/filters.module.css';
 import { 
     Autocomplete,
@@ -181,7 +183,11 @@ export default function Map(props) {
     const [sliderValue, setSliderValue] = useState({
         size: 50
     })
-    const [mapData, setMapData]=useState();
+    // const [mapData, setMapData]=useState();
+    const [mapData, setMapData]=useState({
+        type: "FeatureCollection",
+        features: []
+    });
 
     const valuetext = (value) => {
         return value;
@@ -211,7 +217,28 @@ export default function Map(props) {
         setLoading(false);
         }
 
-        getData()
+        // flatgeobuf file is ~20% of a json file size; a much more performant data load
+        const getFGBData = () => {
+            fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.fgb') 
+            .then(function(response) {
+                console.log("init fgb response: ", response);
+                let fetchFGB = load(response, FlatGeobufLoader);
+                return fetchFGB;
+            })
+            .then(function(fetchFGB) {
+                setMapData({
+                    ...mapData,
+                    features: fetchFGB
+                });
+                console.log("map data: ", mapData);
+                console.log("fgb data: ", fetchFGB);
+                setLoading(false);
+            });
+            
+        }
+
+        //getData()
+        getFGBData();
 
     }, []);
 
