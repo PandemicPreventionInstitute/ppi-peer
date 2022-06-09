@@ -158,21 +158,6 @@ hr {
 }
 
 @media (max-width: 600px) {
-    .precautions {
-        margin: -20px 0px;
-        bottom: 0px !important;
-        position: fixed !important;
-        height: auto;
-        background: #ffffff;
-        z-index: 3;
-        border-radius: 16px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        padding: 0px 12px;
-        left: auto;        
-        width: auto;
-        align-items: center;
-    }
-
     .precautionsLabel {
         text-align: center;
     }
