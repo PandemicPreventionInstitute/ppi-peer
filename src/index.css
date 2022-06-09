@@ -110,12 +110,6 @@ ul a.active {
   bottom: 26px;
 }
 
-@media screen and (min-width: 1600px) {
-  .mapfilters {
-    max-height: none;
-  }
-}
-
 .topMapfilters {
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
