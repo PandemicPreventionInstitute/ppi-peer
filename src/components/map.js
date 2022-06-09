@@ -305,6 +305,8 @@ export default function Map(props) {
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
             let thisSize = 'risk_' + (filterState.size);
+            let expIntroductionsSize = 'exp_introductions_' + (filterState.size);
+            setInfectedAttendees(value.properties[expIntroductionsSize]);
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
