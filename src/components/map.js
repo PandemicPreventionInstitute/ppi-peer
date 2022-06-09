@@ -326,7 +326,7 @@ export default function Map(props) {
             style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create PPI account and map style
             center: [lng, lat],
             zoom: zoom,
-            maxZoom: 10,
+            maxZoom: 7,
             minZoom: 2,
             renderWorldCopies: false
         });
