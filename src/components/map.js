@@ -691,7 +691,7 @@ export default function Map(props) {
                                 </Tooltip>
                             </h4>
                             <hr />
-                            <h3 className={styles.infectedAttendees}>{infectedAttendees} attendees</h3>
+                            <h3 className={styles.infectedAttendees}>{infectedAttendees} {infectedAttendees === 1 ? 'attendee' : 'attendees'}</h3>
                             <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event
                                 <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
                                     <IconButton>
