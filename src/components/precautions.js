@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from '../css/filters.module.css';
+import { styled } from '@mui/material/styles';
 import { 
     IconButton,
+    Box
 } from '@mui/material';
 import {
     ShieldOutlined,
@@ -14,6 +16,29 @@ import handwashing from '../assets/icon_handwashing.png';
 import outdoors from '../assets/icon_outdoors.png';
 import sanitizer from '../assets/icon_sanitizer.png';
 import vaccines from '../assets/icon_vaccines.png';
+
+const PrecautionsBox = styled(Box)(({ open }) => ({   
+        '@media (max-width:600px)': {
+            margin: '-20px 0px',
+            bottom: '0px',
+            position: 'fixed',
+            height: 'auto',
+            background: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+            padding: '0px 12px',
+            left: 'auto',        
+            width: 'auto',
+            alignItems: 'center',
+            ...(open && {
+                zIndex: 5
+            }),
+            ...(!open && {
+                zIndex: 3
+            })
+        }  
+    })
+);
 
 export function PrecautionsContent(props) {
     return (
@@ -71,7 +96,7 @@ export default function Precautions(props) {
     };
     
     return (
-        <div id='Precautions' className={styles.precautions}>
+        <PrecautionsBox open={openUp}>
             <PrecautionsContent open={openUp} /> 
             <h4 className={styles.precautionsLabel}>
                 <ShieldOutlined className={styles.roomOutlined}/> TAKE THE RIGHT PRECAUTIONS
@@ -81,6 +106,6 @@ export default function Precautions(props) {
                 </IconButton>
             </h4>
             <PrecautionsContent open={openDown} />
-        </div>
+        </PrecautionsBox>
     );
 }

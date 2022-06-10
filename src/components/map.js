@@ -309,6 +309,8 @@ export default function Map(props) {
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
             let thisSize = 'risk_' + (filterState.size);
+            let expIntroductionsSize = 'exp_introductions_' + (filterState.size);
+            setInfectedAttendees(value.properties[expIntroductionsSize]);
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
@@ -330,7 +332,7 @@ export default function Map(props) {
             style: 'mapbox://styles/toothpick/cknjppyti1hnz17ocjat5chky', // @todo: create PPI account and map style
             center: [lng, lat],
             zoom: zoom,
-            maxZoom: 10,
+            maxZoom: 7,
             minZoom: 2,
             renderWorldCopies: false
         });
