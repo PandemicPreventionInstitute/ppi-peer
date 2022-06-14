@@ -235,7 +235,6 @@ export default function Map(props) {
         const getFGBData = () => {
             fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.fgb') 
             .then(function(response) {
-                console.log("init fgb response: ", response);
                 let fetchFGB = load(response, FlatGeobufLoader);
                 return fetchFGB;
             })
@@ -244,8 +243,6 @@ export default function Map(props) {
                     ...mapData,
                     features: fetchFGB
                 });
-                console.log("map data: ", mapData);
-                console.log("fgb data: ", fetchFGB);
                 setLoading(false);
             });
             
@@ -474,7 +471,6 @@ export default function Map(props) {
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
-                console.log("this risk is: ", displayRisk);
                 let expIntroductionsSize = 'exp_introductions_' + (filterStateRef.current);
                 let expIntroductions = feature.properties[expIntroductionsSize];
                 setInfectedAttendees(expIntroductions);
