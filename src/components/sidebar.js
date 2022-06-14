@@ -65,11 +65,13 @@ export default function Sidebar(params) {
     return (
         <Box className={styles.sidebarBox}>
             <SidebarTextBox open={params.open}>
-                <h1 className={styles.title}>COVID-19 Presence Estimator</h1>
-                <h2 className={styles.subtitle}>for event planning</h2>
+                <h1 className={styles.title}>COVID-19 Probability Estimator</h1>
+                <h2 className={styles.subtitle}>for Exposure Risk (PEER)</h2>
                 <div className={styles.blurb}>
-                    <p className={styles.serif}>Are you planning to host or attend a special event? Are you worried about someone bringing the virus to the occassion? We can help you estimate the probability.</p>
-                    <p>Estimate the probability that one person could be infected with COVID-19 in the event, so you can take precautions and make safer decisions</p>
+                    <p className={styles.serif}>An innovative tool for contextualizing the probability of COVID-19 exposure.</p>
+                    <p>Decision making relies on accurate information and interpretable metrics. But for most, metrics such as daily reported 
+                        cases and test positivity rates do not easily translate to risk assessment. PEER bridges this gap —translating data 
+                        into clear information to assess the risk posed by an event.</p>
                 </div>  
             </SidebarTextBox>  
             <MenuList sx={{paddingLeft: '5%'}}>

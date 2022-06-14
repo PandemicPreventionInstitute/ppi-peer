@@ -86,10 +86,12 @@ export default function Onboarding(props) {
                         <div className={styles.imageRoot}>
                             <img src={maskedElbowBump} className={styles.image} />
                         </div>
-                        <h1 className={styles.welcome}>Welcome to the COVID-19 Presence Estimator for Event Planning! </h1>
-                        <h3 className={styles.dialogText}>Are you planning to host or attend an event? </h3>
-                        <p className={styles.dialogText}>Learn how to navigate through this tool and understand the probability of <b>at least one person 
-                            being infected with COVID-19 at an event or activity</b>.  It takes only three easy steps!</p>
+                        <h1 className={styles.welcome}>Welcome to the COVID-19 Probability Estimator for Exposure Risk (PEER) </h1>
+                        <h3 className={styles.dialogText}>Navigate our decision-support tool, integrating empirical evidence with public health 
+                        preparedness.</h3> 
+                        <p className={styles.dialogText}>PEER leverages data, science, and technology to quickly estimate the probability that one or more infected
+                         individuals will be present at an event or social gathering given the size and reported cases in the area.  
+                         It takes only three easy steps!</p>
                     </div>
                 </DialogContent>
                 <DialogActions>
