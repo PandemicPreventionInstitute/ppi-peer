@@ -197,7 +197,6 @@ export default function Map(props) {
     const [sliderValue, setSliderValue] = useState({
         size: 50
     })
-    // const [mapData, setMapData]=useState();
     const [mapData, setMapData]=useState({
         type: "FeatureCollection",
         features: []
