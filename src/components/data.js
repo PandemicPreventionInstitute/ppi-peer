@@ -7,16 +7,6 @@ export default function Data() {
 
         <h1>Data Sources</h1>
 
-        <h3>Singapore, Brunei, Djibouti, Qatar, Marshall Islands, Saint Kitts and Nevis, Timor-Leste, Maldives, Grenada, Saint Vincent and the Grenadines, Saint Lucia, 
-            Barbados, Antigua and Barbuda, Seychelles, Palau, Micronesia, Dominica, Bahrain, Kiribati, Sao Tome and Principe, Comoros, Mauritius, Samoa, Trinidad and Tobago, 
-            Lebanon, Jamaica, Gambia, Vanuatu, Bahamas, Eswatini, Kuwait, Fiji, El Salvador, Belize, Cabo Verde, Palestine; and Faroe Islands, Falkland Islands, Greenland, 
-            New Caledonia, Turks and Caicos Islands, Anguilla, British Virgin Islands, Gibraltar, Bermuda, Sint Maarten, Aruba, Curacao, Cook Islands</h3>
-        
-        <p>Aggregated by the COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University: <a target="_blank" href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data">
-            https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data</a>.</p>
-        
-        <p>Dong, E., Du, H., & Gardner, L. (2020). An interactive web-based dashboard to track COVID-19 in real time. The Lancet infectious diseases, 20(5), 533-534.</p>
-
         <h3>Afghanistan, Argentina, Colombia, Mozambique</h3>
 
         <p>Data obtained via Google COVID-19 Open Data: <a target="_blank" href="https://health.google.com/covid-19/open-data/">https://health.google.com/covid-19/open-data/</a>.</p>
@@ -312,6 +302,16 @@ export default function Data() {
 
         <p>COVID-19 Data Repository by African Surveyors Connect, <a target="_blank" href="https://github.com/African-Surveyors-Connect/Zimbabwe-COVID-19-Data/">
             https://github.com/African-Surveyors-Connect/Zimbabwe-COVID-19-Data/</a>.</p>
+
+        <h3>Singapore, Brunei, Djibouti, Qatar, Marshall Islands, Saint Kitts and Nevis, Timor-Leste, Maldives, Grenada, Saint Vincent and the Grenadines, Saint Lucia, 
+        Barbados, Antigua and Barbuda, Seychelles, Palau, Micronesia, Dominica, Bahrain, Kiribati, Sao Tome and Principe, Comoros, Mauritius, Samoa, Trinidad and Tobago, 
+        Lebanon, Jamaica, Gambia, Vanuatu, Bahamas, Eswatini, Kuwait, Fiji, El Salvador, Belize, Cabo Verde, Palestine; and Faroe Islands, Falkland Islands, Greenland, 
+        New Caledonia, Turks and Caicos Islands, Anguilla, British Virgin Islands, Gibraltar, Bermuda, Sint Maarten, Aruba, Curacao, Cook Islands</h3>
+        
+        <p>Aggregated by the COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University: <a target="_blank" href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data">
+            https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data</a>.</p>
+        
+        <p>Dong, E., Du, H., & Gardner, L. (2020). An interactive web-based dashboard to track COVID-19 in real time. The Lancet infectious diseases, 20(5), 533-534.</p>
                
         </div>
     );

@@ -10,9 +10,9 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import creditCard from '../assets/credit_card.png';
-import calculator from '../assets/calculator.png';
-import camera from '../assets/camera.png';
+import connection from '../assets/connection-svgrepo-com.svg';
+import weather from '../assets/rain-weather-svgrepo-com.svg';
+import world from '../assets/worldwide-global-svgrepo-com.svg';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -93,7 +93,7 @@ export default function About() {
                     <div>
                         <VisionCard>
                             <CardContent sx={{height: '230px'}}>
-                                <img className={styles.camera} src={camera} alt='Camera' />
+                                <img className={styles.connection} src={connection} alt='Connected people' />
                                 <h3 className={styles.visionsText}>
                                 A connected, sustainable pandemic data ecosystem
                                     <ExpandMore
@@ -135,7 +135,7 @@ export default function About() {
                     <div>
                         <VisionCard>
                             <CardContent sx={{height: '230px'}}>
-                                <img className={styles.creditCard} src={creditCard} alt="Credit card" ></img>
+                                <img className={styles.weather} src={weather} alt="Weather app icon" ></img>
                                 <h3 className={styles.visionsText}>
                                 Actionable, interpretable public health tools for all
                                     <ExpandMore
@@ -176,7 +176,7 @@ export default function About() {
                     <div>
                         <VisionCard>
                             <CardContent sx={{height: '230px'}}>
-                                <img className={styles.calculator} src={calculator} alt="Calculator" ></img>
+                                <img className={styles.world} src={world} alt="Global map" ></img>
                                 <h3 className={styles.visionsText}>
                                     Data for the entire globe
                                     <ExpandMore
