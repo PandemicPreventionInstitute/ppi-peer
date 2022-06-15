@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "axios-progress-bar": "^1.2.0",
+    "better-react-mathjax": "^2.0.1",
     "env-cmd": "^10.1.0",
     "mapbox-gl": "^2.8.2",
     "react": "^18.0.0",

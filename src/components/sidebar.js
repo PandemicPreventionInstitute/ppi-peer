@@ -84,16 +84,16 @@ export default function Sidebar(params) {
                     <SidebarMenuItemText open={params.open}>MAP</SidebarMenuItemText>
                 </SidebarMenuItem>
 
-                {/* <SidebarMenuItem 
+                <SidebarMenuItem 
                     component={NavLink} 
                     activeclassname="active"
-                    to="/advanced" 
+                    to="/methods" 
                     >
                     <SidebarMenuItemIcon>
                         <BarChartOutlined />
                     </SidebarMenuItemIcon>
-                    <SidebarMenuItemText open={params.open}>ADVANCED DATA TOOLS</SidebarMenuItemText>
-                </SidebarMenuItem> */}
+                    <SidebarMenuItemText open={params.open}>METHODS</SidebarMenuItemText>
+                </SidebarMenuItem> 
 
                 <SidebarMenuItem 
                     component={NavLink} 
