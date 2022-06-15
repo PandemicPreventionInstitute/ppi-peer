@@ -9,8 +9,8 @@ import { styled } from '@mui/material/styles';
 import Map from './components/map.js';
 import About from './components/about.js';
 import Data from './components/data.js';
-import Advanced from './components/advanced.js';
 import Sidebar from './components/sidebar.js';
+import Methods from './components/methods.js';
 
 import './App.css';
 import styles from './css/sidebar.module.css';
@@ -103,7 +103,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Map open={open} windowDimension={windowDimension}/>} />
             <Route path="about" element={<About />} />
-            <Route path="advanced" element={<Advanced />} />
+            <Route path="methods" element={<Methods />} />
             <Route path="data" element={<Data />} />
           </Routes>
         </Grid>
