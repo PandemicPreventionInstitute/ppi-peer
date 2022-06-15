@@ -69,14 +69,16 @@ export default function About() {
                     <div>
                         <h1 className={styles.mainText}>PEER - Probability Estimator for Exposure Risk:</h1>
                         <h3 className={styles.subText}>A COVID-19 calculator powered by the PPI and Georgia Tech</h3>
-                        <p className={styles.smallText}>The Pandemic Prevention Institute and the Georgia Institute of Technology 
-                        partnered to develop a digital tool that supports practical decision-making in the changing face of pathogen exposure. 
-                        The PEER map is an exposure prevention planning tool designed to help users employ interventions that protect 
-                        themselves and their communities against communicable diseases.The latest version of our tool is an adaptation of the 
-                        Event Risk Assessment Planning Tool by Georgia Tech and uses real-time COVID-19 data to estimate the probability that 
-                        one or more infected individuals will be present at an event, given the event size and recently reported 
-                        cases in the area. This approach is designed to empower users to make informed decisions.
-                        </p>
+                        <p className={styles.smallText}>The Probability Estimator for Exposure Risk (PEER) is a prevalence estimation tool that
+                         pulls data from across the globe and translates it into granular and interpretable metrics so that public health 
+                         decision-makers can perform event risk assessment. This version of PEER uses real-time COVID-19 case data and event 
+                         size to estimate the probability that one or more infected individuals will be present at an event and the expected 
+                         number of attendees arriving infected.</p>
+                        <p className={styles.smallText}>This tool leverages peer-reviewed methodologies from collaborators at the 
+                         Georgia Institute of Technology integratingit with a further focus on user-centered design to improve usability and 
+                         interpretability. PEER demonstrates the possibility of a world where, by translating data and science into actionable 
+                         technologies, decision-support tools around infectious disease risk can be as well-understood and accessible as 
+                         hurricane forecasts.</p>
                     </div>          
                 </Grid>
                 <Grid item xs={0} xwidedesktop={6} sx={{textAlign: 'center'}}>
