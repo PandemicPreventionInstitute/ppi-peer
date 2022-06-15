@@ -49,24 +49,19 @@ h3 {
     margin-top: 0px;
 }
 
-.creditCard {
-    width: 14%;
-    margin-left: 35px;
-    margin-top: 50px;
+.weather {
+    width: 9%;
+    margin-top: 30px;
 }
 
-.calculator {
-    width: 10%;
-    text-align: center;
-    margin-top: 49px;
-    margin-left: 20px;
+.world {
+    width: 7.5%;
+    margin-top: 30px;
 }
 
-.camera {
-    width: 15%;
-    margin-left: 30px;
-    text-align: center;
-    margin-top: 49px;
+.connection {
+    width: 9%;
+    margin-top: 30px;
 }
 
 .maskedElbowBumpLarge {
