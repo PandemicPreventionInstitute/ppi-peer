@@ -466,7 +466,9 @@ export default function Map(props) {
                 }
                 let thisSize = 'risk_' + filterStateRef.current;
                 setCurrentRegion(featureCopy);
+                console.log("this feature click: ", featureCopy);
                 setCountrySelect(true);
+                console.log("current region from state: ", currentRegion);
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
