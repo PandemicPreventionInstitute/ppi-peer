@@ -463,7 +463,7 @@ export default function Map(props) {
                 setCountrySelect(true);
                 setCurrentRegion({
                     ...currentRegion,
-                    type: "oh crap",
+                    type: feature.type,
                     geometry: feature._geometry,
                     properties: feature.properties,
                 });
