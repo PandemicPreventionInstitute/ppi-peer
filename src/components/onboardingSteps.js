@@ -48,13 +48,13 @@ export default function OnboardingSteps(props) {
                 </StepBox> : null}
                 {props.step2 ?
                 <StepBox>
-                    <h3 className="serif">Choose event size </h3>
-                    <p>How many people will be at your event or activity</p>
+                    <h3 className="serif">Choose crowd size </h3>
+                    <p>How many people will be present?</p>
                 </StepBox> : null}
                 {props.step3 ? 
                 <StepBox>
                     <h3 className="serif">Map controls </h3>
-                    <p>Use this controls to zoom in or zoom out, and center the map position to your location</p>
+                    <p>Use these controls to zoom in or zoom out, and center the map position to your location</p>
                 </StepBox> : null}
             </OnboardingBox1>
                          
