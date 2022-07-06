@@ -13,7 +13,7 @@ export const useLocalStorage = (key, defaultValue, setIsAccessible) => {
       return getStorageValue(key, defaultValue);
     } catch(err) {
       setIsAccessible(false); // set the isAccessible state to false so we can hide the checkbox option on the UI
-      console.log('local storage is inaccessible to cannot getStorageValue');
+      console.log('local storage is inaccessible, cannot get storage value');
       return defaultValue;
     }
   });
@@ -24,7 +24,7 @@ export const useLocalStorage = (key, defaultValue, setIsAccessible) => {
       localStorage.setItem(key, JSON.stringify(value));
     } catch(err) {
       setIsAccessible(false);
-      console.log('cannot store input name because local storage is inaccessible');
+      console.log('cannot store input name, local storage is inaccessible');
     }
   }, [key, value]);
 
