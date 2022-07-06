@@ -33,7 +33,10 @@ const OnboardingDialog = styled(Dialog)(() => ({
 );
 
 export default function Onboarding(props) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true); // onboarding dialog open/close state
+  const [checked, setChecked] = useState(false); // checkbox state for the UI
+  const [isAccessible, setIsAccessible] = useState(true); // local storage accessibility state
+  const [localCheck, setLocalCheck] = useLocalStorage("localCheck", false, setIsAccessible); // checkbox state for local storage
 
   const handleClose = () => {
     setOpen(false);
@@ -49,11 +52,8 @@ export default function Onboarding(props) {
     props.handleTutorialStep1();
   }
 
-  const [localCheck, setLocalCheck] = useLocalStorage("localCheck", false);
-  const [checked, setChecked] = useState(false);
-
   const handleChange = (event) => {
-    setChecked(event.target.checked); // just set the UI checkbox
+    setChecked(event.target.checked); // only set the UI checkbox
   };
 
   if (!localCheck) {
@@ -95,13 +95,17 @@ export default function Onboarding(props) {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <div>
-                        <Checkbox
-                            checked={checked}
-                            onChange={handleChange}
-                            inputProps={{ 'aria-label': 'do not show again' }}                       
-                        /> Don't show me again
-                    </div>
+                    {isAccessible ? 
+                        (
+                        <div>
+                            <Checkbox
+                                checked={checked}
+                                onChange={handleChange}
+                                inputProps={{ 'aria-label': 'do not show again' }}                       
+                            /> Don't show me again
+                        </div>
+                        ) : <div />
+                    }
                     <div>
                         <Button onClick={handleClose} className={styles.skip}>SKIP</Button>
                         <Button onClick={startTutorial}>TAKE THE TOUR</Button>
