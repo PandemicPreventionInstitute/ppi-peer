@@ -459,15 +459,17 @@ export default function Map(props) {
                 }
 
                 var feature = features[0];
-                // workaround for queryRenderedFeatures's nonstandard object returned
-                let featureCopy = {
+                let thisSize = 'risk_' + filterStateRef.current;
+                setCountrySelect(true);
+                setCurrentRegion({
+                    ...currentRegion,
                     type: feature.type,
                     geometry: feature._geometry,
-                    properties: feature.properties
-                }
-                let thisSize = 'risk_' + filterStateRef.current;
-                setCurrentRegion(featureCopy);
-                setCountrySelect(true);
+                    properties: feature.properties,
+                });
+
+                console.log("this feature click: ", feature);
+                console.log("current region from state: ", currentRegion);
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
@@ -500,7 +502,7 @@ export default function Map(props) {
                     casesPer100k={casesPer100k}
                 />
                 );
-                
+
                 popup
                 .setLngLat(e.lngLat)
                 .setDOMContent(popupNode)
@@ -610,7 +612,7 @@ export default function Map(props) {
                                 id="selector-region"
                                 disabled={loading ? true : false}
                                 options={loading ? null : mapData.features}
-                                getOptionLabel={(option) => option.properties.RegionName}
+                                getOptionLabel={(option) => currentRegion ? currentRegion.properties.RegionName : option.properties.RegionName}
                                 onChange={handleRegionSelect}
                                 renderOption = {(props, option) => { // use unique geoid as key to pacify MUI's unique key errors for autocomplete
                                     return (
