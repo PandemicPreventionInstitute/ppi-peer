@@ -21,6 +21,7 @@ import {
     RoomOutlined
 } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CoronavirusIcon from '@mui/icons-material/Coronavirus';
@@ -30,8 +31,8 @@ import Fade from '@mui/material/Fade';
 
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
-
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGsydGluMHR5MTNjbWhzcmx5aXo5dCJ9.p923c1PxecSV2E9MPfgyBg';
+// mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
 
 const FilterBox = styled(Box)(
@@ -475,6 +476,7 @@ export default function Map(props) {
                 let expIntroductions = feature.properties[expIntroductionsSize];
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
+                console.log('country properties: ', feature.properties); // FLGAG - TO DELETE
 
                 if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
@@ -702,10 +704,16 @@ export default function Map(props) {
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 EXPOSURE RISK IS:
                     </h4>
-                    <h3 className={styles.estimateRange}>
-                        {boxDisplayRisk < 0 ? 'No Data' : (boxDisplayRisk < 1 ? 'Very Low' : (boxDisplayRisk <= 25 ? 'Low' : (boxDisplayRisk <= 50 ? 'Low-Mid' : (boxDisplayRisk <= 75 ? 'Mid-High' : (boxDisplayRisk <= 99 ? 'High' : 'Very High')))))}
-                    </h3>
-                    <h1>{boxDisplayRisk < 0 ? 'No Current Data' : (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))}</h1>
+                    <h1>{boxDisplayRisk < 0 ? 
+                        'No Current Data' : 
+                        (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))
+                        }
+                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="Warning: This country is either (A) reporting low testing rates or (B) not reporting testing data at all. See methods for more details.">
+                            <IconButton>
+                                <ReportProblemOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </h1>
                     {boxDisplayRisk >= 0 ? 
                         <div>
                             <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
