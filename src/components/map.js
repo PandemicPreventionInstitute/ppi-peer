@@ -166,7 +166,7 @@ const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k 
     <div>
       <h3>{featureProperties.RegionName}</h3><br />
       <strong><p id='popup_risk'>Exposure Risk: {displayRisk}</p></strong>
-      <strong><p id='infected_attendees'>Infected Attendees: {expIntroductions}</p></strong>
+      <strong><p id='infected_attendees'>Expected Infected Attendees: {expIntroductions}</p></strong>
       <strong><p>Cases per 100k in the past 14 days: {casesPer100k}</p></strong>   
       <strong><p>Data Last Updated: {featureProperties.DateReport}</p></strong>
     </div>
@@ -274,6 +274,13 @@ export default function Map(props) {
         setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
         let expIntroductionsSize = 'exp_introductions_' + (eventSize);
         let expIntroductions = currentRegion.properties[expIntroductionsSize];
+        if(expIntroductions === 0) {
+            expIntroductions = '0 to 1';
+        } else if (expIntroductions === 1) {
+            expIntroductions = '1 to 2';
+        } else if (expIntroductions === 2) {
+            expIntroductions = '2 to 3';
+        }
         setInfectedAttendees(expIntroductions);
 
         // update popup risk and infected attendees if open
@@ -294,7 +301,7 @@ export default function Map(props) {
                 risk = Math.round(risk) + '%';
             }
             popupRisk.innerText = 'Exposure Risk: ' + risk;
-            infectedAttendees.innerText = 'Infected Attendees: ' + expIntroductions;
+            infectedAttendees.innerText = 'Expected Infected Attendees: ' + expIntroductions;
         }       
     }
 
@@ -333,7 +340,15 @@ export default function Map(props) {
             setCountrySelect(true); // set to true so estimate component is displayed                            
             let thisSize = 'risk_' + (filterState.size);
             let expIntroductionsSize = 'exp_introductions_' + (filterState.size);
-            setInfectedAttendees(value.properties[expIntroductionsSize]);
+            let expIntroductions = value.properties[expIntroductionsSize];
+            if( expIntroductions === 0) {
+                expIntroductions = '0 to 1';
+            } else if (expIntroductions === 1) {
+                expIntroductions = '1 to 2';
+            } else if (expIntroductions === 2) {
+                expIntroductions = '2 to 3';
+            }
+            setInfectedAttendees(expIntroductions);
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
@@ -473,6 +488,13 @@ export default function Map(props) {
                 let displayRisk = feature.properties[thisSize];
                 let expIntroductionsSize = 'exp_introductions_' + (filterStateRef.current);
                 let expIntroductions = feature.properties[expIntroductionsSize];
+                if( expIntroductions === 0) {
+                    expIntroductions = '0 to 1';
+                } else if (expIntroductions === 1) {
+                    expIntroductions = '1 to 2';
+                } else if (expIntroductions === 2) {
+                    expIntroductions = '2 to 3';
+                }
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
 
