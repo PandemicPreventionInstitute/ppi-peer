@@ -90,6 +90,7 @@ export default function Sidebar(params) {
                     component={NavLink} 
                     activeclassname="active"
                     to="/methods" 
+                    data-testid="METHODS"
                     >
                     <SidebarMenuItemIcon>
                         <BarChartOutlined />
@@ -101,6 +102,7 @@ export default function Sidebar(params) {
                     component={NavLink} 
                     activeclassname="active"
                     to="/data" 
+                    data-testid="DATA SOURCES"
                     >
                     <SidebarMenuItemIcon>
                         <ContentCopy />
@@ -112,6 +114,7 @@ export default function Sidebar(params) {
                     component={NavLink} 
                     activeclassname="active"
                     to="/about" 
+                    data-testid="ABOUT"
                     >
                     <SidebarMenuItemIcon>
                         <InfoOutlined />

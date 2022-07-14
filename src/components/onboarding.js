@@ -84,7 +84,7 @@ export default function Onboarding(props) {
                 <DialogContent>
                     <div className={styles.dialogContent}>
                         <div className={styles.imageRoot}>
-                            <img src={maskedElbowBump} className={styles.image} />
+                            <img src={maskedElbowBump} className={styles.image} alt='Masked elbow bump'/>
                         </div>
                         <h1 className={styles.welcome}>Welcome to the COVID-19 Probability Estimator for Exposure Risk (PEER)! </h1>
                         <h3 className={styles.dialogText}>Navigate our decision-support tool, integrating empirical evidence with public health 
