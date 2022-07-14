@@ -29,6 +29,7 @@ import Fade from '@mui/material/Fade';
 
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
 
