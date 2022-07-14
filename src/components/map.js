@@ -165,7 +165,7 @@ const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k 
     <div>
       <h3>{featureProperties.RegionName}</h3><br />
       <strong><p id='popup_risk'>Exposure Risk: {displayRisk}</p></strong>
-      <strong><p id='infected_attendees'>Infected Attendees: {expIntroductions}</p></strong>
+      <strong><p id='infected_attendees'>Expected Infected Attendees: {expIntroductions}</p></strong>
       <strong><p>Cases per 100k in the past 14 days: {casesPer100k}</p></strong>   
       <strong><p>Data Last Updated: {featureProperties.DateReport}</p></strong>
     </div>
@@ -191,6 +191,28 @@ export function GetFGBData(mapData, setMapData, setLoading) {
     getFGBData();
 
     return mapData;
+}
+
+/**
+ * Calculation for the expected number of attendees who arrive infected to an event
+ * @param {*} region - location
+ * @param {*} eventSize - crowd size
+ * @returns 
+ */
+export function GetInfectedAttendees(region, eventSize) {
+    let AB = region.properties['AB'];
+    let pInf = region.properties['pInf'];
+    let expIntroductions = AB * pInf * eventSize; // calculate expected number of infected attendees
+    if( expIntroductions < 1) {
+        expIntroductions = '0 to 1';
+    } else if ( 1 <= expIntroductions && expIntroductions < 2) {
+        expIntroductions = '1 to 2';
+    } else if (2 <= expIntroductions && expIntroductions <= 3) {
+        expIntroductions = '2 to 3';
+    } else {
+        expIntroductions = Math.round(expIntroductions);
+    }
+    return expIntroductions;
 }
 
 export default function Map(props) {
@@ -255,8 +277,7 @@ export default function Map(props) {
             '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
         );
         setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
-        let expIntroductionsSize = 'exp_introductions_' + (eventSize);
-        let expIntroductions = currentRegion.properties[expIntroductionsSize];
+        let expIntroductions = GetInfectedAttendees(currentRegion, eventSize);
         setInfectedAttendees(expIntroductions);
 
         // update popup risk and infected attendees if open
@@ -277,7 +298,7 @@ export default function Map(props) {
                 risk = Math.round(risk) + '%';
             }
             popupRisk.innerText = 'Exposure Risk: ' + risk;
-            infectedAttendees.innerText = 'Infected Attendees: ' + expIntroductions;
+            infectedAttendees.innerText = 'Expected Infected Attendees: ' + expIntroductions;
         }       
     }
 
@@ -315,8 +336,8 @@ export default function Map(props) {
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
             let thisSize = 'risk_' + (filterState.size);
-            let expIntroductionsSize = 'exp_introductions_' + (filterState.size);
-            setInfectedAttendees(value.properties[expIntroductionsSize]);
+            let expIntroductions = GetInfectedAttendees(value, filterState.size);
+            setInfectedAttendees(expIntroductions);
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
         } else {
@@ -454,8 +475,7 @@ export default function Map(props) {
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
-                let expIntroductionsSize = 'exp_introductions_' + (filterStateRef.current);
-                let expIntroductions = feature.properties[expIntroductionsSize];
+                let expIntroductions = GetInfectedAttendees(feature, filterStateRef.current);
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
 

@@ -113,7 +113,7 @@ export default function About() {
                                         application at-scale. In the fields of pandemic preparedness and communicable disease, this 
                                         problem is only more pronounced. Further, these fields need sustainable coordination and innovation 
                                         but are often fragmented and underfunded, leaving many projects competing with one another 
-                                        and without long-term homes.
+                                        and lacking the software infrastructure to be maintained long-term.
                                     </Typography>
                                     <Typography paragraph>
                                         Our collaboration with Georgia Tech seeks to take on this challenge. 
@@ -123,8 +123,11 @@ export default function About() {
                                         real-time metrics. We also want to spotlight shortcomings in similar global tools (such as, data 
                                         dashboards) to convey the time-sensitive opportunity to expand such approaches globally. 
                                         Rather than introduce another tool, our hope is that the PPI can build on what already exists in the 
-                                        Event Risk Tool by focusing on user-centered product design while enabling Georgia Tech to focus 
-                                        on advancing the science of COVID-19 prevalence estimation and risk assessment.
+                                        Event Risk Tool by focusing on user-centered product design and a robust production-ready code base 
+                                        while enabling Georgia Tech to focus on advancing the science of COVID-19 prevalence estimation and 
+                                        risk assessment. We see PEER, which aggregates subnational case data from around the world, as a first 
+                                        step towards developing a pandemic data ecosystem capable of addressing critical questions across scales 
+                                        and geographies.
                                     </Typography>
                                 </CardContent>
                             </Collapse>
@@ -153,9 +156,9 @@ export default function About() {
                                     <Typography paragraph>
                                         The situation with COVID-19 is constantly changing. Restrictions and mask mandates have been rescinded 
                                         in places, and yet we know novel variants will continue to drive surges of infection. 
-                                        Without clear policy guidelines to inform behavior, the onus is on individuals to determine when 
-                                        COVID-19 poses a threat, and when it doesn’t. To navigate this uncertainty, this data-driven tool – 
-                                        PEER – helps users stay safe while returning a sense of normalcy to their everyday lives.
+                                        Without clear policy guidelines to inform behavior, the onus is on individuals and communities to 
+                                        determine when COVID-19 poses a threat, and when it doesn’t. To navigate this uncertainty, this 
+                                        data-driven tool – PEER – helps users stay safe while returning a sense of normalcy to their everyday lives.
                                     </Typography>
                                     <Typography paragraph>
                                         This is only the beginning. Just as we use probabilistic forecasts of the weather to decide if we need 
