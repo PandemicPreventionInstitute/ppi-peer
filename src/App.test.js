@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
 import App from './App';
+import {BrowserRouter as Router} from 'react-router-dom';
+import * as React from 'react';
+import ShallowRenderer from 'react-shallow-renderer';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+const renderer = new ShallowRenderer();
+
+it('renders without crashing', () => {
+  renderer.render(<Router><App /></Router>);
 });

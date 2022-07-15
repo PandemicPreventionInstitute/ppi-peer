@@ -22,6 +22,9 @@ After the package install successfully, you can check it's version by running `y
 ## Local Environment Setup: Running locally
 From your terminal window, run `yarn start`. This will install all the dependency packages in `package.json` and will spin up the application in your browser, at http://localhost:3000
 
+## Running Tests locally
+PEER utilizes Jest to run tests. The tests are all located in the `src/tests` folder. In order to run them, from your terminal window, run `yarn test:jest`. This will run all the tests in all files in the folder and tell you if they Pass or Fail, as well as spit out metrics like the number of lines covered and number of functions in each component that is tested.
+
 ## Build and Deploy
 In order to build a deployable bundle of html, css, and the compiled javascript, run `yarn build`. This will generate a `/build` folder in your project that has the compiled project ready to be deployed to cloud environment.
 

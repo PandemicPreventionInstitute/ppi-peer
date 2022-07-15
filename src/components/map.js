@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ReactDOM from "react-dom/client";
-import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import * as mapboxgl from 'mapbox-gl';
 import turf from 'turf';
 import Precautions from './precautions';
-import axios from 'axios';
 import {load} from '@loaders.gl/core';
 import {FlatGeobufLoader} from '@loaders.gl/flatgeobuf';
 import styles from '../css/filters.module.css';
@@ -172,6 +171,28 @@ const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k 
     </div>
 );
 
+export function GetFGBData(mapData, setMapData, setLoading) {
+    // flatgeobuf file is ~20% of a json file size; a much more performant data load
+    const getFGBData = () => {
+        fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.fgb') 
+        .then(function(response) {
+            let fetchFGB = load(response, FlatGeobufLoader);
+            return fetchFGB;
+        })
+        .then(function(fetchFGB) {
+            setMapData({
+                ...mapData,
+                features: fetchFGB
+            });
+            setLoading(false);
+        });
+    }
+
+    getFGBData();
+
+    return mapData;
+}
+
 /**
  * Calculation for the expected number of attendees who arrive infected to an event
  * @param {*} region - location
@@ -233,46 +254,8 @@ export default function Map(props) {
     }
         // useEffect to fetch data on mount
     useEffect(() => {
-        const getData = async () => {
-        // 'await' the data
-        const response = await axios.get("https://ppi-estimator.s3.amazonaws.com/globalDataWide.json", {
-            onDownloadProgress: (progressEvent) => {
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                // setFetchProgress(percentCompleted);
-                if (percentCompleted === 100) {
-                    setTimeout(() => {
-                      setLoading(false);
-                    }, 400);
-                  }
-                // @todo: use onDownloadProgress as value for a determinant progress bar loader
-            }
-        });
-        // save data to state
-        setMapData(response.data);
-        setLoading(false);
-        }
-
-        // flatgeobuf file is ~20% of a json file size; a much more performant data load
-        const getFGBData = () => {
-            fetch('https://ppi-estimator.s3.amazonaws.com/globalDataWide.fgb') 
-            .then(function(response) {
-                let fetchFGB = load(response, FlatGeobufLoader);
-                return fetchFGB;
-            })
-            .then(function(fetchFGB) {
-                setMapData({
-                    ...mapData,
-                    features: fetchFGB
-                });
-                setLoading(false);
-            });
-            
-        }
-
-        //getData()
-        getFGBData();
-
-    }, []);
+        GetFGBData(mapData, setMapData, setLoading);
+    }, [mapData]);
 
     const handleSliderChange = (e, value) => {
         const markIndex = Math.floor(value / 25); // get slider index so we can get the event size
