@@ -15,6 +15,7 @@
     "axios-progress-bar": "^1.2.0",
     "better-react-mathjax": "^2.0.1",
     "env-cmd": "^10.1.0",
+    "husky": "^8.0.1",
     "mapbox-gl": "^2.8.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -29,7 +30,13 @@
     "build:prod": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:jest": "jest --env=./test/custom-test-env.js"
+    "test:jest": "jest --env=./test/custom-test-env.js",
+    "lint": "eslint src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commmit": "yarn lint && yarn test:jest"
+    }
   },
   "eslintConfig": {
     "extends": [
