@@ -31,8 +31,8 @@ import Fade from '@mui/material/Fade';
 
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
-mapboxgl.accessToken='pk.eyJ1IjoibWluYW1vdXNlOTciLCJhIjoiY2wzMGsydGluMHR5MTNjbWhzcmx5aXo5dCJ9.p923c1PxecSV2E9MPfgyBg';
-// mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
+
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
 
 const FilterBox = styled(Box)(
@@ -206,6 +206,7 @@ export default function Map(props) {
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
     const [infectedAttendees, setInfectedAttendees] = useState('');
+    const [testingFlag, setTestingFlag] = useState(false); // flag for unreliable region data
     const [countrySelect, setCountrySelect] = useState(false);
     const [currentRegion, setCurrentRegion] = useState({
         type: 'Feature',
@@ -357,7 +358,10 @@ export default function Map(props) {
             let expIntroductions = GetInfectedAttendees(value, filterState.size);
             setInfectedAttendees(expIntroductions);
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
-            setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country        
+            setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country   
+            if (value.properties.testing_flag === true) {
+                setTestingFlag(true); // set flag for unreliable data
+            }
         } else {
             setCountrySelect(false); // set to false so estimate component closes
             map.current.fitBounds(map.current.getBounds());
@@ -496,8 +500,9 @@ export default function Map(props) {
                 let expIntroductions = GetInfectedAttendees(feature, filterStateRef.current);
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
-                console.log('country properties: ', feature.properties); // FLGAG - TO DELETE
-
+                if (feature.properties.testing_flag === true) {
+                    setTestingFlag(true); // set flag for unreliable data
+                }
                 if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
                     expIntroductions = 'N/A';
@@ -728,11 +733,14 @@ export default function Map(props) {
                         'No Current Data' : 
                         (boxDisplayRisk < 1 ? '< 1% probable' : (boxDisplayRisk > 99 ? '> 99% probable' : Math.round(boxDisplayRisk) + '% probable'))
                         }
-                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="Warning: This country is either (A) reporting low testing rates or (B) not reporting testing data at all. See methods for more details.">
-                            <IconButton>
-                                <ReportProblemOutlinedIcon />
-                            </IconButton>
-                        </Tooltip>
+                        {testingFlag ?
+                            <Tooltip arrow sx={{marginTop: '-5px', color: '#D0342C'}} title="Warning: This country is either (A) reporting low testing rates or (B) not reporting testing data at all. See methods for more details.">
+                                <IconButton>
+                                    <ReportProblemOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
+                        : null
+                        }
                     </h1>
                     {boxDisplayRisk >= 0 ? 
                         <div>
