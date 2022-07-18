@@ -32,12 +32,6 @@
     "test:jest": "jest --env=./test/custom-test-env.js",
     "lint": "eslint src"
   },
-  "husky": {
-    "hooks": {
-      "pre-commmit": "yarn lint && yarn test:jest",
-      "pre-push": "yarn lint && yarn test:jest"
-    }
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -70,5 +64,11 @@
     "jest-environment-jsdom": "^28.1.2",
     "jest-transform-stub": "^2.0.0",
     "react-shallow-renderer": "^16.15.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commmit": "yarn lint && yarn test:jest",
+      "pre-push": "yarn lint && yarn test:jest"
+    }
   }
 }
