@@ -24,7 +24,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "prepare": "husky install",
+    "postinstall": "husky install",
     "start": "env-cmd -f .env.local react-scripts start",
     "build:local": "env-cmd -f .env.local react-scripts build",
     "build:prod": "env-cmd -f .env react-scripts build",
@@ -64,12 +64,7 @@
     "jest": "^28.1.2",
     "jest-environment-jsdom": "^28.1.2",
     "jest-transform-stub": "^2.0.0",
+    "pinst": "^3.0.0",
     "react-shallow-renderer": "^16.15.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commmit": "yarn lint && yarn test:jest",
-      "pre-push": "yarn lint && yarn test:jest"
-    }
   }
 }
