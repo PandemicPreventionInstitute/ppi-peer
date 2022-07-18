@@ -35,7 +35,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commmit": "yarn lint && yarn test:jest"
+      "pre-commmit": "yarn lint && yarn test:jest",
+      "pre-push": "yarn lint && yarn test:jest"
     }
   },
   "eslintConfig": {
