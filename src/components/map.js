@@ -254,7 +254,7 @@ export default function Map(props) {
     const valueLabelFormat = (value) => {
         return value;
     }
-        // useEffect to fetch data on mount
+    // useEffect to fetch data on mount
     useEffect(() => {
         GetFGBData(mapData, setMapData, setLoading);
     }, [mapData]);
