@@ -257,7 +257,7 @@ export default function Map(props) {
     // useEffect to fetch data on mount
     useEffect(() => {
         GetFGBData(mapData, setMapData, setLoading);
-    }, [mapData]);
+    }, []);
 
     const handleSliderChange = (e, value) => {
         const markIndex = Math.floor(value / 25); // get slider index so we can get the event size
