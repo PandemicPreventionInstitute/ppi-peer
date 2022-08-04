@@ -335,6 +335,9 @@ export default function Map(props) {
                 map.current.dragPan.disable(); // disable panning for mobile map view
             } else {
                 map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
+                setTimeout(() => {
+                    document.getElementById("filterSelect").scrollIntoView();
+                }, 100);
             }
             setCountrySelect(true); // set to true so estimate component is displayed                            
             let thisSize = 'risk_' + (filterState.size);
@@ -477,6 +480,9 @@ export default function Map(props) {
                 let thisSize = 'risk_' + filterStateRef.current;
                 setCurrentRegion(featureCopy);
                 setCountrySelect(true);
+                setTimeout(() => {
+                    document.getElementById("filterSelect").scrollIntoView();
+                }, 100);
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
@@ -610,7 +616,7 @@ export default function Map(props) {
                         <p className='filtersQuestion'>Where will the event or activity take place and how many people will be attending?</p>
                     </div>
                     
-                    <Grid container>
+                    <Grid id="filterSelect" container>
                         <Grid item xs={countrySelect ? 7 : 12} sm={12} ref={gridLocationRef} className={styles.locationGrid} sx={{marginLeft: countrySelect && props.windowDimension.winWidth < 600 ? '-10px' : '0px'}}>
                             <h4 className={styles.locationText}><RoomOutlined className={styles.roomOutlined}/> LOCATION</h4>
                             <Autocomplete
