@@ -25,12 +25,14 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "postinstall": "husky install",
     "start": "env-cmd -f .env.local react-scripts start",
     "build:local": "env-cmd -f .env.local react-scripts build",
     "build:prod": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:jest": "jest --env=./test/custom-test-env.js"
+    "test:jest": "jest --env=./test/custom-test-env.js",
+    "lint": "eslint src"
   },
   "eslintConfig": {
     "extends": [
@@ -58,10 +60,12 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "babel-jest": "^28.1.2",
+    "husky": "^8.0.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^28.1.2",
     "jest-environment-jsdom": "^28.1.2",
     "jest-transform-stub": "^2.0.0",
+    "pinst": "^3.0.0",
     "react-shallow-renderer": "^16.15.0"
   }
 }
