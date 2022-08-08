@@ -228,6 +228,10 @@ div#mapLegend .nodata::before {
   margin-top: 0;
 }
 
+.mapboxgl-popup {
+  max-width: 400px !important;
+}
+
 @media (max-width: 600px) {
   .mapfilters {
     position: sticky;

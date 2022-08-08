@@ -165,10 +165,16 @@ const scale = value => {
 const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k }) => (
     <div>
       <h3>{featureProperties.RegionName}</h3><br />
-      <strong><p id='popup_risk'>Exposure Risk: {displayRisk}</p></strong>
-      <strong><p id='infected_attendees'>Expected Infected Attendees: {expIntroductions}</p></strong>
-      <strong><p>Cases per 100k in the past 14 days: {casesPer100k}</p></strong>   
-      <strong><p>Data Last Updated: {featureProperties.DateReport}</p></strong>
+      {displayRisk != 'No data has been reported from this region within the last 14 days.' ?
+        <strong><p id='popup_risk' style={{marginBottom: '5px'}}>Exposure Risk: {displayRisk}</p></strong>
+      : <strong><p id='popup_risk' style={{marginBottom: '5px'}}>{displayRisk}</p></strong>}
+      {expIntroductions != 'N/A' ? 
+        <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: {expIntroductions}</p></strong>
+      : null}
+      {casesPer100k != 'N/A' ? 
+        <strong><p style={{marginBottom: '5px'}}>Cases per 100k in the past 14 days: {casesPer100k}</p></strong> 
+      : null}   
+      <strong><p style={{marginBottom: '5px'}}>Data Last Updated: {featureProperties.DateReport}</p></strong>
     </div>
 );
 
@@ -488,7 +494,7 @@ export default function Map(props) {
                 let displayRisk = feature.properties[thisSize];
                 let expIntroductions = GetInfectedAttendees(feature, filterStateRef.current);
                 setInfectedAttendees(expIntroductions);
-                let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d);
+                let casesPer100k = feature.properties.cases_per_100k_past_14_d;
                 if (feature.properties.testing_flag === true) {
                     setTestingFlag(true); // set flag for unreliable data
                 }
