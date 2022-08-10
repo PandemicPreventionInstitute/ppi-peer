@@ -70,8 +70,8 @@ export default function Methods() {
                 at higher or lower risk of arriving infected due to a number of factors we don’t consider here (i.e. age, occupation, etc.). This could make 
                 events higher or lower risk than our estimates imply.</p>
 
-            <p>And, in practice, only data on newly reported COVID-19 cases (i.e. incidence) is available, not data on the total number of current 
-                cases (i.e. prevalence). To estimate prevalence from reported cases in a region, we must make a number of assumptions. If we assume 
+            <p>And, in practice, only data on newly reported COVID-19 cases (i.e. incidence) is available, not data on the total number of active infections
+                (i.e. prevalence). To estimate prevalence from reported cases in a region, we must account for the duration of infections and the proportion of infections reported. If we assume 
                 the individuals are infectious for an average of <i>d</i> days, we can approximate the active cases per capita by averaging over the cases 
                 reported over the recent time window 𝛕, where the time window is small enough that we think it is a reasonable reflection of the 
                 current prevalence, and large enough to smooth over weekday effects and reporting anomalies. Thus, we have the following equation, 
@@ -88,8 +88,8 @@ export default function Methods() {
 
             <p>Once we have the number of active cases per capita, <MathJax inline >{'$C_a$'}</MathJax>, in a region, we approximate the disease prevalence by assuming that the 
                 reported cases represent a fraction of the true number of infected individuals in the population. Thus we have the following 
-                equation, where <i>prev</i> is the estimated disease prevalence, <MathJax inline >{'$C_a$'}</MathJax> is the estimated active cases, and <MathJax inline >{'$f_d$'}</MathJax> is the fraction of infections that 
-                are detected:</p>
+                equation, where <i>prev</i> is the estimated disease prevalence, <MathJax inline >{'$C_a$'}</MathJax> is the estimated active cases per capita, and <MathJax inline >{'$f_d$'}</MathJax> is the fraction of infections that 
+                are detected and reported:</p>
 
             <p><MathJax>{'$$ prev = C_a \\frac{1}{f_d} $$'}</MathJax></p>
 
@@ -97,7 +97,31 @@ export default function Methods() {
                 and reported as cases is highly variable across time and space, and reflects a combination of public health policies, resource 
                 availability, and reporting infrastructure. In this initial version of PEER, we assume that all regions have the same <MathJax inline >{'$f_d$'}</MathJax> of ¼, 
                 i.e. we assume an ascertainment bias of 4 for every country and region. However, future versions of the tool aim to account for the 
-                dynamic and geographically variable estimate of this quantity.</p>
+                dynamic and geographically variable nature of this quantity.</p>
+
+            <h3>The Data</h3>
+
+            <p>PEER currently includes a risk estimate and associated metrics for a subset of countries who publicly 
+                report case data at the subnational level in a downloadable format. An R package has been developed by our 
+                collaborators at Georgia Tech that makes the subnational level data used to populate this risk map available for the 
+                current time point.</p>
+
+            <p>Among the countries in this dataset, reporting practices are likely to be highly variable and dependent on testing 
+                availability and data reporting systems. At this time, we do not make a country or region-specific estimate of the 
+                underreporting rate. However, our Surveillance Capacity tool characterizes countries diagnostic capacities based on 
+                reported test positivity rate and tests per capita. We developed data-driven testing targets based on the distributions 
+                of these metrics across lower and middle income countries, as is described here. A country is characterized as not 
+                meeting testing targets if, in the past year if their: </p>
+
+            <ol>
+                <li>Test positivity rate &gt; 20%</li>
+                <p>OR</p>
+                <li>Average daily tests per 1,000  &lt; 0.5 </li>
+            </ol>
+
+            <p>Although all countries face issues with reporting a sufficient proportion of cases, countries who are not meeting these 
+                testing targets are particularly prone to these issues and are labeled with a warning message. We encourage users to 
+                consider that risk levels in these countries in particular are likely higher than described here.</p>
 
             </div> 
         </MathJaxContext>
