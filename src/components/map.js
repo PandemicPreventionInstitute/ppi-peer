@@ -31,6 +31,10 @@ import Fade from '@mui/material/Fade';
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
 
+import { GAtimingTracker, GAsetRegionDropdownDimension, GAsetRegionMapDimension } from './analyticsTracking';
+import GAeventTracker from './analyticsTracking';
+import ReactGA from "react-ga";
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
 const marks = require('../assets/eventSizes.json');
 
@@ -189,7 +193,9 @@ export function GetFGBData(mapData, setMapData, setLoading) {
         });
     }
 
+    const currentTime = new Date().getMilliseconds();
     getFGBData();
+    GAtimingTracker('Timing','mapPage_render', new Date().getMilliseconds() - currentTime); // track time it takes to get the data
 
     return mapData;
 }
@@ -247,6 +253,13 @@ export default function Map(props) {
         features: []
     });
 
+    /* Initialize Google Analytics for tracking */
+    useEffect(() => { ReactGA.initialize('G-8YZYM2GQGD'); }, []);
+
+    /* Tracking for Google Analytics */
+    const mapEventTracker = () => { GAeventTracker('Map Events') };
+    const onboardingEventTracker = () => { GAeventTracker('Onboarding Steps Actions') };
+
     const valuetext = (value) => {
         return value;
     }
@@ -257,7 +270,7 @@ export default function Map(props) {
     // useEffect to fetch data on mount
     useEffect(() => {
         GetFGBData(mapData, setMapData, setLoading);
-    }, [mapData]);
+    }, []);
 
     const handleSliderChange = (e, value) => {
         const markIndex = Math.floor(value / 25); // get slider index so we can get the event size
@@ -281,6 +294,7 @@ export default function Map(props) {
         setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
         let expIntroductions = GetInfectedAttendees(currentRegion, eventSize);
         setInfectedAttendees(expIntroductions);
+        mapEventTracker('crowd_slider_event'); // track slider event in Google Analytics
 
         // update popup risk and infected attendees if open
         if(popupState) {
@@ -310,6 +324,9 @@ export default function Map(props) {
             region: value
         })
         if (value) {
+            mapEventTracker('region_dropdown_selector_event'); // track region select event in Google Analytics
+            GAsetRegionDropdownDimension(value.properties.RegionName); // set dimension in Google Analytics
+
             setCountrySelect(true); // set to true so estimate component is displayed
             setCurrentRegion({
                 ...currentRegion,
@@ -438,6 +455,7 @@ export default function Map(props) {
             
             // onClick behavior for a region: zoom and popup
             map.current.on('click', 'world-fill', function(e) {
+                mapEventTracker('map_click_event'); // track map click in Google Analytics
                 var popup = new mapboxgl.Popup({ offset: [0, -7] });
                 map.current.getCanvas().style.cursor = 'pointer';
                 setPopupState(true);
@@ -475,6 +493,7 @@ export default function Map(props) {
                     properties: feature.properties
                 }
                 let thisSize = 'risk_' + filterStateRef.current;
+                GAsetRegionMapDimension(feature.properties.RegionName); // set Google Analytics dimension
                 setCurrentRegion(featureCopy);
                 setCountrySelect(true);
                 setDateLastUpdated(feature.properties.DateReport);
@@ -558,17 +577,20 @@ export default function Map(props) {
     const [mapControlAnchorEl, setMapControlAnchorEl] = useState(null);
 
     const handleTutorialStep1 = () => {
+        onboardingEventTracker('starting onboarding step 1');
         setLocationAnchorEl(gridLocationRef.current);
         setLocationPopperOpen(true);  
     }
 
     const handleTutorialStep2 = () => {
+        onboardingEventTracker('starting onboarding step 2');
         setCrowdSizeAnchorEl(gridCrowdSizeRef.current);
         setLocationPopperOpen(false);
         setCrowdSizePopperOpen(true);
     }
 
     const handleTutorialStep3 = () => {
+        onboardingEventTracker('starting onboarding step 3');
         let mapControl = document.getElementsByClassName('mapboxgl-ctrl-top-right');
         setMapControlAnchorEl(mapControl[0]);
         setCrowdSizePopperOpen(false);
