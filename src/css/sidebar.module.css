@@ -22,18 +22,25 @@
     padding: 0 40px;
 }
 
+.description {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 .subtitle::after {
     content: '';
     width: 40px;
     height: 8px;
     background: #ffc108;
     display: block;
-    margin-top: 18px;
+    margin-top: 10px;
 }
 .serif {
     font-family: 'Noto Serif', serif;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 @media (max-width: 600px) {
