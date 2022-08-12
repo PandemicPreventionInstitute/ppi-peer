@@ -22,7 +22,7 @@ import styles from '../css/sidebar.module.css';
 import GAeventTracker from './analyticsTracking';
 
 const SidebarMenuItem = styled(MenuItem)(() => ({
-    padding: '24px 12px',
+    padding: '17px 12px',
     borderRadius: '12px 0 0 12px'
 }));
 
@@ -74,10 +74,8 @@ export default function Sidebar(params) {
                 <h1 className={styles.title}>COVID-19 Probability Estimator</h1>
                 <h2 className={styles.subtitle}>for Exposure Risk (PEER)</h2>
                 <div className={styles.blurb}>
-                    <p className={styles.serif}>An innovative tool for contextualizing the probability of COVID-19 exposure.</p>
-                    <p>Decision making relies on accurate information and interpretable metrics. But for most, metrics such as daily reported 
-                        cases and test positivity rates do not easily translate to risk assessment. PEER bridges this gap —translating data 
-                        into clear information to assess the risk posed by an event.</p>
+                    <p className={styles.serif}>A tool for contextualizing the probability of COVID-19 exposure.</p>
+                    <p className={styles.description}>PEER translates COVID-19 data into accurate and interpretable information for assessing risk.</p>
                 </div>  
             </SidebarTextBox>  
             <MenuList sx={{paddingLeft: '5%'}}>
