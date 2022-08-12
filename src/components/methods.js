@@ -1,5 +1,6 @@
 import React from "react";
 import { MathJaxContext, MathJax } from "better-react-mathjax";
+import ReactGA from "react-ga";
 
 const config = {
     loader: { load: ["[tex]/html"] },
@@ -20,6 +21,8 @@ const config = {
   };
 
 export default function Methods() {
+
+    ReactGA.pageview(window.location.pathname + window.location.search);
 
     return ( 
         <MathJaxContext version={3} config={config}>
