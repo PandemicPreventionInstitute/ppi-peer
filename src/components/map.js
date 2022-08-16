@@ -169,13 +169,13 @@ const scale = value => {
 const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k }) => (
     <div>
       <h3>{featureProperties.RegionName}</h3><br />
-      {displayRisk != 'No data has been reported from this region within the last 14 days.' ?
+      {displayRisk !== 'No data has been reported from this region within the last 14 days.' ?
         <strong><p id='popup_risk' style={{marginBottom: '5px'}}>Exposure Risk: {displayRisk}</p></strong>
       : <strong><p id='popup_risk' style={{marginBottom: '5px'}}>{displayRisk}</p></strong>}
-      {expIntroductions != 'N/A' ? 
+      {expIntroductions !== 'N/A' ? 
         <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: {expIntroductions}</p></strong>
       : null}
-      {casesPer100k != 'N/A' ? 
+      {expIntroductions !== 'N/A' ? 
         <strong><p style={{marginBottom: '5px'}}>Cases per 100k in the past 14 days: {casesPer100k}</p></strong> 
       : null}   
       <strong><p style={{marginBottom: '5px'}}>Data Last Updated: {featureProperties.DateReport}</p></strong>
@@ -514,6 +514,10 @@ export default function Map(props) {
                 let expIntroductions = GetInfectedAttendees(feature, filterStateRef.current);
                 setInfectedAttendees(expIntroductions);
                 let casesPer100k = feature.properties.cases_per_100k_past_14_d;
+
+                if (casesPer100k < 1) {
+                    casesPer100k = 'N/A';
+                }
                 if (feature.properties.testing_flag === true) {
                     setTestingFlag(true); // set flag for unreliable data
                 }
@@ -770,7 +774,7 @@ export default function Map(props) {
                             </h4>
                             <hr />
                             <h3 className={styles.infectedAttendees}>{infectedAttendees} {infectedAttendees === 1 ? 'attendee' : 'attendees'}</h3>
-                            <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event
+                            <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
                                 <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
                                     <IconButton>
                                         <InfoOutlinedIcon />

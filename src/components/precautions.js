@@ -14,8 +14,8 @@ import mask from '../assets/icon_mask.png';
 import socialDistance from '../assets/icon_distancing.png';
 import handwashing from '../assets/icon_handwashing.png';
 import outdoors from '../assets/icon_outdoors.png';
-import sanitizer from '../assets/icon_sanitizer.png';
 import vaccines from '../assets/icon_vaccines.png';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
 const PrecautionsBox = styled(Box)(({ open }) => ({   
         '@media (max-width:600px)': {
@@ -68,10 +68,10 @@ export function PrecautionsContent(props) {
                 <div className={styles.precautionText}>Choose the outdoors</div>
             </div> 
             <div className={styles.iconBlock}>
-                <div className={styles.circle}>
-                    <img src={sanitizer} alt="Use hand sanitizer" />
+                <div className={styles.groupSizeCircle}>
+                    <GroupsOutlinedIcon className={styles.groupSize}/>
                 </div>
-                <div className={styles.precautionText}>Use hand sanitizer</div>
+                <div className={styles.precautionText}>Reduce your group size</div>
             </div>  
             <div className={styles.iconBlock}>
                 <div className={styles.circle}>
