@@ -20,7 +20,7 @@ import styles from './css/sidebar.module.css';
 function App() {
 
   /* Initialize Google Analytics for tracking */
-  useEffect(() => { ReactGA.initialize('G-8YZYM2GQGD'); }, []);
+  useEffect(() => { ReactGA.initialize('G-8YZYM2GQGD', { debug: false }); }, []);
 
   const [open, setOpen] = React.useState(true);
 

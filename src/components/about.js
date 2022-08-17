@@ -14,8 +14,7 @@ import connection from '../assets/connection-svgrepo-com.svg';
 import weather from '../assets/rain-weather-svgrepo-com.svg';
 import world from '../assets/worldwide-global-svgrepo-com.svg';
 
-import ReactGA from "react-ga";
-import GAeventTracker from './analyticsTracking';
+import { GAeventTracker } from './analyticsTracking';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -47,30 +46,30 @@ const theme = createTheme({
    
 export default function About() {
 
-    /* Tracking for Google Analytics */
-    const aboutPageEventTracker = () => {
-        ReactGA.pageview(window.location.pathname + window.location.search);
-        GAeventTracker('About Page');
-    };
-
     /* Handling for connect card */
     const [expandedConnect, setExpandedConnect] = React.useState(false);
     const handleExpandedClickConnect = () => {
-        aboutPageEventTracker('connected data ecosystem expanded');
+        if (expandedConnect === false) {
+            GAeventTracker('About Page', 'click', 'connected data ecosystem expanded'); // Google Analytics tracking
+        }
         setExpandedConnect(!expandedConnect);
     }; 
 
     /* Handling for tools card */
     const [expandedTools, setExpandedTools] = React.useState(false);
     const handleExpandedClickTools = () => {
-        aboutPageEventTracker('public health tools expanded');
+        if (expandedTools === false) {
+            GAeventTracker('About Page', 'click', 'public health tools expanded'); // Google Analytics tracking
+        }
         setExpandedTools(!expandedTools);
     };       
 
     /* Handling for data card */
     const [expandedData, setExpandedData] = React.useState(false);
     const handleExpandedClickData = () => {
-        aboutPageEventTracker('global data expanded');
+        if (expandedData === false) {
+            GAeventTracker('About Page', 'click', 'global data expanded'); // Google Analytics tracking
+        }
         setExpandedData(!expandedData);
     };      
     

@@ -31,8 +31,8 @@ import Fade from '@mui/material/Fade';
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
 
-import { GAtimingTracker, GAsetRegionDropdownDimension, GAsetRegionMapDimension } from './analyticsTracking';
-import GAeventTracker from './analyticsTracking';
+import { GAtimingTracker, GAsetRegionDropdownDimension, GAsetRegionMapDimension, GAeventTracker } from './analyticsTracking';
+
 import ReactGA from "react-ga";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN; // pulls Mapbox token from env file
@@ -260,7 +260,7 @@ export default function Map(props) {
     });
 
     /* Initialize Google Analytics for tracking */
-    useEffect(() => { ReactGA.initialize('G-8YZYM2GQGD'); }, []);
+    useEffect(() => { ReactGA.initialize('G-8YZYM2GQGD', { debug: false }); }, []);
 
     /* Tracking for Google Analytics */
     const mapEventTracker = () => { GAeventTracker('Map Events') };
@@ -300,7 +300,7 @@ export default function Map(props) {
         setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
         let expIntroductions = GetInfectedAttendees(currentRegion, eventSize);
         setInfectedAttendees(expIntroductions);
-        mapEventTracker('crowd_slider_event'); // track slider event in Google Analytics
+        GAeventTracker('Map Events', 'click', 'crowd_slider_event'); // track slider event in Google Analytics
 
         // update popup risk and infected attendees if open
         if(popupState) {
@@ -330,7 +330,7 @@ export default function Map(props) {
             region: value
         })
         if (value) {
-            mapEventTracker('region_dropdown_selector_event'); // track region select event in Google Analytics
+            GAeventTracker('Map Events', 'click', 'region_dropdown_selector_event'); // track region select event in Google Analytics
             GAsetRegionDropdownDimension(value.properties.RegionName); // set dimension in Google Analytics
 
             setCountrySelect(true); // set to true so estimate component is displayed
@@ -464,7 +464,7 @@ export default function Map(props) {
             
             // onClick behavior for a region: zoom and popup
             map.current.on('click', 'world-fill', function(e) {
-                mapEventTracker('map_click_event'); // track map click in Google Analytics
+                GAeventTracker('Map Events', 'click', 'map_click_event'); // track map click in Google Analytics
                 var popup = new mapboxgl.Popup({ offset: [0, -7] });
                 map.current.getCanvas().style.cursor = 'pointer';
                 setPopupState(true);
@@ -593,20 +593,20 @@ export default function Map(props) {
     const [mapControlAnchorEl, setMapControlAnchorEl] = useState(null);
 
     const handleTutorialStep1 = () => {
-        onboardingEventTracker('starting onboarding step 1');
+        GAeventTracker('Onboarding Steps Actions', 'click', 'starting onboarding step 1');
         setLocationAnchorEl(gridLocationRef.current);
         setLocationPopperOpen(true);  
     }
 
     const handleTutorialStep2 = () => {
-        onboardingEventTracker('starting onboarding step 2');
+        GAeventTracker('Onboarding Steps Actions', 'click', 'starting onboarding step 2');
         setCrowdSizeAnchorEl(gridCrowdSizeRef.current);
         setLocationPopperOpen(false);
         setCrowdSizePopperOpen(true);
     }
 
     const handleTutorialStep3 = () => {
-        onboardingEventTracker('starting onboarding step 3');
+        GAeventTracker('Onboarding Steps Actions', 'click', 'starting onboarding step 3');
         let mapControl = document.getElementsByClassName('mapboxgl-ctrl-top-right');
         setMapControlAnchorEl(mapControl[0]);
         setCrowdSizePopperOpen(false);

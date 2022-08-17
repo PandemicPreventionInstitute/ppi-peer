@@ -8,10 +8,6 @@ export const GAtimingTracker = (categoryName, variableName, valueNum) => {
     });
 };
 
-export const GApageView = (page) => {   
-  ReactGA.pageview(page);   
-}
-
 export const GAsetRegionDropdownDimension = (value) => {
   ReactGA.set({ region_dropdown_selector: value });
 }
@@ -20,10 +16,10 @@ export const GAsetRegionMapDimension = (value) => {
   ReactGA.set({ region_map_click: value });
 }
 
-const GAeventTracker = (category="PEER category") => {
-  const eventTracker = (action = "test action", label = "test label") => {
-    ReactGA.event({category, action, label});
-  }
-  return eventTracker;
+export const GAeventTracker = (categoryValue, actionValue, labelValue) => {
+  ReactGA.event({
+    category: categoryValue,
+    action: actionValue,
+    label: labelValue
+  });
 }
-export default GAeventTracker;
