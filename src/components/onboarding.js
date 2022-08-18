@@ -40,7 +40,7 @@ export default function Onboarding(props) {
   const [localCheck, setLocalCheck] = useLocalStorage("localCheck", false, setIsAccessible); // checkbox state for local storage
 
   const handleClose = () => {
-    GAeventTracker('Onboarding Welcome Actions', 'click', 'onboarding welcome closed'); // google analytics tracking
+    GAeventTracker('Onboarding', 'Onboarding Welcome Closed'); // google analytics tracking
     setOpen(false);
     if (checked) { // set the checkbox state in local storage
         setLocalCheck(true);
@@ -55,7 +55,7 @@ export default function Onboarding(props) {
   }
 
   const handleChange = (event) => {
-    GAeventTracker('Onboarding Welcome Actions', 'click', 'checkbox checked'); // google analytics tracking
+    GAeventTracker('Onboarding', 'Onboarding Dont Show Again Check'); // google analytics tracking
     setChecked(event.target.checked); // only set the UI checkbox
   };
 

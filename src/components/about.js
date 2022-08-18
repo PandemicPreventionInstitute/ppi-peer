@@ -50,7 +50,7 @@ export default function About() {
     const [expandedConnect, setExpandedConnect] = React.useState(false);
     const handleExpandedClickConnect = () => {
         if (expandedConnect === false) {
-            GAeventTracker('About Page', 'click', 'connected data ecosystem expanded'); // Google Analytics tracking
+            GAeventTracker('About Page', 'Connected Data Dcosystem'); // Google Analytics tracking
         }
         setExpandedConnect(!expandedConnect);
     }; 
@@ -59,7 +59,7 @@ export default function About() {
     const [expandedTools, setExpandedTools] = React.useState(false);
     const handleExpandedClickTools = () => {
         if (expandedTools === false) {
-            GAeventTracker('About Page', 'click', 'public health tools expanded'); // Google Analytics tracking
+            GAeventTracker('About Page', 'Public Health Tools'); // Google Analytics tracking
         }
         setExpandedTools(!expandedTools);
     };       
@@ -68,7 +68,7 @@ export default function About() {
     const [expandedData, setExpandedData] = React.useState(false);
     const handleExpandedClickData = () => {
         if (expandedData === false) {
-            GAeventTracker('About Page', 'click', 'global data expanded'); // Google Analytics tracking
+            GAeventTracker('About Page', 'Global Data'); // Google Analytics tracking
         }
         setExpandedData(!expandedData);
     };      
