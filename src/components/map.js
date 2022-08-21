@@ -462,6 +462,34 @@ export default function Map(props) {
                 'filter': ['==', '$type', 'Polygon']
             }, 'road-simple');  
             
+            map.current.addLayer(
+                {
+                'id': 'region-highlighted',
+                'type': 'line',
+                'source': 'world',
+                'paint': {
+                    'line-color': '#000000',
+                    'line-width': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // line widths for zoom levels <3, 3-5, 5-8, 8-10, and 10+
+                        3, 5,
+                        5, 5.25,
+                        8, 5.5,
+                        10, 5.75
+                    ],
+                    'line-opacity': [
+                        "interpolate", ["linear"], ["zoom"],
+                        // line opacities for zoom levels <3, 3-5, 5-8, and 8+
+                        3, 1,
+                        5, 1,
+                        8, 1
+                    ],
+                },
+                'filter': ['==', 'RegionName', '']
+                },
+                'road-simple'
+            ); // Highlighted region
+            
             // onClick behavior for a region: zoom and popup
             map.current.on('click', 'world-fill', function(e) {
                 mapEventTracker('map_click_event'); // track map click in Google Analytics
@@ -476,8 +504,15 @@ export default function Map(props) {
                     features: features
                   });
 
-                map.current.fitBounds(bbox, {padding: 200}); 
-    
+                map.current.fitBounds(bbox, {padding: 400});
+
+                const regionName = features.map(
+                    (feature) => feature.properties.RegionName
+                );
+
+                // Set a filter matching selected features by region to activate the 'region-highlighted' layer.
+                map.current.setFilter('region-highlighted', ['==', 'RegionName', ...regionName]);                
+                    
                 if (!features.length) {
                     return;
                 } else {
