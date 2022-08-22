@@ -480,8 +480,8 @@ export default function Map(props) {
                     'line-opacity': [
                         "interpolate", ["linear"], ["zoom"],
                         // line opacities for zoom levels <3, 3-5, 5-8, and 8+
-                        3, 1,
-                        5, 1,
+                        3, 0.8,
+                        5, 0.9,
                         8, 1
                     ],
                 },
