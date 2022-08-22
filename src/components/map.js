@@ -330,6 +330,15 @@ export default function Map(props) {
             region: value
         })
         if (value) {
+            /* close popup element if it exists in the document */
+            let popupElements = document.getElementsByClassName("mapboxgl-popup");
+            if (popupElements.length > 0) {
+                let mapboxglPopup = popupElements[0];
+                mapboxglPopup.style.display = 'none';
+                mapboxglPopup.style.visibility = 'hidden';
+            }
+
+            map.current.setFilter('region-highlighted', ['==', 'RegionName', value.properties.RegionName]); // highlight selected region
             mapEventTracker('region_dropdown_selector_event'); // track region select event in Google Analytics
             GAsetRegionDropdownDimension(value.properties.RegionName); // set dimension in Google Analytics
 
@@ -374,6 +383,7 @@ export default function Map(props) {
         } else {
             setCountrySelect(false); // set to false so estimate component closes
             map.current.fitBounds(map.current.getBounds());
+            map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region
         }
     }
     
@@ -588,6 +598,7 @@ export default function Map(props) {
 
                 popup.on('close', function(e) {
                     setPopupState(false);
+                    map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region  
                 });
             });    
         });            
@@ -595,11 +606,13 @@ export default function Map(props) {
     
     useEffect(() => {
         if (!map.current) return; // wait for map to initialize
-        map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
-            setZoom(map.current.getZoom().toFixed(2));
-        });
+        /* Commenting out below code to improve performance when moving map and selecting different countries, 
+        and to get rid of the 'Maximum Depth Exceeded' warning */
+        // map.current.on('move', () => {
+        //     setLng(map.current.getCenter().lng.toFixed(4));
+        //     setLat(map.current.getCenter().lat.toFixed(4));
+        //     setZoom(map.current.getZoom().toFixed(2));
+        // });
     });
 
     /**
@@ -692,7 +705,8 @@ export default function Map(props) {
                                 name="region"
                                 id="selector-region"
                                 disabled={loading ? true : false}
-                                options={loading ? null : mapData.features}
+                                options={loading ? [] : mapData.features} // use empty array to avoid error of options being null when loading
+                                isOptionEqualToValue={(option, value) => option.properties.geoid === value.properties.geoid} // needed to prevent MUI warning of 'invalid' value
                                 getOptionLabel={(option) => option.properties.RegionName}
                                 onChange={handleRegionSelect}
                                 renderOption = {(props, option) => { // use unique geoid as key to pacify MUI's unique key errors for autocomplete
