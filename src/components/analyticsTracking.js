@@ -1,44 +1,62 @@
 import ReactGA from "react-ga";
 
 export const GAtimingTracker = (categoryName, variableName, valueNum) => {
+    ReactGA.initialize('G-8YZYM2GQGD', 
+    { 
+      debug: false,  
+      gaOptions: {
+        siteSpeedSampleRate: 100
+      }
+    });
+
     ReactGA.timing({       
         category: categoryName,       
         variable: variableName,       
         value: valueNum
     });
-};
+}
 
-export const GAsetRegionDropdown = (value) => {
-  // ReactGA.set({ dimension1: value });
-  // GAeventTracker('Map Events', 'region_dropdown_selector_event'); // track region select event in Google Analytics
-
-  window.gtag('event', 'click', {
-    page_name: 'Map Page',
-    click_name: 'region_dropdown_selector_event',
-    region_dropdown_selected: value
+export const GAregionSelect = (value) => {
+  window.gtag('event', 'region_select', {
+    'page_name': 'Map Page',
+    'click_name': 'region_dropdown_selector_event',
+    'region_dropdown_selected': value
   });
 }
 
-export const GAsetRegionMap = (value) => {
-  // ReactGA.set({ dimension2: value });
-  // GAeventTracker('Map Events', 'map_click_event'); // track map click in Google Analytics
+export const GAmapClick = (value) => {
+  window.gtag('event', 'map_click', {
+    'page_name': 'Map Page',
+    'click_name': 'map_click_event',
+    'region_map_clicked': value
+  });
+}
 
-  window.gtag('event', 'click', {
-    page_name: 'Map Page',
-    click_name: 'map_click_event',
-    region_map_clicked: value
+export const GAcrowdSizeSelect = (value) => {
+  window.gtag('event', 'crowd_size_select', {
+    'page_name': 'Map Page',
+    'click_name': 'crowd_size_select',
+    'crowd_size_selected': value
   });
 }
 
 export const GAeventTracker = (categoryValue, labelValue) => {
-  // ReactGA.event({
-  //   category: categoryValue,
-  //   action: actionValue,
-  //   label: labelValue
-  // });
-
   window.gtag('event', 'click', {
-    page_name: categoryValue,
-    click_name: labelValue
+    'page_name': categoryValue,
+    'click_name': labelValue
+  });
+}
+
+export const GAonboardingEventTracker = (categoryValue, labelValue) => {
+  window.gtag('event', 'onboarding_click', {
+    'page_name': categoryValue,
+    'click_name': labelValue
+  });
+}
+
+export const GAaboutEventTracker = (categoryValue, labelValue) => {
+  window.gtag('event', 'about_click', {
+    'page_name': categoryValue,
+    'click_name': labelValue
   });
 }

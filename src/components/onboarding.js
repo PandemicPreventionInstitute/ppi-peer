@@ -12,7 +12,7 @@ import styles from '../css/onboarding.module.css';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import { useLocalStorage } from './localStorage';
-import { GAeventTracker } from './analyticsTracking';
+import { GAonboardingEventTracker } from './analyticsTracking';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -40,7 +40,7 @@ export default function Onboarding(props) {
   const [localCheck, setLocalCheck] = useLocalStorage("localCheck", false, setIsAccessible); // checkbox state for local storage
 
   const handleClose = () => {
-    GAeventTracker('Onboarding', 'Onboarding Welcome Closed'); // google analytics tracking
+    GAonboardingEventTracker('Onboarding', 'Onboarding Welcome Closed'); // google analytics tracking
     setOpen(false);
     if (checked) { // set the checkbox state in local storage
         setLocalCheck(true);
@@ -55,7 +55,11 @@ export default function Onboarding(props) {
   }
 
   const handleChange = (event) => {
-    GAeventTracker('Onboarding', 'Onboarding Dont Show Again Check'); // google analytics tracking
+    if (event.target.checked) {
+        GAonboardingEventTracker('Onboarding', 'Onboarding Dont Show Again Checked'); // google analytics tracking
+    } else if (!event.target.checked) {
+        GAonboardingEventTracker('Onboarding', 'Onboarding Dont Show Again Unchecked'); // google analytics tracking
+    }  
     setChecked(event.target.checked); // only set the UI checkbox
   };
 

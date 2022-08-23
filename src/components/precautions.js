@@ -16,6 +16,7 @@ import handwashing from '../assets/icon_handwashing.png';
 import outdoors from '../assets/icon_outdoors.png';
 import vaccines from '../assets/icon_vaccines.png';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import { GAeventTracker } from './analyticsTracking';
 
 const PrecautionsBox = styled(Box)(({ open }) => ({   
         '@media (max-width:600px)': {
@@ -89,10 +90,16 @@ export default function Precautions(props) {
 
     const handlePrecautionsOpenUp = () => {
       setOpenUp(!openUp);
+      if (!openUp) {
+        GAeventTracker('Map Filters', 'Precautions Opened'); // google analytics tracking
+      }     
     };
 
     const handlePrecautionsOpenDown = () => {
       setOpenDown(!openDown);
+      if (!openDown) {
+        GAeventTracker('Map Filters', 'Precautions Opened'); // google analytics tracking
+      }   
     };
     
     return (

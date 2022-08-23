@@ -19,8 +19,6 @@ import {
 
 import styles from '../css/sidebar.module.css';
 
-import ReactGA from "react-ga";
-
 const SidebarMenuItem = styled(MenuItem)(() => ({
     padding: '17px 12px',
     borderRadius: '12px 0 0 12px'
@@ -63,11 +61,6 @@ const SidebarMenuItemText = styled(ListItemText, { shouldForwardProp: (prop) => 
  
 export default function Sidebar(params) {
 
-    /* Tracking for Google Analytics */
-    const sidebarEventTracker = (value) => {
-        ReactGA.pageview(value);
-    }
-
     return (
         <Box className={styles.sidebarBox}>
             <SidebarTextBox open={params.open}>
@@ -83,7 +76,6 @@ export default function Sidebar(params) {
                     component={NavLink} 
                     activeclassname="active"
                     to="/" 
-                    onClick={()=>sidebarEventTracker('/map')}
                     >
                     <SidebarMenuItemIcon>
                         <MapOutlined />
@@ -96,7 +88,6 @@ export default function Sidebar(params) {
                     activeclassname="active"
                     to="/methods" 
                     data-testid="METHODS"
-                    onClick={()=>sidebarEventTracker('/methods')}
                     >
                     <SidebarMenuItemIcon>
                         <BarChartOutlined />
@@ -109,7 +100,6 @@ export default function Sidebar(params) {
                     activeclassname="active"
                     to="/data" 
                     data-testid="DATA SOURCES"
-                    onClick={()=>sidebarEventTracker('/data')}
                     >
                     <SidebarMenuItemIcon>
                         <ContentCopy />
@@ -122,7 +112,6 @@ export default function Sidebar(params) {
                     activeclassname="active"
                     to="/about" 
                     data-testid="ABOUT"
-                    onClick={()=>sidebarEventTracker('/about')}
                     >
                     <SidebarMenuItemIcon>
                         <InfoOutlined />

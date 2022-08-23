@@ -14,7 +14,7 @@ import connection from '../assets/connection-svgrepo-com.svg';
 import weather from '../assets/rain-weather-svgrepo-com.svg';
 import world from '../assets/worldwide-global-svgrepo-com.svg';
 
-import { GAeventTracker } from './analyticsTracking';
+import { GAaboutEventTracker } from './analyticsTracking';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -50,7 +50,7 @@ export default function About() {
     const [expandedConnect, setExpandedConnect] = React.useState(false);
     const handleExpandedClickConnect = () => {
         if (expandedConnect === false) {
-            GAeventTracker('About Page', 'Connected Data Dcosystem'); // Google Analytics tracking
+            GAaboutEventTracker('About Page', 'Connected Data Dcosystem'); // Google Analytics tracking
         }
         setExpandedConnect(!expandedConnect);
     }; 
@@ -59,7 +59,7 @@ export default function About() {
     const [expandedTools, setExpandedTools] = React.useState(false);
     const handleExpandedClickTools = () => {
         if (expandedTools === false) {
-            GAeventTracker('About Page', 'Public Health Tools'); // Google Analytics tracking
+            GAaboutEventTracker('About Page', 'Public Health Tools'); // Google Analytics tracking
         }
         setExpandedTools(!expandedTools);
     };       
@@ -68,7 +68,7 @@ export default function About() {
     const [expandedData, setExpandedData] = React.useState(false);
     const handleExpandedClickData = () => {
         if (expandedData === false) {
-            GAeventTracker('About Page', 'Global Data'); // Google Analytics tracking
+            GAaboutEventTracker('About Page', 'Global Data'); // Google Analytics tracking
         }
         setExpandedData(!expandedData);
     };      
