@@ -83,10 +83,10 @@ export default function About() {
                         <p className={styles.smallText}>The Probability Estimator for Exposure Risk (PEER) is a prevalence estimation tool that
                          pulls data from across the globe and translates it into granular and interpretable metrics so that public health 
                          decision-makers can perform event risk assessment. This version of PEER uses real-time COVID-19 case data and event 
-                         size to estimate the probability that one or more infected individuals will be present at an event and the expected 
+                         size to estimate the probability that one or more infected individuals will be present at an event; and the expected 
                          number of attendees arriving infected.</p>
                         <p className={styles.smallText}>This tool leverages peer-reviewed methodologies from collaborators at the 
-                         Georgia Institute of Technology integratingit with a further focus on user-centered design to improve usability and 
+                         Georgia Institute of Technology integrating it with a further focus on user-centered design to improve usability and 
                          interpretability. PEER demonstrates the possibility of a world where, by translating data and science into actionable 
                          technologies, decision-support tools around infectious disease risk can be as well-understood and accessible as 
                          hurricane forecasts.</p>
@@ -208,8 +208,9 @@ export default function About() {
                                     <Typography paragraph>
                                         Just as clearly as the PEER COVID-19 calculator presents the opportunities available with high quality 
                                         and interpretable data, it highlights what stands in our way. We are unable to make risk calculations 
-                                        for so many countries in the world because the data that’s needed doesn’t exist! This tool serves 
-                                        as a reminder that while many high-income countries in North America and Europe live in relative 
+                                        for so many countries in the world because the data that’s needed doesn’t exist! This is either due to 
+                                        data not being collected, or due to data not being publicly distributed in machine readable formats. This 
+                                        tool serves as a reminder that while many high-income countries in North America and Europe live in relative 
                                         awareness of the trajectory of COVID-19, most of the world does not. We hope PEER will help 
                                         spur increased data sharing to enable more equitable access to tools like these.
                                     </Typography>
