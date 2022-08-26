@@ -331,8 +331,6 @@ export default function Map(props) {
             }
 
             map.current.setFilter('region-highlighted', ['==', 'RegionName', value.properties.RegionName]); // highlight selected region
-            mapEventTracker('region_dropdown_selector_event'); // track region select event in Google Analytics
-            GAsetRegionDropdownDimension(value.properties.RegionName); // set dimension in Google Analytics
 
             setCountrySelect(true); // set to true so estimate component is displayed
             setCurrentRegion({
