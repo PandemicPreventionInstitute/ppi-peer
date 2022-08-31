@@ -802,7 +802,7 @@ export default function Map(props) {
                         : null
                         }
                     </h1>
-                    {boxDisplayRisk >= 0 ? 
+                    {boxDisplayRisk > 0 ? 
                         <div>
                             <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
                                 <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
