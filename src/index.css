@@ -171,31 +171,11 @@ div#mapLegend span.range6 {
   border-top-color: #184e77;
 }
 
-div#mapLegend span.nocases {
-  width: auto;
-  border-top: 0;
-  position: relative;
-  padding-left: 24px;
-}
-
 div#mapLegend span.nodata {
   width: auto;
   border-top: 0;
   position: relative;
-  padding-left: 24px;
-  left: 40px;
-}
-
-div#mapLegend .nocases::before {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #cccccc;
+  padding-left: 26px;
 }
 
 div#mapLegend .nodata::before {

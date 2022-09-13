@@ -288,7 +288,7 @@ export default function Map(props) {
         map.current.setPaintProperty('world-fill', 'fill-color', [
             'step',
             ['get', newSize],
-            '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
+            '#ffffff',-1,'#ffffff',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
         );
         setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
 
@@ -449,7 +449,7 @@ export default function Map(props) {
                     'fill-color': [
                         'step',
                         ['get', 'risk_'+(filterState.size)],
-                        '#cccccc',-1,'#cccccc',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77'
+                        '#ffffff',-1,'#ffffff',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77'
                     ],
                     'fill-opacity': [
                         'case',
@@ -627,6 +627,7 @@ export default function Map(props) {
 
                 popup.on('close', function(e) {
                     setPopupState(false);
+                    setCountrySelect(false); // set to false so estimate component closes
                     map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region  
                 });
             });    
@@ -841,7 +842,7 @@ export default function Map(props) {
                         : null
                         }
                     </h1>
-                    {boxDisplayRisk >= 0 ? 
+                    {boxDisplayRisk > 0 ? 
                         <div>
                             <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
                                 <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
@@ -921,7 +922,6 @@ export default function Map(props) {
                 <span className="range4">50 - 75 </span>
                 <span className="range5">75 - 99 </span>
                 <span className="range6">&#62; 99% </span>
-                <span className="nocases">No cases reported in 14+ days.</span>
                 <span className="nodata">No data available.</span>
             </div>
             <div id="loading" className="loading"></div>
