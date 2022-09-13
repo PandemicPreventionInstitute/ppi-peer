@@ -237,9 +237,9 @@ export default function Map(props) {
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
     const [infectedAttendees, setInfectedAttendees] = useState({
-        lb: '',
-        med: '',
-        ub: ''
+        lb: 4,
+        med: 8,
+        ub: 15
     });
     const [testingFlag, setTestingFlag] = useState(false); // flag for unreliable region data
     const [countrySelect, setCountrySelect] = useState(false);
@@ -855,7 +855,7 @@ export default function Map(props) {
                             </h4>
                             <hr />
                             { infectedAttendees.med === 'N/A' ? 
-                            null : 
+                              null : 
                               infectedAttendees.med < 1 ? 
                                 <div>
                                     <h3 className={styles.infectedAttendees}>0 - 1 attendees</h3> 
