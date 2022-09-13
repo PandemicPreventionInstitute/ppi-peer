@@ -400,6 +400,7 @@ export default function Map(props) {
             }
         } else {
             setCountrySelect(false); // set to false so estimate component closes
+            setTestingFlag(false); // reset flag for unreliable data
             map.current.fitBounds(map.current.getBounds());
             map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region
         }
@@ -630,6 +631,7 @@ export default function Map(props) {
                 popup.on('close', function(e) {
                     setPopupState(false);
                     setCountrySelect(false); // set to false so estimate component closes
+                    setTestingFlag(false); // reset flag for unreliable data
                     map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region  
                 });
             });    
