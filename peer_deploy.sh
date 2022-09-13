@@ -1,4 +1,5 @@
-# This script is used to build the PEER application and deploy it
+# This script is used to build the PEER application and deploy it.
+# In order to run this script, make sure you are running it from the ppi-peer directory.
 # This script also assumes the following are installed and configured on your device:
 #   * git
 #   * Node.js
