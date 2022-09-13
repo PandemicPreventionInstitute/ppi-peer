@@ -307,7 +307,7 @@ export default function Map(props) {
         if(popupState) {
             let popupRisk = document.getElementById('popup_risk');
             let risk = currentRegion.properties[newSize];
-            let infectedAttendees = document.getElementById('infected_attendees');
+            let infected_attendees = document.getElementById('infected_attendees');
 
             if (risk < 0) {
                 risk = 'No data has been reported from this region within the last 14 days.';
@@ -323,11 +323,11 @@ export default function Map(props) {
             popupRisk.innerText = 'Exposure Risk: ' + risk;
 
             if (expIntroductions_med < 1) {
-                infectedAttendees.innerText = 'Expected Infected Attendees: 0 - 1'
+                infected_attendees.innerText = 'Expected Infected Attendees: 0 - 1'
             } else if (expIntroductions_med === 'N/A') {
-                infectedAttendees.innerText = 'Expected Infected Attendees: ' + expIntroductions_med
+                infected_attendees.innerText = 'Expected Infected Attendees: ' + expIntroductions_med
             } else {
-                infectedAttendees.innerText = 'Expected Infected Attendees: ' + expIntroductions_med + ' (Range: ' + expIntroductions_lb + ' - ' + expIntroductions_ub + ')';
+                infected_attendees.innerText = 'Expected Infected Attendees: ' + expIntroductions_med + ' (Range: ' + expIntroductions_lb + ' - ' + expIntroductions_ub + ')';
             }
             
         }       
@@ -851,14 +851,31 @@ export default function Map(props) {
                                 </Tooltip>
                             </h4>
                             <hr />
-                            <h3 className={styles.infectedAttendees}>{infectedAttendees} {infectedAttendees === 1 ? 'attendee' : 'attendees'}</h3>
-                            <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
-                                <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
-                                    <IconButton>
-                                        <InfoOutlinedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </h4>
+                            { infectedAttendees.med === 'N/A' ? 
+                            null : 
+                              infectedAttendees.med < 1 ? 
+                                <div>
+                                    <h3 className={styles.infectedAttendees}>0 - 1 attendees</h3> 
+                                    <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
+                                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                            <IconButton>
+                                                <InfoOutlinedIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </h4>
+                                </div>
+                              : 
+                                <div>
+                                    <h3 className={styles.infectedAttendees}>{infectedAttendees.med} (Range: {infectedAttendees.lb} - {infectedAttendees.ub}) attendees</h3>
+                                    <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
+                                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                            <IconButton>
+                                                <InfoOutlinedIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </h4>
+                                </div> 
+                            }
                             <hr />
                         </div>
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
