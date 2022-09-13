@@ -30,10 +30,9 @@ Precommit hooks are handled using [husky](https://typicode.github.io/husky/#/). 
 When committing changes into a branch, a pre-commit hook will run that will run a linter, as well as tests. The pre-commit hook commands are available in `./husky/pre-commit`. The current commands that run on commit are `yarn lint` and `yarn test:jest`.
 
 ## Build and Deploy
-In order to build a deployable bundle of html, css, and the compiled javascript, run `yarn build`. This will generate a `/build` folder in your project that has the compiled project ready to be deployed to cloud environment.
+In order to build a deployable bundle of html, css, and the compiled javascript, and then deploy the bundle, run `sh peer_deploy.sh`. This will run a script that generates a `/build` folder in your project that has the compiled project ready to be deployed to the cloud environment, and then uploads the bundle to S3 and creates a new Invalidation for the CloudFront distribution domain. 
 
-@todo: 
-- deployment and integration pipeline to Pantheon and AWS
+Note: The script assumes you already have AWS configured access key credentials that give you permissions to write to S3 and CloudFront. If you do not, create new credentials or retrieve existing credentials and configure AWS CLI on your machine first, and then run the script. For more information about setting up AWS CLI with credentials, click [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) to view the documentation.
 
 ## Backend
 @todo:
