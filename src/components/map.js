@@ -170,9 +170,11 @@ const Popup = ({ featureProperties, displayRisk, expIntroductions_med, expIntrod
       {displayRisk !== 'No data has been reported from this region within the last 14 days.' ?
         <strong><p id='popup_risk' style={{marginBottom: '5px'}}>Exposure Risk: {displayRisk}</p></strong>
       : <strong><p id='popup_risk' style={{marginBottom: '5px'}}>{displayRisk}</p></strong>}
-      {expIntroductions_med !== 'N/A' ? 
+      {expIntroductions_med !== 'N/A'  && expIntroductions_med >= 1 ? 
         <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: {expIntroductions_med} (Range: {expIntroductions_lb} - {expIntroductions_ub})</p></strong>
-      : null}
+      : expIntroductions_med !== 'N/A'  && expIntroductions_med < 1 ?
+        <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: 0 - 1</p></strong>
+      : null }
       {expIntroductions_med !== 'N/A' ? 
         <strong><p style={{marginBottom: '5px'}}>Cases per 100k in the past 14 days: {casesPer100k}</p></strong> 
       : null}   
@@ -581,7 +583,7 @@ export default function Map(props) {
                     ub: expIntroductions_ub
                 });
 
-                let casesPer100k = feature.properties.cases_per_100k_past_14_d;
+                let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d * 10) / 10;
 
                 if (casesPer100k < 1) {
                     casesPer100k = 'N/A';
