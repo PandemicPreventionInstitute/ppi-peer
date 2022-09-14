@@ -32,15 +32,20 @@ export default function Methods() {
                 the event and infect someone, as this depends on several event-specific factors such as mask-use, ventilation, crowding, and 
                 immunity of attendees. Here we describe briefly how we estimate the probability that an individual infected with COVID-19 will be 
                 present at an event, using reported COVID-19 cases from that region. These methods were established by our collaborators in <a href='https://weitzgroup.biosci.gatech.edu/'>
-                The Weitz Group</a> at Georgia Tech, please see their <a href='https://www.nature.com/articles/s41562-020-01000-9'>peer-reviewed 
-                publication</a> for further details, or check out our <a href='https://github.com/PandemicPreventionInstitute/subregionalcovid19'>github repository</a>.
+                The Weitz Group</a> and <a href='https://planning.gatech.edu/people/clio-andris'>Andris Group</a> at Georgia Tech, as described in 
+                their <a href='https://www.nature.com/articles/s41562-020-01000-9'>peer-reviewed publication</a>, and accompanying <a 
+                href='https://blogs.scientificamerican.com/observations/online-covid-19-dashboard-calculates-how-risky-reopenings-and-gatherings-can-be/'>Op-Ed</a>. 
+                Georgia Tech has also published a software note describing the <a href='https://github.com/PandemicPreventionInstitute/subregionalcovid19'>R package</a>. 
+                Similar methodology has also been applied by the <a href='https://covid-19.tacc.utexas.edu/'>Meyers Lab at UT Austin</a> to estimate 
+                the <a href='https://covid-19.tacc.utexas.edu/dashboards/school-risk/'>expected introductions in schools</a> and assess the <a 
+                href='chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://covid-19.tacc.utexas.edu/media/filer_public/5e/e4/5ee435ec-fe51-4b4f-99e4-88c3c24eb386/final_event_risk_framework_may_2022.pdf'>risk posed by large events.</a> 
             </p>
 
-            <h3>The Theory: Probability that one or more people arrive infected to an event of size <i>n</i></h3>
+            <h3>Probability that one or more people arrive infected to an event of size <i>n</i></h3>
 
             <p>Calculating the probability that one or more people will show up to an event infected is an extension of a foundational question in 
                 probability. The easiest way to solve this is to invert the question and start by finding the probability that no one in the group 
-                of size narrives infected. We first use the following equation to find the probability that an individual is not infected, where 
+                of size <i>n</i> arrives infected. We first use the following equation to find the probability that an individual is not infected, where 
                 our baseline assumption is that an individual’s risk of infection is equal to the region-level disease prevalence, <i>prev</i>.
             </p>
 
@@ -59,7 +64,21 @@ export default function Methods() {
             <p>From this simple equation, we can easily estimate the probability that 1 or more infected individuals will arrive at an event of any 
                 size, assuming we can approximate the disease prevalence among the event participants.</p>
 
-            <h3>The Practice: Estimating disease prevalence</h3>
+            <h3>Expected number of event attendees arriving infected</h3>
+
+            <p>In addition to providing the risk that at least 1 person will arrive infected to an event of size <i>n</i>, we also provide an estimate of 
+                the range of expected event attendees that will arrive infected, as this number can be helpful for planning of resource allocation 
+                (i.e. isolation rooms, testing, treatments etc.) needed to respond to outbreaks. The expected number of individuals arriving 
+                infected is simply:</p>
+
+            <p><MathJax>{'$$ N_{infected} = n \\times prev_k $$'}</MathJax></p>
+
+            <p>Where <i>N</i> is the number of individuals attending the event and <MathJax inline >{'$prev_k$'}</MathJax> is the estimated prevalence of disease among the population. 
+                We report the <MathJax inline >{'$N_{infected}$'}</MathJax> over <i>k</i> prevalence estimates (lower bound, median, and upper bound) reflecting the uncertainty in the 
+                fraction of cases reported. For ease of interpretation, we round numbers to the nearest integer. If <MathJax inline >{'$N_{infected}$'}</MathJax> is estimated to be 
+                less than 1, we report “0 to 1” event attendees would be expected to arrive infected. </p>
+
+            <h3>Estimating disease prevalence</h3>
 
             <p>Estimating the disease prevalence among the population of interest, however, is non-trivial. A myriad of factors can affect the expected 
                 disease prevalence among event attendees such as vaccination status and prior immunity, as well as pre-event mitigation measures such as 
@@ -70,7 +89,7 @@ export default function Methods() {
                 at higher or lower risk of arriving infected due to a number of factors we don’t consider here (i.e. age, occupation, etc.). This could make 
                 events higher or lower risk than our estimates imply.</p>
 
-            <p>And, in practice, only data on newly reported COVID-19 cases (i.e. incidence) is available, not data on the total number of active infections
+            <p>And, in practice, only data on newly reported COVID-19 cases (i.e. incidence) is available, not data on the total number of current infections
                 (i.e. prevalence). To estimate prevalence from reported cases in a region, we must account for the duration of infections and the proportion of infections reported. If we assume 
                 the individuals are infectious for an average of <i>d</i> days, we can approximate the active cases per capita by averaging over the cases 
                 reported over the recent time window 𝛕, where the time window is small enough that we think it is a reasonable reflection of the 
@@ -91,27 +110,30 @@ export default function Methods() {
                 equation, where <i>prev</i> is the estimated disease prevalence, <MathJax inline >{'$C_a$'}</MathJax> is the estimated active cases per capita, and <MathJax inline >{'$f_d$'}</MathJax> is the fraction of infections that 
                 are detected and reported:</p>
 
-            <p><MathJax>{'$$ prev = C_a \\frac{1}{f_d} $$'}</MathJax></p>
+            <p><MathJax>{'$$ prev_k = C_a \\frac{1}{f_d} = C_a \\times AB_k$$'}</MathJax></p>
 
-            <p>We sometimes refer to <MathJax inline >{'$f_d$'}</MathJax> as the underreporting rate and <MathJax inline>{'$ \\frac{1}{f_d} $'}</MathJax> as the ascertainment bias. The fraction of infections that are detected 
-                and reported as cases is highly variable across time and space, and reflects a combination of public health policies, resource 
-                availability, and reporting infrastructure. In this initial version of PEER, we assume that all regions have the same <MathJax inline >{'$f_d$'}</MathJax> of ¼, 
-                i.e. we assume an ascertainment bias of 4 for every country and region. However, future versions of the tool aim to account for the 
+            <p>We sometimes refer to <MathJax inline >{'$f_d$'}</MathJax> as the underreporting rate and <i>AB</i>{/* <MathJax inline>{'$ \\frac{1}{f_d} $'}</MathJax> */} 
+                is the ascertainment bias, and <i>k</i> is the <i>k</i>th value of the ascertainment bias. For the probabilistic risk estimate, we use the central value 
+                of ascertainment bias of 8. For the range of expected infected attendees, we use a lower bound of 4 and an upper bound of 15. In reality, the fraction 
+                of infections that are detected and reported as cases is highly variable across time and space, and reflects a combination of public health policies, resource 
+                availability, and reporting infrastructure. Estimating the fraction of all infections that get reported as cases is a non-trivial problem 
+                as testing levels and reporting mechanisms vary significantly across geographies and shift in time. Future versions of the tool aim to account for the 
                 dynamic and geographically variable nature of this quantity.</p>
 
             <h3>The Data</h3>
 
             <p>PEER currently includes a risk estimate and associated metrics for a subset of countries who publicly 
-                report case data at the subnational level in a downloadable format. An R package has been developed by our 
-                collaborators at Georgia Tech that makes the subnational level data used to populate this risk map available for the 
-                current time point.</p>
+                report case data at the subnational level in a downloadable format. An <a href='https://github.com/sjbeckett/subregionalcovid19'>
+                R package</a> has been developed by our collaborators at Georgia Tech that makes the subnational level data used to populate 
+                this risk map available for the current time point.</p>
 
             <p>Among the countries in this dataset, reporting practices are likely to be highly variable and dependent on testing 
                 availability and data reporting systems. At this time, we do not make a country or region-specific estimate of the 
-                underreporting rate. However, our Surveillance Capacity tool characterizes countries diagnostic capacities based on 
+                underreporting rate. However, our Surveillance Capacity tool characterizes countries' diagnostic capacities based on 
                 reported test positivity rate and tests per capita. We developed data-driven testing targets based on the distributions 
-                of these metrics across lower and middle income countries, as is described here. A country is characterized as not 
-                meeting testing targets if, in the past year if their: </p>
+                of these metrics across lower and middle income countries, as is described <a 
+                href='https://github.com/PandemicPreventionInstitute/NGS-Capacity-map/blob/main/methods/ngs_methods_2022.pdf'>here</a>. 
+                A country is characterized as not meeting testing targets if, in the past year if their: </p>
 
             <ol>
                 <li>Test positivity rate &gt; 20%</li>
