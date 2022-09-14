@@ -164,16 +164,18 @@ const scale = value => {
     return remainder * increment + previousMark.eventSize;
 };
 
-const Popup = ({ featureProperties, displayRisk, expIntroductions, casesPer100k }) => (
+const Popup = ({ featureProperties, displayRisk, expIntroductions_med, expIntroductions_lb, expIntroductions_ub, casesPer100k }) => (
     <div>
       <h3>{featureProperties.RegionName}</h3><br />
       {displayRisk !== 'No data has been reported from this region within the last 14 days.' ?
         <strong><p id='popup_risk' style={{marginBottom: '5px'}}>Exposure Risk: {displayRisk}</p></strong>
       : <strong><p id='popup_risk' style={{marginBottom: '5px'}}>{displayRisk}</p></strong>}
-      {expIntroductions !== 'N/A' ? 
-        <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: {expIntroductions}</p></strong>
-      : null}
-      {expIntroductions !== 'N/A' ? 
+      {expIntroductions_med !== 'N/A'  && expIntroductions_med >= 1 ? 
+        <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: {expIntroductions_med} (Range: {expIntroductions_lb} - {expIntroductions_ub})</p></strong>
+      : expIntroductions_med !== 'N/A'  && expIntroductions_med < 1 ?
+        <strong><p id='infected_attendees' style={{marginBottom: '5px'}}>Expected Infected Attendees: 0 - 1</p></strong>
+      : null }
+      {expIntroductions_med !== 'N/A' ? 
         <strong><p style={{marginBottom: '5px'}}>Cases per 100k in the past 14 days: {casesPer100k}</p></strong> 
       : null}   
       <strong><p style={{marginBottom: '5px'}}>Data Last Updated: {featureProperties.DateReport}</p></strong>
@@ -210,20 +212,18 @@ export function GetFGBData(mapData, setMapData, setLoading) {
  * @param {*} eventSize - crowd size
  * @returns 
  */
-export function GetInfectedAttendees(region, eventSize) {
-    let AB = region.properties['AB'];
+export function GetInfectedAttendees(region, eventSize, bound) {
+
+    let AB = region.properties[bound];
     let pInf = region.properties['pInf'];
-    let expIntroductions = AB * pInf * eventSize; // calculate expected number of infected attendees
-    if( expIntroductions < 1) {
-        expIntroductions = '0 to 1';
-    } else if ( 1 <= expIntroductions && expIntroductions < 2) {
-        expIntroductions = '1 to 2';
-    } else if (2 <= expIntroductions && expIntroductions <= 3) {
-        expIntroductions = '2 to 3';
+
+    let expIntroductions = AB * pInf * eventSize;
+
+    if((expIntroductions < 1) && (bound === 'AB_med')) { // don't round if the number is less than 1 and it is the median expected number
+        return expIntroductions; // calculate expected number of infected attendees without rounding
     } else {
-        expIntroductions = Math.round(expIntroductions);
+        return Math.round(AB * pInf * eventSize); 
     }
-    return expIntroductions;
 }
 
 export default function Map(props) {
@@ -236,7 +236,11 @@ export default function Map(props) {
     const [loading, setLoading] = useState(true);
     const [boxDisplayRisk, setBoxDisplayRisk] = useState(0);
     const [dateLastUpdated, setDateLastUpdated] = useState('');
-    const [infectedAttendees, setInfectedAttendees] = useState('');
+    const [infectedAttendees, setInfectedAttendees] = useState({
+        lb: 4,
+        med: 8,
+        ub: 15
+    });
     const [testingFlag, setTestingFlag] = useState(false); // flag for unreliable region data
     const [countrySelect, setCountrySelect] = useState(false);
     const [currentRegion, setCurrentRegion] = useState({
@@ -289,19 +293,27 @@ export default function Map(props) {
             '#ffffff',-1,'#ffffff',0,'#eff5d9',1,'#d9ed92',25,'#76c893',50,'#34a0a4',75,'#1a759f',99,'#184e77']
         );
         setBoxDisplayRisk(currentRegion.properties[newSize]);  // update state and estimation
-        let expIntroductions = GetInfectedAttendees(currentRegion, eventSize);
-        setInfectedAttendees(expIntroductions);
+
+        let expIntroductions_lb = GetInfectedAttendees(currentRegion, eventSize, 'AB_lb');
+        let expIntroductions_med = GetInfectedAttendees(currentRegion, eventSize, 'AB_med');
+        let expIntroductions_ub = GetInfectedAttendees(currentRegion, eventSize, 'AB_ub');
+        setInfectedAttendees({
+            lb: expIntroductions_lb,
+            med: expIntroductions_med,
+            ub: expIntroductions_ub
+        });
+
         GAcrowdSizeSelect(eventSize); // track slider event in Google Analytics
 
         // update popup risk and infected attendees if open
         if(popupState) {
             let popupRisk = document.getElementById('popup_risk');
             let risk = currentRegion.properties[newSize];
-            let infectedAttendees = document.getElementById('infected_attendees');
+            let infected_attendees = document.getElementById('infected_attendees');
 
             if (risk < 0) {
                 risk = 'No data has been reported from this region within the last 14 days.';
-                expIntroductions = 'N/A';
+                expIntroductions_med = 'N/A';
             }
             else if (risk < 1) {
                 risk = '< 1%';
@@ -311,7 +323,15 @@ export default function Map(props) {
                 risk = Math.round(risk) + '%';
             }
             popupRisk.innerText = 'Exposure Risk: ' + risk;
-            infectedAttendees.innerText = 'Expected Infected Attendees: ' + expIntroductions;
+
+            if (expIntroductions_med < 1) {
+                infected_attendees.innerText = 'Expected Infected Attendees: 0 - 1'
+            } else if (expIntroductions_med === 'N/A') {
+                infected_attendees.innerText = 'Expected Infected Attendees: ' + expIntroductions_med
+            } else {
+                infected_attendees.innerText = 'Expected Infected Attendees: ' + expIntroductions_med + ' (Range: ' + expIntroductions_lb + ' - ' + expIntroductions_ub + ')';
+            }
+            
         }       
     }
 
@@ -361,10 +381,18 @@ export default function Map(props) {
                     document.getElementById("filterSelect").scrollIntoView();
                 }, 100);
             }
-            setCountrySelect(true); // set to true so estimate component is displayed                            
+            setCountrySelect(true); // set to true so estimate component is displayed  
+
             let thisSize = 'risk_' + (filterState.size);
-            let expIntroductions = GetInfectedAttendees(value, filterState.size);
-            setInfectedAttendees(expIntroductions);
+            let expIntroductions_med = GetInfectedAttendees(value, filterState.size, 'AB_med');
+            let expIntroductions_lb = GetInfectedAttendees(value, filterState.size, 'AB_lb');
+            let expIntroductions_ub = GetInfectedAttendees(value, filterState.size, 'AB_ub');
+            setInfectedAttendees({
+                lb: expIntroductions_lb,
+                med: expIntroductions_med,
+                ub: expIntroductions_ub
+            });
+
             setBoxDisplayRisk(value.properties[thisSize]); // set risk for selected country
             setDateLastUpdated(value.properties.DateReport); // set date last updated for selected country   
             if (value.properties.testing_flag === true) {
@@ -372,6 +400,7 @@ export default function Map(props) {
             }
         } else {
             setCountrySelect(false); // set to false so estimate component closes
+            setTestingFlag(false); // reset flag for unreliable data
             map.current.fitBounds(map.current.getBounds());
             map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region
         }
@@ -545,9 +574,17 @@ export default function Map(props) {
                 setDateLastUpdated(feature.properties.DateReport);
                 setBoxDisplayRisk(feature.properties[thisSize]);
                 let displayRisk = feature.properties[thisSize];
-                let expIntroductions = GetInfectedAttendees(feature, filterStateRef.current);
-                setInfectedAttendees(expIntroductions);
-                let casesPer100k = feature.properties.cases_per_100k_past_14_d;
+
+                let expIntroductions_med = GetInfectedAttendees(feature, filterStateRef.current, 'AB_med');
+                let expIntroductions_lb = GetInfectedAttendees(feature, filterStateRef.current, 'AB_lb');
+                let expIntroductions_ub = GetInfectedAttendees(feature, filterStateRef.current, 'AB_ub');
+                setInfectedAttendees({
+                    lb: expIntroductions_lb,
+                    med: expIntroductions_med,
+                    ub: expIntroductions_ub
+                });
+
+                let casesPer100k = Math.round(feature.properties.cases_per_100k_past_14_d * 10) / 10;
 
                 if (casesPer100k < 1) {
                     casesPer100k = 'N/A';
@@ -557,8 +594,12 @@ export default function Map(props) {
                 }
                 if (displayRisk < 0) {
                     displayRisk = 'No data has been reported from this region within the last 14 days.';
-                    expIntroductions = 'N/A';
-                    setInfectedAttendees('N/A');
+                    expIntroductions_med = 'N/A';
+                    setInfectedAttendees({
+                        lb: 'N/A',
+                        med: 'N/A',
+                        ub: 'N/A'
+                    });
                     casesPer100k = 'N/A';
                 } else if (displayRisk < 1) {
                     displayRisk = '< 1%';
@@ -575,7 +616,9 @@ export default function Map(props) {
                 <Popup
                     featureProperties={feature.properties}
                     displayRisk={displayRisk}
-                    expIntroductions={expIntroductions}
+                    expIntroductions_med={expIntroductions_med}
+                    expIntroductions_lb={expIntroductions_lb}
+                    expIntroductions_ub={expIntroductions_ub}
                     casesPer100k={casesPer100k}
                 />
                 );
@@ -588,6 +631,7 @@ export default function Map(props) {
                 popup.on('close', function(e) {
                     setPopupState(false);
                     setCountrySelect(false); // set to false so estimate component closes
+                    setTestingFlag(false); // reset flag for unreliable data
                     map.current.setFilter('region-highlighted', ['==', 'RegionName', '']); // remove highlight around selected region  
                 });
             });    
@@ -812,14 +856,31 @@ export default function Map(props) {
                                 </Tooltip>
                             </h4>
                             <hr />
-                            <h3 className={styles.infectedAttendees}>{infectedAttendees} {infectedAttendees === 1 ? 'attendee' : 'attendees'}</h3>
-                            <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
-                                <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
-                                    <IconButton>
-                                        <InfoOutlinedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </h4>
+                            { infectedAttendees.med === 'N/A' ? 
+                              null : 
+                              infectedAttendees.med < 1 ? 
+                                <div>
+                                    <h3 className={styles.infectedAttendees}>0 - 1 attendees</h3> 
+                                    <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
+                                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                            <IconButton>
+                                                <InfoOutlinedIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </h4>
+                                </div>
+                              : 
+                                <div>
+                                    <h3 className={styles.infectedAttendees}>{infectedAttendees.med} (Range: {infectedAttendees.lb} - {infectedAttendees.ub}) attendees</h3>
+                                    <h4 className={styles.estimateTextAttendees}>would be expected to arrive infected to the event on average
+                                        <Tooltip arrow sx={{marginTop: '-5px', color: 'inherit'}} title="This was calculated based on the number of reported cases in the last 14 days">
+                                            <IconButton>
+                                                <InfoOutlinedIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </h4>
+                                </div> 
+                            }
                             <hr />
                         </div>
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
