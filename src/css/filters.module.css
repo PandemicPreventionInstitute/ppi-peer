@@ -100,6 +100,16 @@
     color: inherit;
 }
 
+.minimizeEstimate {
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: -25px;
+}
+
+.minimizeEstimateIcon {
+    font-size: 30px;
+}
+
 .estimateText {
     margin-top: 12px;
     color: inherit;
