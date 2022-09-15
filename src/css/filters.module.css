@@ -100,13 +100,13 @@
     color: inherit;
 }
 
-.minimizeEstimate {
+.collapseEstimate {
     text-align: center;
     margin-top: -15px;
     margin-bottom: -25px;
 }
 
-.minimizeEstimateIcon {
+.collapseEstimateIcon {
     font-size: 30px;
 }
 

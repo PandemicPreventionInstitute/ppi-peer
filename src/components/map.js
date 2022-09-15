@@ -263,7 +263,7 @@ export default function Map(props) {
         type: "FeatureCollection",
         features: []
     });
-    const [minimizeEstimate, setMinimizeEstimate] = useState(false);
+    const [collapseEstimate, setCollapseEstimate] = useState(false);
 
     const valuetext = (value) => {
         return value;
@@ -711,8 +711,8 @@ export default function Map(props) {
         setMapControlPopperOpen(false);
     }
 
-    const handleMinimizeEstimate = () => {
-        setMinimizeEstimate(!minimizeEstimate);
+    const handleCollapseEstimate = () => {
+        setCollapseEstimate(!collapseEstimate);
     }
 
     return (
@@ -839,9 +839,9 @@ export default function Map(props) {
 
                 <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nocases : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     {props.windowDimension.winWidth < 600 ?
-                        <div className={styles.minimizeEstimate}>
-                            <IconButton style={{color: 'inherit'}} onClick={handleMinimizeEstimate}>
-                                {minimizeEstimate ? <ExpandLessIcon className={styles.minimizeEstimateIcon}/> : <ExpandMoreIcon className={styles.minimizeEstimateIcon}/>}                            
+                        <div className={styles.collapseEstimate}>
+                            <IconButton style={{color: 'inherit'}} onClick={handleCollapseEstimate}>
+                                {collapseEstimate ? <ExpandLessIcon className={styles.collapseEstimateIcon}/> : <ExpandMoreIcon className={styles.collapseEstimateIcon}/>}                            
                             </IconButton>
                         </div>
                     : null}
@@ -861,7 +861,7 @@ export default function Map(props) {
                         : null
                         }
                     </h1>
-                    <Collapse in={minimizeEstimate}>
+                    <Collapse in={collapseEstimate}>
                     {boxDisplayRisk > 0 ? 
                         <div>
                             <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
