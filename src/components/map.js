@@ -841,7 +841,7 @@ export default function Map(props) {
                     {props.windowDimension.winWidth < 600 ?
                         <div className={styles.collapseEstimate}>
                             <IconButton style={{color: 'inherit'}} onClick={handleCollapseEstimate}>
-                                {collapseEstimate ? <ExpandLessIcon className={styles.collapseEstimateIcon}/> : <ExpandMoreIcon className={styles.collapseEstimateIcon}/>}                            
+                                {!collapseEstimate ? <ExpandLessIcon className={styles.collapseEstimateIcon}/> : <ExpandMoreIcon className={styles.collapseEstimateIcon}/>}                            
                             </IconButton>
                         </div>
                     : null}
@@ -861,7 +861,7 @@ export default function Map(props) {
                         : null
                         }
                     </h1>
-                    <Collapse in={collapseEstimate}>
+                    <Collapse in={!collapseEstimate}>
                     {boxDisplayRisk > 0 ? 
                         <div>
                             <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
