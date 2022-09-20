@@ -41,7 +41,7 @@ Note: The script assumes you already have AWS configured access key credentials 
 - documentation on data pipeline, and output geobuf file on S3
 
 ## Additional Documentation
- For more information about the Pandemic Prevention Institute and The Rockefeller Foundation, see [here](https://www.rockefellerfoundation.org/pandemicpreventioninstitute/).
+For more information about the Pandemic Prevention Institute and The Rockefeller Foundation, see [here](https://www.rockefellerfoundation.org/pandemicpreventioninstitute/).
 
 ## More on React and Material-UI
 More React documentation on the [Main Concepts](https://reactjs.org/docs/hello-world.html) of ReactJS, as well as [Advanced Guides](https://reactjs.org/docs/accessibility.html) and the ReactJS [API Reference](https://reactjs.org/docs/react-api.html) can be found in the ReactJS Docs. 
