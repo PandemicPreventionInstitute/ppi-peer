@@ -1,6 +1,6 @@
 # PEER 
 <img src="https://user-images.githubusercontent.com/201428/165138572-711bb040-f827-473d-898b-1a325f00bbe1.png" align="right" width=240 />
-The Covid Probability Estimator for Exposure Risk (PEER) provides everyday decision-makers with easy-to-understand, actionable data on Covid risks. This app is built using [React](https://reactjs.org/docs/getting-started.html) and [Material UI](https://mui.com/) components. The 
+The Covid Probability Estimator for Exposure Risk (PEER) provides everyday decision-makers with easy-to-understand, actionable data on Covid risks. This app is built using [React](https://reactjs.org/docs/getting-started.html) and [Material UI](https://mui.com/) components. 
 
 ## Local Environment Setup: Prerequisites
 The PEER React App uses Node.js (v17.x.x) and Yarn package manager. Before installing and using the Yarn package manager, you will need to have Node.js installed. To see if you already have Node.js installed, type the following command into your local command line terminal:
@@ -32,6 +32,8 @@ When committing changes into a branch, a pre-commit hook will run that will run 
 ## Build and Deploy
 In order to build a deployable bundle of html, css, and the compiled javascript, and then deploy the bundle, run `sh peer_deploy.sh`. This will run a script that generates a `/build` folder in your project that has the compiled project ready to be deployed to the cloud environment, and then uploads the bundle to S3 and creates a new Invalidation for the CloudFront distribution domain. 
 
+After the steps above to build and deploy the code have been done, you can go to the [CloudFront domain](https://d6nv7otlairbs.cloudfront.net/) to see the changes.
+
 Note: The script assumes you already have AWS configured access key credentials that give you permissions to write to S3 and CloudFront. If you do not, create new credentials or retrieve existing credentials and configure AWS CLI on your machine first, and then run the script. For more information about setting up AWS CLI with credentials, click [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) to view the documentation.
 
 ## Backend
@@ -39,7 +41,9 @@ Note: The script assumes you already have AWS configured access key credentials 
 - documentation on data pipeline, and output geobuf file on S3
 
 ## Additional Documentation
-@todo
+For more information about the Pandemic Prevention Institute and The Rockefeller Foundation, see [here](https://www.rockefellerfoundation.org/pandemicpreventioninstitute/).
 
 ## More on React and Material-UI
-@todo
+More React documentation on the [Main Concepts](https://reactjs.org/docs/hello-world.html) of ReactJS, as well as [Advanced Guides](https://reactjs.org/docs/accessibility.html) and the ReactJS [API Reference](https://reactjs.org/docs/react-api.html) can be found in the ReactJS Docs. 
+
+For more introduction into Material-UI see the [Overview](https://mui.com/material-ui/getting-started/overview/) page and other Getting Started pages in the documentation. See the Material-UI [Component API](https://mui.com/material-ui/api/accordion/) library for the API documentation on the different Material-UI [Components](https://mui.com/material-ui/react-autocomplete/).
