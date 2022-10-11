@@ -96,14 +96,14 @@
 
 .estimateHeader {
     margin-bottom: 15px;
-    margin-top: 20px;
+    margin-top: 15px;
     color: inherit;
 }
 
 .collapseEstimate {
-    text-align: center;
-    margin-top: -15px;
-    margin-bottom: -25px;
+    text-align: right;
+    margin-top: -32px;
+    margin-right: 10px;
 }
 
 .collapseEstimateIcon {

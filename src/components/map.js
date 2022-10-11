@@ -838,15 +838,15 @@ export default function Map(props) {
                 </FilterBox>
 
                 <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nocases : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
-                    {props.windowDimension.winWidth < 600 ?
-                        <div className={styles.collapseEstimate}>
-                            <IconButton style={{color: 'inherit'}} onClick={handleCollapseEstimate}>
-                                {!collapseEstimate ? <ExpandLessIcon className={styles.collapseEstimateIcon}/> : <ExpandMoreIcon className={styles.collapseEstimateIcon}/>}                            
-                            </IconButton>
-                        </div>
-                    : null}
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 EXPOSURE RISK IS:
+                        {props.windowDimension.winWidth < 600 ?
+                            <div className={styles.collapseEstimate}>
+                                <IconButton style={{color: 'inherit'}} onClick={handleCollapseEstimate}>
+                                    {!collapseEstimate ? <ExpandLessIcon className={styles.collapseEstimateIcon}/> : <ExpandMoreIcon className={styles.collapseEstimateIcon}/>}                            
+                                </IconButton>
+                            </div>
+                        : null}
                     </h4>
                     <h1>{boxDisplayRisk < 0 ? 
                         'No Current Data' : 
