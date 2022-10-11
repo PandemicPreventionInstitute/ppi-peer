@@ -27,6 +27,9 @@ import CoronavirusIcon from '@mui/icons-material/Coronavirus';
 import { styled } from '@mui/material/styles';
 import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
 
 import OnboardingSteps from './onboardingSteps';
 import Onboarding from './onboarding.js';
@@ -260,6 +263,7 @@ export default function Map(props) {
         type: "FeatureCollection",
         features: []
     });
+    const [collapseEstimate, setCollapseEstimate] = useState(false);
 
     const valuetext = (value) => {
         return value;
@@ -370,11 +374,11 @@ export default function Map(props) {
                         top: 0,
                         left: 100,
                         right: 100,
-                        bottom: 500
+                        bottom: 200
                     } 
                 });
-                map.current.scrollZoom.disable(); // disable scrolling/zooming for mobile map view
-                map.current.dragPan.disable(); // disable panning for mobile map view
+                // map.current.scrollZoom.disable(); // disable scrolling/zooming for mobile map view
+                // map.current.dragPan.disable(); // disable panning for mobile map view
             } else {
                 map.current.fitBounds(selectedbbx, {padding: 200}); // on region select, zoom to region polygon 
                 setTimeout(() => {
@@ -707,6 +711,10 @@ export default function Map(props) {
         setMapControlPopperOpen(false);
     }
 
+    const handleCollapseEstimate = () => {
+        setCollapseEstimate(!collapseEstimate);
+    }
+
     return (
         <div className="map">
             <div>
@@ -832,6 +840,13 @@ export default function Map(props) {
                 <EstimateBox id='Estimate' countrySelect={countrySelect} className={boxDisplayRisk < 0 ? styles.nocases : (boxDisplayRisk < 1 ? styles.range1 : (boxDisplayRisk <= 25 ? styles.range2 : (boxDisplayRisk <= 50 ? styles.range3 : (boxDisplayRisk <= 75 ? styles.range4 : (boxDisplayRisk <= 99 ? styles.range5 : styles.range6)))))}>
                     <h4 className={styles.estimateHeader}>
                         <CoronavirusIcon className={styles.mainIcons} />COVID-19 EXPOSURE RISK IS:
+                        {props.windowDimension.winWidth < 600 ?
+                            <div className={styles.collapseEstimate}>
+                                <IconButton style={{color: 'inherit'}} onClick={handleCollapseEstimate}>
+                                    {!collapseEstimate ? <ExpandLessIcon className={styles.collapseEstimateIcon}/> : <ExpandMoreIcon className={styles.collapseEstimateIcon}/>}                            
+                                </IconButton>
+                            </div>
+                        : null}
                     </h4>
                     <h1>{boxDisplayRisk < 0 ? 
                         'No Current Data' : 
@@ -846,6 +861,7 @@ export default function Map(props) {
                         : null
                         }
                     </h1>
+                    <Collapse in={!collapseEstimate}>
                     {boxDisplayRisk > 0 ? 
                         <div>
                             <h4 className={styles.estimateText}>that at least ONE PERSON would arrive infected to the event
@@ -886,6 +902,7 @@ export default function Map(props) {
                     : <h4 className={styles.estimateText}>No data has been reported from this region within the last 14 days.</h4>
                     }
                     <p><strong>Data Last Updated:</strong> {dateLastUpdated}</p>
+                    </Collapse>
                 </EstimateBox>
 
                 <PrecautionsBox><Precautions winWidth={props.windowDimension.winWidth}/></PrecautionsBox>                                                                         

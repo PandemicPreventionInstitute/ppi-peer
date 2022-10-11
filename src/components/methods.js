@@ -123,7 +123,7 @@ export default function Methods() {
             <h3>The Data</h3>
 
             <p>PEER currently includes a risk estimate and associated metrics for a subset of countries who publicly 
-                report case data at the subnational level in a downloadable format. An <a href='https://github.com/sjbeckett/subregionalcovid19'>
+                report case data at the subnational level in a downloadable format. An <a href='https://github.com/sjbeckett/localcovid19now'>
                 R package</a> has been developed by our collaborators at Georgia Tech that makes the subnational level data used to populate 
                 this risk map available for the current time point.</p>
 
